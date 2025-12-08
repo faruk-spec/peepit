@@ -269,6 +269,13 @@ Tracks:
 
 ## Troubleshooting
 
+### Issue: "This page isn't working" or "No matching DirectoryIndex" (aaPanel/BT Panel)
+**Solution:** 
+1. In aaPanel, go to Website > Your Site > Site Directory
+2. Set "Running Directory" to `/public`
+3. Save and restart the web server
+4. If you can't change the DocumentRoot, ensure the `index.php` file exists in the root directory
+
 ### Issue: White screen after installation
 **Solution:** Check PHP error logs, ensure all permissions are correct
 

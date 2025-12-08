@@ -115,6 +115,137 @@ chmod -R 777 public/uploads
 
 4. Test email configuration
 
+## aaPanel / BT Panel Hosting
+
+aaPanel (BaoTa Panel) is a popular server management panel. Here's how to deploy Peepit on aaPanel:
+
+### Step 1: Upload Files via FTP/SFTP
+
+1. **Connect to your server:**
+   - Use FileZilla or any FTP/SFTP client
+   - Connect to your server using credentials from aaPanel
+
+2. **Upload project files:**
+   - Upload all files to `/www/wwwroot/yourdomain.com/`
+   - Ensure all folders are uploaded (app, config, install, public, vendor)
+
+### Step 2: Configure Site Settings in aaPanel
+
+1. **Login to aaPanel**
+2. **Go to Website > Your Site > Site Directory**
+3. **IMPORTANT: Set the Document Root (Running Directory) to `/www/wwwroot/yourdomain.com/public`**
+   - This is crucial! The DocumentRoot must point to the `public/` subdirectory
+   - Click "Site Directory" button
+   - Set "Running Directory" to `/public`
+   - Save changes
+
+**Alternative if you cannot change DocumentRoot:**
+If your panel doesn't allow changing the document root, the fallback `index.php` in the root directory will handle redirects automatically. However, for best performance and security, always configure the DocumentRoot to point to the `public/` folder.
+
+### Step 3: Configure PHP Settings
+
+1. In aaPanel, go to **Website > Your Site > PHP Version**
+2. Select **PHP 8.0** or higher
+3. Click **PHP Extensions** and ensure these are installed:
+   - mysqli / pdo_mysql
+   - gd
+   - mbstring
+   - curl
+   - openssl
+   - fileinfo
+   - zip
+
+### Step 4: Set Permissions
+
+1. In aaPanel File Manager or via SSH:
+   ```bash
+   cd /www/wwwroot/yourdomain.com
+   chmod -R 755 .
+   chmod -R 777 config
+   chmod -R 777 public/uploads
+   chown -R www:www .
+   ```
+
+### Step 5: Create Database
+
+1. In aaPanel, go to **Database > Add Database**
+2. Create database name (e.g., `peepit_db`)
+3. Create database user with password
+4. Grant all privileges to the user
+5. Note down: database name, username, and password
+
+### Step 6: Configure SSL (Optional but Recommended)
+
+1. In aaPanel, go to **Website > Your Site > SSL**
+2. Choose one of:
+   - **Let's Encrypt** (Free): Click "Let's Encrypt" tab and apply
+   - **Other Certificate**: Upload your SSL certificate files
+3. Enable **Force HTTPS** option
+
+### Step 7: Run Installer
+
+1. Navigate to `https://yourdomain.com/install/` (or `http://` if no SSL)
+2. Follow the installation wizard:
+   - Check system requirements (should all pass if PHP extensions are installed)
+   - Enter database credentials from Step 5
+   - Import database schema
+   - Create admin account
+   - Complete installation
+
+3. **Important:** Delete the `install` folder after installation:
+   ```bash
+   rm -rf /www/wwwroot/yourdomain.com/install
+   ```
+
+### Step 8: Configure Rewrite Rules (If needed)
+
+If the site still shows errors after setting DocumentRoot to `/public`:
+
+1. In aaPanel, go to **Website > Your Site > Rewrite**
+2. Select **Other** from the dropdown
+3. Add this rewrite rule:
+   ```apache
+   location / {
+       try_files $uri $uri/ /index.php?$query_string;
+   }
+   ```
+4. Save and restart the web server
+
+### Troubleshooting aaPanel Deployment
+
+**Error: "This page isn't working" or "No matching DirectoryIndex"**
+- **Solution:** Make sure DocumentRoot is set to `/www/wwwroot/yourdomain.com/public` in aaPanel Site Directory settings
+- Alternative: Ensure the fallback `index.php` file exists in the root directory
+
+**Error: "500 Internal Server Error"**
+- **Solution:** Check file permissions, especially `config/` and `public/uploads/` folders (should be 777)
+- Check PHP error logs in aaPanel > Website > Your Site > Log
+
+**Error: SSL Certificate Warning**
+- **Solution:** In aaPanel SSL settings, ensure your certificate matches your domain name
+- For Let's Encrypt, make sure your domain DNS is properly pointing to the server
+
+**Error: Database Connection Failed**
+- **Solution:** Verify database credentials in the installer
+- Make sure the database user has all privileges on the database
+
+### aaPanel Performance Optimization
+
+After installation:
+
+1. **Enable OPcache:**
+   - Go to Software Store > PHP > Settings > Configuration
+   - Find `opcache.enable` and set to `1`
+   - Set `opcache.memory_consumption=128`
+
+2. **Enable GZIP Compression:**
+   - Already configured in `.htaccess` for Apache
+   - For Nginx, it's usually enabled by default in aaPanel
+
+3. **Configure PHP-FPM:**
+   - Go to Software Store > PHP > Settings > FPM
+   - Adjust `pm.max_children` based on your server RAM (default: 20 for 1GB RAM)
+
 ## VPS/Dedicated Server
 
 ### Option 1: Ubuntu/Debian with Apache
