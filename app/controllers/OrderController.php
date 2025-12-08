@@ -109,6 +109,16 @@ class OrderController extends Controller
         $labelImage = null;
 
         if (isset($_FILES['label_image']) && $_FILES['label_image']['error'] === UPLOAD_ERR_OK) {
+            // Additional validation for file content
+            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->file($_FILES['label_image']['tmp_name']);
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+            
+            if (!in_array($mimeType, $allowedTypes)) {
+                flash('error', 'Invalid file type. Only JPG and PNG images are allowed.');
+                $this->redirect(url('order/step4'));
+            }
+            
             $upload = upload_file($_FILES['label_image'], __DIR__ . '/../../public/uploads/labels');
             if (isset($upload['success'])) {
                 $labelImage = $upload['filename'];

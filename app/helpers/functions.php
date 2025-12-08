@@ -32,7 +32,7 @@ function validate_csrf()
 {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $token = $_POST['csrf_token'] ?? '';
-        if (!isset($_SESSION['csrf_token']) || $token !== $_SESSION['csrf_token']) {
+        if (!isset($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $token)) {
             http_response_code(403);
             die('CSRF validation failed');
         }

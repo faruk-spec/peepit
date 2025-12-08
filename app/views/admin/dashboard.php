@@ -130,20 +130,24 @@
                 <div class="card">
                     <div class="card-header">System Status</div>
                     <div class="p-20">
-                        <div class="status-item">
-                            <span>Database:</span>
-                            <span class="badge badge-success">Connected</span>
-                        </div>
-                        <div class="status-item">
-                            <span>PHP Version:</span>
-                            <span class="badge"><?= PHP_VERSION ?></span>
-                        </div>
-                        <div class="status-item">
-                            <span>Upload Directory:</span>
-                            <span class="badge badge-<?= is_writable(__DIR__ . '/../../../public/uploads') ? 'success' : 'error' ?>">
-                                <?= is_writable(__DIR__ . '/../../../public/uploads') ? 'Writable' : 'Not Writable' ?>
-                            </span>
-                        </div>
+                        <?php if (has_role('superadmin')): ?>
+                            <div class="status-item">
+                                <span>Database:</span>
+                                <span class="badge badge-success">Connected</span>
+                            </div>
+                            <div class="status-item">
+                                <span>PHP Version:</span>
+                                <span class="badge"><?= PHP_VERSION ?></span>
+                            </div>
+                            <div class="status-item">
+                                <span>Upload Directory:</span>
+                                <span class="badge badge-<?= is_writable(__DIR__ . '/../../../public/uploads') ? 'success' : 'error' ?>">
+                                    <?= is_writable(__DIR__ . '/../../../public/uploads') ? 'Writable' : 'Not Writable' ?>
+                                </span>
+                            </div>
+                        <?php else: ?>
+                            <p class="text-center">System status: ✅ Operational</p>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

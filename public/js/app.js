@@ -62,8 +62,13 @@ function previewImage(input, targetId) {
 
 // Price Calculator
 function calculatePrice(quantity, sizeId) {
-    // This would fetch pricing from backend
-    fetch(`/api/calculate-price?quantity=${quantity}&size=${sizeId}`)
+    // Properly encode URL parameters
+    const params = new URLSearchParams({
+        quantity: quantity,
+        size: sizeId
+    });
+    
+    fetch(`/api/calculate-price?${params.toString()}`)
         .then(response => response.json())
         .then(data => {
             document.getElementById('unit-price').textContent = data.unit_price;

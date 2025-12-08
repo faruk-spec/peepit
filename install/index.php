@@ -120,10 +120,10 @@ if ($step == 5 && isset($_SESSION['installer'])) {
             
             // Write config file
             $configContent = "<?php\nreturn [\n";
-            $configContent .= "    'host' => '{$config['host']}',\n";
-            $configContent .= "    'dbname' => '{$config['dbname']}',\n";
-            $configContent .= "    'username' => '{$config['username']}',\n";
-            $configContent .= "    'password' => '" . addslashes($config['password']) . "',\n";
+            $configContent .= "    'host' => " . var_export($config['host'], true) . ",\n";
+            $configContent .= "    'dbname' => " . var_export($config['dbname'], true) . ",\n";
+            $configContent .= "    'username' => " . var_export($config['username'], true) . ",\n";
+            $configContent .= "    'password' => " . var_export($config['password'], true) . ",\n";
             $configContent .= "    'charset' => 'utf8mb4',\n";
             $configContent .= "    'options' => [\n";
             $configContent .= "        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,\n";

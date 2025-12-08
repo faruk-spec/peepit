@@ -2,7 +2,10 @@
 
 // Start session with security settings
 ini_set('session.cookie_httponly', 1);
-ini_set('session.cookie_secure', 1);
+// Only set secure cookie if HTTPS is available
+if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
+    ini_set('session.cookie_secure', 1);
+}
 ini_set('session.use_strict_mode', 1);
 session_start();
 

@@ -86,10 +86,9 @@ class SettingsController extends Controller
             $configContent = "<?php\nreturn [\n";
             foreach ($config as $key => $value) {
                 if (is_string($value)) {
-                    $value = addslashes($value);
-                    $configContent .= "    '{$key}' => '{$value}',\n";
+                    $configContent .= "    " . var_export($key, true) . " => " . var_export($value, true) . ",\n";
                 } else {
-                    $configContent .= "    '{$key}' => {$value},\n";
+                    $configContent .= "    " . var_export($key, true) . " => {$value},\n";
                 }
             }
             $configContent .= "];\n";

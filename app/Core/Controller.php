@@ -45,7 +45,7 @@ class Controller
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $token = $_POST['csrf_token'] ?? '';
-            if (!isset($_SESSION['csrf_token']) || $token !== $_SESSION['csrf_token']) {
+            if (!isset($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $token)) {
                 $this->json(['error' => 'Invalid CSRF token'], 403);
             }
         }
