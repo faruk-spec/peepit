@@ -32,8 +32,8 @@ Thumbs.db
 .env
 .env.local
 
-# Install folder (after installation)
-/install/
+# Install folder (delete after installation, but include in repo)
+# /install/
 
 # Temporary files
 /tmp/
