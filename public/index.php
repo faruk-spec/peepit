@@ -328,6 +328,78 @@ $router->post('/admin/orders/update-status/{id}', function($id) {
     $controller->updateStatus($id);
 });
 
+// Admin Template Management
+$router->get('/admin/templates', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TemplateController.php';
+    $controller = new \App\Controllers\Admin\TemplateController();
+    $controller->index();
+});
+
+$router->get('/admin/templates/create', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TemplateController.php';
+    $controller = new \App\Controllers\Admin\TemplateController();
+    $controller->create();
+});
+
+$router->post('/admin/templates/store', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TemplateController.php';
+    $controller = new \App\Controllers\Admin\TemplateController();
+    $controller->store();
+});
+
+$router->get('/admin/templates/edit/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TemplateController.php';
+    $controller = new \App\Controllers\Admin\TemplateController();
+    $controller->edit($id);
+});
+
+$router->post('/admin/templates/update/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TemplateController.php';
+    $controller = new \App\Controllers\Admin\TemplateController();
+    $controller->update($id);
+});
+
+$router->post('/admin/templates/delete/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TemplateController.php';
+    $controller = new \App\Controllers\Admin\TemplateController();
+    $controller->delete($id);
+});
+
+// Admin User Management
+$router->get('/admin/users', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/UserController.php';
+    $controller = new \App\Controllers\Admin\UserController();
+    $controller->index();
+});
+
+$router->get('/admin/users/edit/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/UserController.php';
+    $controller = new \App\Controllers\Admin\UserController();
+    $controller->edit($id);
+});
+
+$router->post('/admin/users/update/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/UserController.php';
+    $controller = new \App\Controllers\Admin\UserController();
+    $controller->update($id);
+});
+
+$router->post('/admin/users/delete/{id}', function($id) {
+    require_role('superadmin');
+    require_once __DIR__ . '/../app/controllers/admin/UserController.php';
+    $controller = new \App\Controllers\Admin\UserController();
+    $controller->delete($id);
+});
+
 // Get current URL and method
 $url = $_GET['url'] ?? '/';
 $method = $_SERVER['REQUEST_METHOD'];
