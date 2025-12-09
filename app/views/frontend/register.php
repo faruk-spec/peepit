@@ -3,10 +3,7 @@
 <div class="auth-container">
     <div class="auth-card glass-effect">
         <div class="auth-header">
-            <div class="auth-icon">
-                <i class="fas fa-user-plus"></i>
-            </div>
-            <h2>Create Account</h2>
+            <h2><i class="fas fa-user-plus"></i> Create Account</h2>
             <p>Join Peepit to start creating custom water bottles</p>
         </div>
         
@@ -194,36 +191,19 @@
         margin-bottom: 30px;
     }
     
-    .auth-icon {
-        width: 80px;
-        height: 80px;
-        margin: 0 auto 20px;
-        background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 36px;
-        color: white;
-        box-shadow: 0 10px 25px rgba(6, 182, 212, 0.4);
-        animation: pulse 2s ease-in-out infinite;
-    }
-    
-    @keyframes pulse {
-        0%, 100% {
-            transform: scale(1);
-            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.4);
-        }
-        50% {
-            transform: scale(1.05);
-            box-shadow: 0 15px 35px rgba(6, 182, 212, 0.6);
-        }
-    }
-    
     .auth-header h2 {
         margin: 0 0 10px;
         color: #2d3748;
         font-size: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+    }
+    
+    .auth-header h2 i {
+        color: #06b6d4;
+        font-size: 32px;
     }
     
     .auth-header p {
@@ -465,14 +445,12 @@
             padding: 30px 20px;
         }
         
-        .auth-icon {
-            width: 60px;
-            height: 60px;
-            font-size: 28px;
-        }
-        
         .auth-header h2 {
             font-size: 24px;
+        }
+        
+        .auth-header h2 i {
+            font-size: 26px;
         }
     }
 </style>
