@@ -228,7 +228,12 @@ function config($key, $default = null)
     static $config = null;
     
     if ($config === null) {
-        $config = require __DIR__ . '/../config/app.php';
+        $configFile = __DIR__ . '/../config/app.php';
+        if (!file_exists($configFile)) {
+            // Return default if config file doesn't exist (installation not complete)
+            return $default;
+        }
+        $config = require $configFile;
     }
     
     return $config[$key] ?? $default;
