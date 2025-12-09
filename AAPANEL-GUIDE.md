@@ -2,25 +2,38 @@
 
 This guide specifically addresses deployment on aaPanel (BaoTa Panel) servers.
 
-## Quick Fix for "This page isn't working" Error
+## Quick Fix for Common Errors
 
-### Problem
-You see error: `Cannot serve directory: No matching DirectoryIndex found`
+### Problem 1: "This page isn't working" - No matching DirectoryIndex
 
-### Solution (Choose One)
-
-#### Option 1: Configure DocumentRoot (RECOMMENDED)
+**Solution:**
 1. Login to aaPanel
 2. Go to **Website** → Select your site → **Site Directory**
 3. Change **Running Directory** from `/` to `/public`
 4. Click **Save**
-5. Restart web server (Apache/Nginx)
+5. Proceed to Problem 2 below
 
-#### Option 2: Use Root Index Fallback
+### Problem 2: open_basedir Restriction (CRITICAL - Do this after Problem 1)
+
+**Error:** `open_basedir restriction in effect` or `Failed opening required vendor/autoload.php`
+
+**Solution:**
+1. In aaPanel, **Website** → Your site → **Site Directory**
+2. Scroll to **Security** section (or **防跨站设置**)
+3. Find **Open Basedir** setting
+4. Change from: `/www/wwwroot/yourdomain.com/public/:/tmp/`
+5. Change to: `/www/wwwroot/yourdomain.com/:/tmp/`
+   - **Remove `/public` from the path**
+6. Click **Save**
+7. Restart PHP-FPM
+
+**Note:** If you can't change DocumentRoot, use the root `index.php` fallback instead (see Option 2 below).
+
+#### Option 2: Use Root Index Fallback (Alternative)
 If you cannot change the DocumentRoot:
 1. Ensure `index.php` exists in your project root (not in public/)
 2. This file will automatically redirect to the correct location
-3. Refresh your browser
+3. No need to modify open_basedir in this case
 
 ## Complete aaPanel Setup Guide
 
@@ -40,7 +53,11 @@ Ensure these folders exist:
 └── composer.json
 ```
 
-### Step 2: Set DocumentRoot
+### Step 2: Choose DocumentRoot Configuration Method
+
+Choose ONE of the following methods:
+
+#### Method A: DocumentRoot to /public (RECOMMENDED for Security)
 
 **For Apache:**
 1. Website → Your Site → **Site Directory**
@@ -57,7 +74,65 @@ location / {
 }
 ```
 
-### Step 3: Install PHP Extensions
+**Then proceed to Step 3 to configure open_basedir.**
+
+#### Method B: DocumentRoot to Root Directory (Simpler Configuration)
+
+If you prefer to keep DocumentRoot at the root level or want to avoid open_basedir configuration:
+
+**For Apache - Edit Config File:**
+1. Website → Your Site → **Config File**
+2. Keep `DocumentRoot "/www/wwwroot/yourdomain.com"` (root directory)
+3. Ensure these settings in the `<Directory>` section:
+```apache
+<Directory "/www/wwwroot/yourdomain.com">
+    SetOutputFilter DEFLATE
+    Options FollowSymLinks
+    AllowOverride All
+    Require all granted
+    DirectoryIndex index.php index.html index.htm default.php default.html default.htm
+</Directory>
+```
+4. Save and restart Apache
+
+**For Nginx:**
+1. Keep root directive pointing to project root
+2. Ensure proper rewrite rules
+
+**Advantages of Method B:**
+- No need to modify `open_basedir` settings
+- Simpler configuration
+- The root `index.php` file handles all routing automatically
+
+**Disadvantages of Method B:**
+- Slightly less secure (all files potentially accessible)
+- Not the standard MVC pattern deployment
+
+**Choose Method A if you want maximum security. Choose Method B if you want simplicity and are having issues with open_basedir.**
+
+### Step 3: Configure PHP Security Settings (Only for Method A)
+
+**Skip this step if you chose Method B above.**
+
+**IMPORTANT:** After setting DocumentRoot to `/public`, you must adjust the `open_basedir` restriction:
+
+1. Website → Your Site → **Site Directory**
+2. Find the **Security** section (may need to scroll down)
+3. Look for **Open Basedir** or **防跨站设置** (Anti-cross-site setting)
+4. Change from:
+   ```
+   /www/wwwroot/yourdomain.com/public/:/tmp/
+   ```
+   To:
+   ```
+   /www/wwwroot/yourdomain.com/:/tmp/
+   ```
+   (Remove `/public` from the path - allow access to entire project directory)
+5. Click **Save**
+
+**Why this is needed:** PHP needs to access files in `vendor/`, `app/`, `config/`, and `install/` folders which are outside the `/public` directory. The `open_basedir` restriction prevents this access for security, but our application architecture requires parent directory access.
+
+### Step 4: Install PHP Extensions
 
 Go to **Software Store** → **PHP 8.0** (or higher) → **Settings** → **Install Extensions**
 
@@ -70,7 +145,7 @@ Required extensions:
 - [x] fileinfo
 - [x] zip
 
-### Step 4: Set File Permissions
+### Step 5: Set File Permissions
 
 In Terminal or SSH:
 ```bash
@@ -85,7 +160,7 @@ Or in aaPanel File Manager:
 - Right-click on `config` folder → Permissions → Set to `777`
 - Right-click on `public/uploads` folder → Permissions → Set to `777`
 
-### Step 5: Create Database
+### Step 6: Create Database
 
 1. **Database** → **Add Database**
    - Database Name: `peepit_db` (or your choice)
@@ -101,14 +176,14 @@ Or in aaPanel File Manager:
    - Database user: `peepit_user`
    - Database password: (your password)
 
-### Step 6: Configure SSL (Recommended)
+### Step 7: Configure SSL (Recommended)
 
 1. **Website** → Your Site → **SSL**
 2. Choose **Let's Encrypt** (free)
 3. Apply for certificate
 4. Enable **Force HTTPS**
 
-### Step 7: Install Composer Dependencies
+### Step 8: Install Composer Dependencies
 
 **Option A: Via SSH**
 ```bash
@@ -120,7 +195,7 @@ composer install --no-dev --optimize-autoloader
 - Install locally: `composer install --no-dev`
 - Upload entire project including `vendor/` folder
 
-### Step 8: Run Web Installer
+### Step 9: Run Web Installer
 
 1. Visit: `https://yourdomain.com/install/`
 
@@ -155,7 +230,7 @@ composer install --no-dev --optimize-autoloader
    rm -rf /www/wwwroot/yourdomain.com/install
    ```
 
-### Step 9: Access Your Site
+### Step 10: Access Your Site
 
 - **Frontend:** `https://yourdomain.com`
 - **Admin Panel:** `https://yourdomain.com/admin/login`
@@ -180,7 +255,30 @@ Website → Your Site → Site Directory
 # Change Running Directory to: /public
 ```
 
-### Issue 2: SSL Certificate Mismatch
+### Issue 2: open_basedir Restriction Error (CRITICAL)
+
+**Error:**
+```
+Warning: is_dir(): open_basedir restriction in effect. File(...) is not within the allowed path(s)
+Warning: require_once(): open_basedir restriction in effect. File(/www/wwwroot/.../vendor/autoload.php) is not within the allowed path(s)
+Fatal error: Failed opening required '.../vendor/autoload.php'
+```
+
+**Solution:**
+This happens after setting DocumentRoot to `/public`. PHP's `open_basedir` security setting prevents access to parent directories.
+
+1. Website → Your Site → **Site Directory**
+2. Scroll down to **Security** section
+3. Find **Open Basedir** (or **防跨站设置** in Chinese)
+4. Current value will be: `/www/wwwroot/yourdomain.com/public/:/tmp/`
+5. Change to: `/www/wwwroot/yourdomain.com/:/tmp/`
+   - Remove the `/public` part to allow access to parent directory
+6. Click **Save**
+7. Restart PHP-FPM or Apache
+
+**Why this happens:** The MVC architecture requires access to `vendor/`, `app/`, `config/` folders which are outside the `/public` directory. The `open_basedir` restriction must include the entire project directory.
+
+### Issue 3: SSL Certificate Mismatch
 
 **Error:**
 ```
@@ -194,7 +292,7 @@ SSL certificate does NOT include an ID which matches the server name
 4. Wait 2-3 minutes for DNS propagation
 5. Ensure domain points to correct IP
 
-### Issue 3: 500 Internal Server Error
+### Issue 4: 500 Internal Server Error
 
 **Solutions:**
 1. Check file permissions:
@@ -214,7 +312,7 @@ SSL certificate does NOT include an ID which matches the server name
    - Change to: `display_errors = On`
    - Save and restart PHP
 
-### Issue 4: Database Connection Failed
+### Issue 5: Database Connection Failed
 
 **Solution:**
 1. Verify database credentials:
@@ -233,7 +331,7 @@ SSL certificate does NOT include an ID which matches the server name
 3. Update config if needed:
    - Edit `/www/wwwroot/yourdomain.com/config/database.php`
 
-### Issue 5: File Upload Not Working
+### Issue 6: File Upload Not Working
 
 **Solution:**
 1. Check permissions:
@@ -254,7 +352,7 @@ SSL certificate does NOT include an ID which matches the server name
 3. Restart PHP-FPM:
    - Software Store → PHP → **Settings** → **Service** → Restart
 
-### Issue 6: .htaccess Not Working (Apache)
+### Issue 7: .htaccess Not Working (Apache)
 
 **Solution:**
 1. Enable mod_rewrite:
@@ -268,7 +366,7 @@ SSL certificate does NOT include an ID which matches the server name
 
 3. Restart Apache
 
-### Issue 7: Nginx 404 Errors
+### Issue 8: Nginx 404 Errors
 
 **Solution:**
 1. Website → Your Site → **Rewrite**
