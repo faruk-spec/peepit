@@ -220,6 +220,92 @@ $router->post('/admin/bottles/delete/{id}', function($id) {
     $controller->delete($id);
 });
 
+// Admin Size Management
+$router->get('/admin/sizes', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/SizeController.php';
+    $controller = new \App\Controllers\Admin\SizeController();
+    $controller->index();
+});
+
+$router->get('/admin/sizes/create', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/SizeController.php';
+    $controller = new \App\Controllers\Admin\SizeController();
+    $controller->create();
+});
+
+$router->post('/admin/sizes/store', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/SizeController.php';
+    $controller = new \App\Controllers\Admin\SizeController();
+    $controller->store();
+});
+
+$router->get('/admin/sizes/edit/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/SizeController.php';
+    $controller = new \App\Controllers\Admin\SizeController();
+    $controller->edit($id);
+});
+
+$router->post('/admin/sizes/update/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/SizeController.php';
+    $controller = new \App\Controllers\Admin\SizeController();
+    $controller->update($id);
+});
+
+$router->post('/admin/sizes/delete/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/SizeController.php';
+    $controller = new \App\Controllers\Admin\SizeController();
+    $controller->delete($id);
+});
+
+// Admin Color Management
+$router->get('/admin/colors', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/ColorController.php';
+    $controller = new \App\Controllers\Admin\ColorController();
+    $controller->index();
+});
+
+$router->get('/admin/colors/create', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/ColorController.php';
+    $controller = new \App\Controllers\Admin\ColorController();
+    $controller->create();
+});
+
+$router->post('/admin/colors/store', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/ColorController.php';
+    $controller = new \App\Controllers\Admin\ColorController();
+    $controller->store();
+});
+
+$router->get('/admin/colors/edit/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/ColorController.php';
+    $controller = new \App\Controllers\Admin\ColorController();
+    $controller->edit($id);
+});
+
+$router->post('/admin/colors/update/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/ColorController.php';
+    $controller = new \App\Controllers\Admin\ColorController();
+    $controller->update($id);
+});
+
+$router->post('/admin/colors/delete/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/ColorController.php';
+    $controller = new \App\Controllers\Admin\ColorController();
+    $controller->delete($id);
+});
+
 // Get current URL and method
 $url = $_GET['url'] ?? '/';
 $method = $_SERVER['REQUEST_METHOD'];
