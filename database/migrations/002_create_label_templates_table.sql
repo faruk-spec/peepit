@@ -1,12 +1,15 @@
 -- Migration: Create label_templates table
 -- Description: Table for storing label template designs that customers can use
 
-CREATE TABLE IF NOT EXISTS `label_templates` (
+-- Drop table if exists to ensure clean schema
+DROP TABLE IF EXISTS `label_templates`;
+
+CREATE TABLE `label_templates` (
   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `category` VARCHAR(100) DEFAULT NULL,
   `description` TEXT DEFAULT NULL,
-  `image` VARCHAR(255) DEFAULT NULL COMMENT 'Preview image filename',
+  `image` VARCHAR(255) NULL DEFAULT NULL COMMENT 'Preview image filename',
   `status` ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
