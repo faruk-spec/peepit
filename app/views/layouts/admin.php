@@ -798,7 +798,7 @@
                     <a href="<?= url('admin/notifications') ?>" class="<?= ($current_page ?? '') === 'notifications' ? 'active' : '' ?>">
                         <i class="fas fa-bell"></i>
                         <span>Notifications</span>
-                        <span id="notification-badge" class="badge badge-danger" style="display: none; margin-left: auto; background: #EF4444; color: white; padding: 2px 6px; border-radius: 10px; font-size: 11px;"></span>
+                        <span id="notification-badge" style="display: none;"></span>
                     </a>
                 </li>
                 <li>
@@ -895,10 +895,10 @@
         }
 
         // Close sidebar when clicking outside on mobile
-        const isMobile = () => window.matchMedia('(max-width: 1024px)').matches;
+        const mobileMediaQuery = window.matchMedia('(max-width: 1024px)');
         
         document.addEventListener('click', function(event) {
-            if (!isMobile()) return;
+            if (!mobileMediaQuery.matches) return;
             
             const sidebar = document.getElementById('adminSidebar');
             const toggle = document.querySelector('.mobile-menu-toggle');
