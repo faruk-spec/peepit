@@ -12,10 +12,14 @@
 // Get the request URI and remove query string
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// If accessing the installer, serve it directly
-if (strpos($requestUri, '/install') === 0) {
-    // Let Apache/PHP handle the install directory naturally
-    return false;
+// If accessing the installer directory, serve it directly
+if (strpos($requestUri, '/install/') === 0 || $requestUri === '/install') {
+    $installerFile = __DIR__ . '/install/index.php';
+    if (file_exists($installerFile)) {
+        chdir(__DIR__ . '/install');
+        require $installerFile;
+        exit;
+    }
 }
 
 // Check if the request is for a static file in the public directory

@@ -6,9 +6,8 @@
     # RewriteCond %{HTTPS} off
     # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
     
-    # Allow installer access
-    RewriteCond %{REQUEST_URI} ^/install/
-    RewriteRule ^ - [L]
+    # Block access to sensitive directories (but allow install during setup)
+    RewriteRule ^(app|config|vendor)/.*$ - [F,L]
     
     # Route everything through root index.php
     RewriteCond %{REQUEST_FILENAME} !-f
@@ -19,14 +18,7 @@
 # Block direct access to folders
 Options -Indexes
 
-# Protect sensitive files and folders
+# Protect sensitive files
 <FilesMatch "^\.">
-    Order allow,deny
-    Deny from all
+    Require all denied
 </FilesMatch>
-
-# Block access to sensitive directories
-<DirectoryMatch "^.*(app|config|vendor).*">
-    Order allow,deny
-    Deny from all
-</DirectoryMatch>
