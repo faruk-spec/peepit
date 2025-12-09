@@ -53,7 +53,7 @@
                        id="phone" 
                        name="phone" 
                        class="form-control"
-                       placeholder="+91 98765 43210"
+                       placeholder="+91 012345 6789"
                        pattern="[0-9+\s\-]+"
                        value="<?= old('phone') ?>"
                        required>
