@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS `label_templates` (
   INDEX `idx_category` (`category`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Insert some sample templates (with NULL image values explicitly)
-INSERT INTO `label_templates` (`name`, `category`, `image`, `status`) VALUES
-('Classic Label', 'Business', NULL, 'active'),
-('Modern Minimalist', 'Business', NULL, 'active'),
-('Vintage Style', 'Retro', NULL, 'active');
+-- Insert some sample templates (image will use DEFAULT NULL from table definition)
+INSERT INTO `label_templates` (`name`, `category`, `status`) VALUES
+('Classic Label', 'Business', 'active'),
+('Modern Minimalist', 'Business', 'active'),
+('Vintage Style', 'Retro', 'active');
