@@ -273,6 +273,12 @@
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease-out;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            position: relative;
+            pointer-events: auto;
         }
 
         .dropdown.open .dropdown-menu {
@@ -289,11 +295,6 @@
             transition: all 0.3s;
         }
 
-        .dropdown-toggle:hover {
-            background: rgba(14, 165, 233, 0.2);
-            color: white;
-        }
-
         .dropdown-toggle::after {
             content: '▼';
             margin-left: auto;
@@ -308,10 +309,16 @@
         .dropdown-menu a {
             padding-left: 52px !important;
             color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            pointer-events: auto;
+            border-left: 3px solid transparent;
         }
         
         .dropdown-menu a:hover {
             color: white;
+            background: rgba(14, 165, 233, 0.15);
+            border-left: 3px solid var(--primary);
         }
 
         @media (max-width: 1024px) {
