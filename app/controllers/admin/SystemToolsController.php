@@ -11,8 +11,7 @@ class SystemToolsController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->requireAuth();
-        $this->requireRole(['superadmin', 'manager']);
+        // Auth and role checking will be done in each method
     }
 
     /**
@@ -20,8 +19,11 @@ class SystemToolsController extends Controller
      */
     public function index()
     {
+        require_role('manager');
+        
         $data = [
             'title' => 'System Tools',
+            'csrf_token' => $this->generateCSRF(),
             'cache_info' => $this->getCacheInfo(),
             'log_info' => $this->getLogInfo(),
             'backup_info' => $this->getBackupInfo(),
@@ -36,8 +38,11 @@ class SystemToolsController extends Controller
      */
     public function cache()
     {
+        require_role('manager');
+        
         $data = [
             'title' => 'Cache Management',
+            'csrf_token' => $this->generateCSRF(),
             'cache_size' => $this->getCacheSize(),
             'cache_files' => $this->getCacheFiles()
         ];
@@ -50,10 +55,9 @@ class SystemToolsController extends Controller
      */
     public function clearCache()
     {
-        if (!$this->validateCSRF()) {
-            flash('error', 'Invalid request. Please try again.');
-            redirect('/admin/system-tools/cache');
-        }
+        require_role('manager');
+        
+        $this->validateCSRF();
 
         try {
             $cacheDir = __DIR__ . '/../../../storage/cache/';
@@ -80,10 +84,13 @@ class SystemToolsController extends Controller
      */
     public function logs()
     {
+        require_role('manager');
+        
         $logFile = $_GET['file'] ?? 'error.log';
         
         $data = [
             'title' => 'System Logs',
+            'csrf_token' => $this->generateCSRF(),
             'log_files' => $this->getLogFiles(),
             'current_file' => $logFile,
             'log_content' => $this->readLogFile($logFile)
@@ -97,10 +104,9 @@ class SystemToolsController extends Controller
      */
     public function clearLogs()
     {
-        if (!$this->validateCSRF()) {
-            flash('error', 'Invalid request. Please try again.');
-            redirect('/admin/system-tools/logs');
-        }
+        require_role('manager');
+        
+        $this->validateCSRF();
 
         $logFile = $_POST['log_file'] ?? 'error.log';
 
@@ -125,8 +131,11 @@ class SystemToolsController extends Controller
      */
     public function backup()
     {
+        require_role('manager');
+        
         $data = [
             'title' => 'Backup Management',
+            'csrf_token' => $this->generateCSRF(),
             'backups' => $this->getBackupList()
         ];
 
@@ -138,10 +147,9 @@ class SystemToolsController extends Controller
      */
     public function createBackup()
     {
-        if (!$this->validateCSRF()) {
-            flash('error', 'Invalid request. Please try again.');
-            redirect('/admin/system-tools/backup');
-        }
+        require_role('manager');
+        
+        $this->validateCSRF();
 
         try {
             $config = require __DIR__ . '/../../../config/config.php';
@@ -184,6 +192,8 @@ class SystemToolsController extends Controller
      */
     public function downloadBackup($filename)
     {
+        require_role('manager');
+        
         $filename = basename($filename);
         $filepath = __DIR__ . '/../../../storage/backups/' . $filename;
 
@@ -204,10 +214,9 @@ class SystemToolsController extends Controller
      */
     public function deleteBackup()
     {
-        if (!$this->validateCSRF()) {
-            flash('error', 'Invalid request. Please try again.');
-            redirect('/admin/system-tools/backup');
-        }
+        require_role('manager');
+        
+        $this->validateCSRF();
 
         $filename = $_POST['filename'] ?? '';
         $filename = basename($filename);

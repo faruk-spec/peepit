@@ -11,13 +11,15 @@ class NotificationsController extends Controller
         require_role('sales');
         
         try {
+            $userId = user_id();
+            
             // Get all notifications
             $notifications = $this->db->fetchAll(
                 "SELECT * FROM notifications 
                  WHERE user_id = ? OR user_id IS NULL
                  ORDER BY created_at DESC 
                  LIMIT 50",
-                [user()->id]
+                [$userId]
             );
             
             $csrfToken = $this->generateCSRF();
@@ -43,14 +45,15 @@ class NotificationsController extends Controller
             redirect('admin/notifications');
         }
         
-        $this->validateCSRF($_POST['csrf_token'] ?? '');
+        $this->validateCSRF();
         
         try {
             $notificationId = intval($_POST['notification_id'] ?? 0);
+            $userId = user_id();
             
             $this->db->execute(
                 "UPDATE notifications SET is_read = 1 WHERE id = ? AND user_id = ?",
-                [$notificationId, user()->id]
+                [$notificationId, $userId]
             );
             
             flash('success', 'Notification marked as read.');
@@ -70,12 +73,14 @@ class NotificationsController extends Controller
             redirect('admin/notifications');
         }
         
-        $this->validateCSRF($_POST['csrf_token'] ?? '');
+        $this->validateCSRF();
         
         try {
+            $userId = user_id();
+            
             $this->db->execute(
                 "UPDATE notifications SET is_read = 1 WHERE user_id = ? OR user_id IS NULL",
-                [user()->id]
+                [$userId]
             );
             
             flash('success', 'All notifications marked as read.');
@@ -95,14 +100,15 @@ class NotificationsController extends Controller
             redirect('admin/notifications');
         }
         
-        $this->validateCSRF($_POST['csrf_token'] ?? '');
+        $this->validateCSRF();
         
         try {
             $notificationId = intval($_POST['notification_id'] ?? 0);
+            $userId = user_id();
             
             $this->db->execute(
                 "DELETE FROM notifications WHERE id = ? AND user_id = ?",
-                [$notificationId, user()->id]
+                [$notificationId, $userId]
             );
             
             flash('success', 'Notification deleted.');
@@ -119,10 +125,12 @@ class NotificationsController extends Controller
         require_role('sales');
         
         try {
+            $userId = user_id();
+            
             $count = $this->db->fetch(
                 "SELECT COUNT(*) as count FROM notifications 
                  WHERE (user_id = ? OR user_id IS NULL) AND is_read = 0",
-                [user()->id]
+                [$userId]
             )['count'] ?? 0;
             
             header('Content-Type: application/json');
