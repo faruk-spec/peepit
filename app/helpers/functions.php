@@ -207,22 +207,40 @@ function require_role($role)
 function validate_upload($file, $maxSize = 5242880, $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'])
 {
     if (!isset($file['error']) || is_array($file['error'])) {
-        return 'Invalid file upload';
+        error_log("Invalid file upload structure");
+        return 'Invalid file upload structure';
     }
 
     if ($file['error'] !== UPLOAD_ERR_OK) {
-        return 'Upload error: ' . $file['error'];
+        $errorMessages = [
+            UPLOAD_ERR_INI_SIZE => 'File exceeds upload_max_filesize directive in php.ini',
+            UPLOAD_ERR_FORM_SIZE => 'File exceeds MAX_FILE_SIZE directive in HTML form',
+            UPLOAD_ERR_PARTIAL => 'File was only partially uploaded',
+            UPLOAD_ERR_NO_FILE => 'No file was uploaded',
+            UPLOAD_ERR_NO_TMP_DIR => 'Missing temporary folder',
+            UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
+            UPLOAD_ERR_EXTENSION => 'A PHP extension stopped the file upload',
+        ];
+        $errorMsg = isset($errorMessages[$file['error']]) 
+            ? $errorMessages[$file['error']] 
+            : 'Unknown upload error (code: ' . $file['error'] . ')';
+        error_log("Upload error: " . $errorMsg);
+        return $errorMsg;
     }
 
     if ($file['size'] > $maxSize) {
-        return 'File too large. Maximum size: ' . ($maxSize / 1048576) . 'MB';
+        $maxMB = round($maxSize / 1048576, 1);
+        $fileMB = round($file['size'] / 1048576, 1);
+        error_log("File too large: {$fileMB}MB exceeds limit of {$maxMB}MB");
+        return "File too large ({$fileMB}MB). Maximum size: {$maxMB}MB";
     }
 
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $mimeType = $finfo->file($file['tmp_name']);
 
     if (!in_array($mimeType, $allowedTypes)) {
-        return 'Invalid file type';
+        error_log("Invalid file type: {$mimeType}. Allowed: " . implode(', ', $allowedTypes));
+        return "Invalid file type ({$mimeType}). Allowed: JPG, PNG";
     }
 
     return true;
@@ -232,7 +250,22 @@ function upload_file($file, $destination)
 {
     $validation = validate_upload($file);
     if ($validation !== true) {
+        error_log("Upload validation failed: " . $validation);
         return ['error' => $validation];
+    }
+
+    // Ensure destination directory exists
+    if (!is_dir($destination)) {
+        if (!mkdir($destination, 0755, true)) {
+            error_log("Failed to create upload directory: " . $destination);
+            return ['error' => 'Upload directory does not exist and could not be created'];
+        }
+    }
+
+    // Check if directory is writable
+    if (!is_writable($destination)) {
+        error_log("Upload directory not writable: " . $destination);
+        return ['error' => 'Upload directory is not writable'];
     }
 
     $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
@@ -240,7 +273,8 @@ function upload_file($file, $destination)
     $targetPath = $destination . '/' . $filename;
 
     if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
-        return ['error' => 'Failed to move uploaded file'];
+        error_log("Failed to move uploaded file from {$file['tmp_name']} to {$targetPath}");
+        return ['error' => 'Failed to move uploaded file. Please check directory permissions.'];
     }
 
     return ['success' => true, 'filename' => $filename, 'path' => $targetPath];

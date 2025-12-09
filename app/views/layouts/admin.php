@@ -612,15 +612,20 @@
             </header>
 
             <!-- Flash Messages -->
-            <?php if (flash('success')): ?>
-                <div class="alert alert-success" style="margin: 20px 30px;">
-                    <i class="fas fa-check-circle"></i> <?= escape(flash('success')) ?>
-                </div>
-            <?php endif; ?>
-
-            <?php if (flash('error')): ?>
-                <div class="alert alert-error" style="margin: 20px 30px;">
-                    <i class="fas fa-exclamation-circle"></i> <?= escape(flash('error')) ?>
+            <?php if (has_flash()): ?>
+                <?php $flash_type = flash_type(); ?>
+                <?php $flash_message = get_flash(); ?>
+                <div class="alert alert-<?= $flash_type ?>" style="margin: 20px 30px;">
+                    <?php if ($flash_type === 'success'): ?>
+                        <i class="fas fa-check-circle"></i>
+                    <?php elseif ($flash_type === 'error'): ?>
+                        <i class="fas fa-exclamation-circle"></i>
+                    <?php elseif ($flash_type === 'warning'): ?>
+                        <i class="fas fa-exclamation-triangle"></i>
+                    <?php else: ?>
+                        <i class="fas fa-info-circle"></i>
+                    <?php endif; ?>
+                    <?= escape($flash_message) ?>
                 </div>
             <?php endif; ?>
 
