@@ -106,6 +106,11 @@ $router->post('/admin/login', function() {
 $url = $_GET['url'] ?? '/';
 $method = $_SERVER['REQUEST_METHOD'];
 
+// Normalize URL - ensure it starts with /
+if ($url !== '/' && strpos($url, '/') !== 0) {
+    $url = '/' . $url;
+}
+
 // Dispatch router
 try {
     $router->dispatch($url, $method);

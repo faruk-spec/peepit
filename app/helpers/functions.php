@@ -53,10 +53,24 @@ function generate_csrf()
 
 function url($path = '')
 {
-    $config = require __DIR__ . '/../config/app.php';
-    $baseUrl = rtrim($config['app_url'], '/');
+    // Auto-detect base URL if config not available
+    $baseUrl = '';
+    
+    $configFile = __DIR__ . '/../config/app.php';
+    if (file_exists($configFile)) {
+        $config = require $configFile;
+        $baseUrl = rtrim($config['app_url'] ?? '', '/');
+    }
+    
+    // Fallback to auto-detect from server variables
+    if (empty($baseUrl)) {
+        $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $baseUrl = $protocol . '://' . $host;
+    }
+    
     $path = ltrim($path, '/');
-    return $baseUrl . '/' . $path;
+    return empty($path) ? $baseUrl : $baseUrl . '/' . $path;
 }
 
 function redirect($url)

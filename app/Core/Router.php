@@ -33,12 +33,17 @@ class Router
 
     public function dispatch($url, $method)
     {
+        // Parse and normalize URL
         $url = parse_url($url, PHP_URL_PATH);
-        $url = rtrim($url, '/');
-        $url = $url ?: '/';
+        $url = '/' . trim($url, '/');
+        $url = ($url === '/') ? '/' : rtrim($url, '/');
 
         foreach ($this->routes as $route) {
-            $pattern = preg_replace('/\{[a-zA-Z0-9_]+\}/', '([a-zA-Z0-9_-]+)', $route['path']);
+            // Normalize route path
+            $routePath = '/' . trim($route['path'], '/');
+            $routePath = ($routePath === '/') ? '/' : rtrim($routePath, '/');
+            
+            $pattern = preg_replace('/\{[a-zA-Z0-9_]+\}/', '([a-zA-Z0-9_-]+)', $routePath);
             $pattern = '#^' . $pattern . '$#';
 
             if ($route['method'] === strtoupper($method) && preg_match($pattern, $url, $matches)) {
