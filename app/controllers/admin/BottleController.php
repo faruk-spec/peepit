@@ -51,10 +51,27 @@ class BottleController extends Controller
             if (isset($upload['success'])) {
                 $image = $upload['filename'];
             } else {
-                flash('error', $upload['error']);
+                $errorMsg = isset($upload['error']) ? $upload['error'] : 'Image upload failed';
+                flash('error', 'Image Upload Error: ' . $errorMsg);
                 set_old($_POST);
                 $this->redirect(url('admin/bottles/create'));
             }
+        } elseif (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
+            // Handle other upload errors
+            $errorMessages = [
+                UPLOAD_ERR_INI_SIZE => 'File too large (exceeds server limit)',
+                UPLOAD_ERR_FORM_SIZE => 'File too large (exceeds form limit)', 
+                UPLOAD_ERR_PARTIAL => 'File was only partially uploaded',
+                UPLOAD_ERR_NO_TMP_DIR => 'Missing temporary folder',
+                UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
+                UPLOAD_ERR_EXTENSION => 'File upload stopped by extension',
+            ];
+            $errorMsg = isset($errorMessages[$_FILES['image']['error']]) 
+                ? $errorMessages[$_FILES['image']['error']] 
+                : 'Unknown upload error (code: ' . $_FILES['image']['error'] . ')';
+            flash('error', 'Image Upload Error: ' . $errorMsg);
+            set_old($_POST);
+            $this->redirect(url('admin/bottles/create'));
         }
 
         try {
@@ -126,7 +143,26 @@ class BottleController extends Controller
                     unlink(__DIR__ . "/../../../public/uploads/bottles/{$image}");
                 }
                 $image = $upload['filename'];
+            } else {
+                $errorMsg = isset($upload['error']) ? $upload['error'] : 'Image upload failed';
+                flash('error', 'Image Upload Error: ' . $errorMsg);
+                $this->redirect(url("admin/bottles/edit/{$id}"));
             }
+        } elseif (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
+            // Handle other upload errors
+            $errorMessages = [
+                UPLOAD_ERR_INI_SIZE => 'File too large (exceeds server limit)',
+                UPLOAD_ERR_FORM_SIZE => 'File too large (exceeds form limit)',
+                UPLOAD_ERR_PARTIAL => 'File was only partially uploaded',
+                UPLOAD_ERR_NO_TMP_DIR => 'Missing temporary folder',
+                UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
+                UPLOAD_ERR_EXTENSION => 'File upload stopped by extension',
+            ];
+            $errorMsg = isset($errorMessages[$_FILES['image']['error']])
+                ? $errorMessages[$_FILES['image']['error']]
+                : 'Unknown upload error (code: ' . $_FILES['image']['error'] . ')';
+            flash('error', 'Image Upload Error: ' . $errorMsg);
+            $this->redirect(url("admin/bottles/edit/{$id}"));
         }
 
         try {

@@ -140,7 +140,7 @@ $router->get('/order/{id}', function($id) {
     require_login();
     require_once __DIR__ . '/../app/controllers/MyOrdersController.php';
     $controller = new \App\Controllers\MyOrdersController();
-    $controller->view($id);
+    $controller->viewOrder($id);
 });
 
 $router->get('/profile', function() {

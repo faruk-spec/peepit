@@ -34,7 +34,7 @@ class MyOrdersController extends Controller
         }
     }
     
-    public function view($orderId)
+    public function viewOrder($orderId)
     {
         require_login();
         

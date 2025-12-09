@@ -77,6 +77,6 @@
 <?php
 $content = ob_get_clean();
 $page_title = 'Label Templates';
-$current_page = 'bottles';
+$current_page = 'templates';
 include __DIR__ . '/../../layouts/admin.php';
 ?>
