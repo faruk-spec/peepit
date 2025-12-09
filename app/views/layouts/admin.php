@@ -392,6 +392,12 @@
                         <span>Settings</span>
                     </a>
                 </li>
+                <li>
+                    <a href="<?= url('admin/system-tools') ?>" class="<?= ($current_page ?? '') === 'system-tools' ? 'active' : '' ?>">
+                        <i class="fas fa-wrench"></i>
+                        <span>System Tools</span>
+                    </a>
+                </li>
 
                 <!-- Quick Links -->
                 <li class="menu-section">

@@ -468,6 +468,70 @@ $router->post('/admin/settings/update', function() {
     $controller->update();
 });
 
+// Admin System Tools
+$router->get('/admin/system-tools', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/SystemToolsController.php';
+    $controller = new \App\Controllers\Admin\SystemToolsController();
+    $controller->index();
+});
+
+$router->get('/admin/system-tools/cache', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/SystemToolsController.php';
+    $controller = new \App\Controllers\Admin\SystemToolsController();
+    $controller->cache();
+});
+
+$router->post('/admin/system-tools/cache/clear', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/SystemToolsController.php';
+    $controller = new \App\Controllers\Admin\SystemToolsController();
+    $controller->clearCache();
+});
+
+$router->get('/admin/system-tools/logs', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/SystemToolsController.php';
+    $controller = new \App\Controllers\Admin\SystemToolsController();
+    $controller->logs();
+});
+
+$router->post('/admin/system-tools/logs/clear', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/SystemToolsController.php';
+    $controller = new \App\Controllers\Admin\SystemToolsController();
+    $controller->clearLogs();
+});
+
+$router->get('/admin/system-tools/backup', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/SystemToolsController.php';
+    $controller = new \App\Controllers\Admin\SystemToolsController();
+    $controller->backup();
+});
+
+$router->post('/admin/system-tools/backup/create', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/SystemToolsController.php';
+    $controller = new \App\Controllers\Admin\SystemToolsController();
+    $controller->createBackup();
+});
+
+$router->get('/admin/system-tools/backup/download/{filename}', function($filename) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/SystemToolsController.php';
+    $controller = new \App\Controllers\Admin\SystemToolsController();
+    $controller->downloadBackup($filename);
+});
+
+$router->post('/admin/system-tools/backup/delete', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/SystemToolsController.php';
+    $controller = new \App\Controllers\Admin\SystemToolsController();
+    $controller->deleteBackup();
+});
+
 $router->get('/admin/settings/smtp', function() {
     require_role('superadmin');
     require_once __DIR__ . '/../app/controllers/admin/SettingsController.php';
