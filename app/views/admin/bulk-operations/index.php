@@ -22,7 +22,17 @@
                 </div>
             <?php endif; ?>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <style>
+                    @media (max-width: 768px) {
+                        .glass-card { margin-bottom: 20px; }
+                        .form-group input[type="file"] { font-size: 0.875rem; padding: 8px; }
+                        .btn { min-height: 44px; font-size: 1rem; }
+                    }
+                    @media (max-width: 480px) {
+                        .stats-row { flex-direction: column; gap: 10px; }
+                    }
+                </style>
                 <!-- Import Products -->
                 <div class="glass-card">
                     <div class="card-header" style="padding: 20px; border-bottom: 1px solid #e5e7eb;">
@@ -148,7 +158,13 @@
                     <h3>📚 Instructions & Best Practices</h3>
                 </div>
                 <div class="card-body" style="padding: 20px;">
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                        <style>
+                            @media (max-width: 768px) {
+                                .card-body h4 { font-size: 1rem; }
+                                .card-body ul { font-size: 0.875rem; padding-left: 20px; }
+                            }
+                        </style>
                         <div>
                             <h4 style="color: #0EA5E9; margin-bottom: 10px;">📥 Importing Data</h4>
                             <ul style="color: #64748b; line-height: 1.8;">

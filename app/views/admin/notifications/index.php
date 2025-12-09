@@ -11,7 +11,14 @@
 
     <div class="admin-content">
         <div class="container">
-            <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; gap: 15px; flex-wrap: wrap;">
+                <style>
+                    @media (max-width: 768px) {
+                        .page-header { flex-direction: column; align-items: flex-start; }
+                        .page-header form { width: 100%; }
+                        .page-header form button { width: 100%; min-height: 44px; }
+                    }
+                </style>
                 <div>
                     <h1>🔔 Notifications</h1>
                     <p class="text-muted">Stay updated with system activities</p>
@@ -39,6 +46,14 @@
                         <?php foreach ($notifications as $notification): ?>
                             <div class="notification-item <?= $notification['is_read'] ? 'read' : 'unread' ?>" 
                                  style="padding: 20px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: start; gap: 15px; <?= $notification['is_read'] ? 'opacity: 0.6;' : '' ?>">
+                                <style>
+                                    @media (max-width: 768px) {
+                                        .notification-item { padding: 15px !important; gap: 10px !important; flex-wrap: wrap; }
+                                        .notification-icon { font-size: 1.5rem !important; }
+                                        .notification-actions { width: 100%; justify-content: flex-end; margin-top: 10px; }
+                                        .notification-actions .btn-sm { min-width: 44px; min-height: 44px; }
+                                    }
+                                </style>
                                 
                                 <!-- Icon -->
                                 <div class="notification-icon" style="font-size: 2rem; flex-shrink: 0;">

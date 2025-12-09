@@ -5,7 +5,16 @@
     <p>Manage system cache, logs, backups, and monitor disk usage</p>
 </div>
 
-<div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px;">
+<div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px;">
+    <style>
+        @media (max-width: 768px) {
+            .glass-card { padding: 15px; }
+            .grid { gap: 15px !important; }
+        }
+        @media (max-width: 480px) {
+            .grid { grid-template-columns: 1fr !important; }
+        }
+    </style>
     <!-- Cache Info Card -->
     <div class="glass-card">
         <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
@@ -83,7 +92,15 @@
 <!-- Quick Actions -->
 <div class="glass-card">
     <h2 style="margin-bottom: 20px;">Quick Actions</h2>
-    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
+        <style>
+            @media (max-width: 768px) {
+                .btn { min-height: 50px; font-size: 1rem; }
+            }
+            @media (max-width: 480px) {
+                .grid { grid-template-columns: 1fr !important; }
+            }
+        </style>
         <a href="/admin/system-tools/cache" class="btn btn-secondary" style="display: flex; align-items: center; gap: 10px; justify-content: center;">
             <span>🗑️</span>
             <span>Manage Cache</span>
@@ -106,7 +123,14 @@
 <!-- System Information -->
 <div class="glass-card" style="margin-top: 30px;">
     <h2 style="margin-bottom: 20px;">System Information</h2>
-    <table class="table">
+    <div class="table-responsive" style="overflow-x: auto;">
+        <table class="table">
+            <style>
+                @media (max-width: 768px) {
+                    .table { font-size: 0.875rem; }
+                    .table td { padding: 10px 8px; }
+                }
+            </style>
         <tbody>
             <tr>
                 <td style="font-weight: 600;">PHP Version</td>
@@ -130,4 +154,5 @@
             </tr>
         </tbody>
     </table>
+    </div>
 </div>

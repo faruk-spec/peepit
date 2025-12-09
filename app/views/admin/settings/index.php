@@ -23,6 +23,15 @@
             <?php endif; ?>
 
             <div class="glass-card">
+                <style>
+                    @media (max-width: 768px) {
+                        .form-group { margin-bottom: 20px; }
+                        .form-group input, .form-group textarea { font-size: 1rem; padding: 12px; }
+                        .form-actions { display: flex; flex-direction: column; gap: 10px; }
+                        .form-actions .btn { width: 100%; min-height: 50px; }
+                        .settings-group h3 { font-size: 1.25rem; }
+                    }
+                </style>
                 <form method="POST" action="<?= url('admin/settings/update') ?>">
                     <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
 
@@ -59,7 +68,7 @@
                             </div>
                         <?php endforeach; ?>
 
-                        <div class="form-actions">
+                        <div class="form-actions" style="display: flex; gap: 10px;">
                             <button type="submit" class="btn btn-primary">
                                 💾 Save Settings
                             </button>

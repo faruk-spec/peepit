@@ -24,7 +24,17 @@
             <?php endif; ?>
 
             <!-- Key Metrics -->
-            <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+            <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                <style>
+                    @media (max-width: 768px) {
+                        .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 15px !important; }
+                        .stat-card { padding: 15px !important; }
+                        .stat-value { font-size: 1.5rem !important; }
+                    }
+                    @media (max-width: 480px) {
+                        .stats-grid { grid-template-columns: 1fr !important; }
+                    }
+                </style>
                 <div class="stat-card glass-card" style="padding: 20px;">
                     <div class="stat-icon" style="font-size: 2rem; margin-bottom: 10px;">📦</div>
                     <div class="stat-value" style="font-size: 2rem; font-weight: bold; color: #0EA5E9;">
@@ -71,17 +81,27 @@
             </div>
 
             <!-- Export Button -->
-            <div style="margin-bottom: 30px; text-align: right;">
-                <a href="<?= url('admin/analytics/export?format=csv') ?>" class="btn btn-primary">
+            <div style="margin-bottom: 30px; display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap;">
+                <a href="<?= url('admin/analytics/export?format=csv') ?>" class="btn btn-primary" style="min-width: 160px;">
                     📥 Export to CSV
                 </a>
-                <a href="<?= url('admin/analytics/export?format=pdf') ?>" class="btn btn-secondary" style="margin-left: 10px;">
+                <a href="<?= url('admin/analytics/export?format=pdf') ?>" class="btn btn-secondary" style="min-width: 160px;">
                     📄 Export to PDF
                 </a>
             </div>
+            <style>
+                @media (max-width: 768px) {
+                    .btn { width: 100%; margin: 0; }
+                }
+            </style>
 
             <!-- Interactive Charts Row -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 30px; margin-bottom: 30px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 30px;">
+                <style>
+                    @media (max-width: 768px) {
+                        .glass-card canvas { height: 200px !important; }
+                    }
+                </style>
                 <!-- Revenue Trend Chart -->
                 <div class="glass-card">
                     <div class="card-header" style="padding: 20px; border-bottom: 1px solid #e5e7eb;">
@@ -113,7 +133,14 @@
                 </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px;">
+                <style>
+                    .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+                    @media (max-width: 768px) {
+                        .table { font-size: 0.875rem; }
+                        .table th, .table td { padding: 8px; }
+                    }
+                </style>
                 <!-- Customer Analytics -->
                 <div class="glass-card">
                     <div class="card-header" style="padding: 20px; border-bottom: 1px solid #e5e7eb;">
@@ -121,24 +148,26 @@
                     </div>
                     <div class="card-body" style="padding: 20px;">
                         <?php if (!empty($top_customers)): ?>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Customer</th>
-                                        <th>Orders</th>
-                                        <th>Total Spent</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($top_customers as $customer): ?>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
                                         <tr>
-                                            <td><?= htmlspecialchars($customer['name']) ?></td>
-                                            <td><span class="badge badge-primary"><?= intval($customer['order_count']) ?></span></td>
-                                            <td>$<?= number_format($customer['total_spent'] ?? 0, 2) ?></td>
+                                            <th>Customer</th>
+                                            <th>Orders</th>
+                                            <th>Total Spent</th>
                                         </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($top_customers as $customer): ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($customer['name']) ?></td>
+                                                <td><span class="badge badge-primary"><?= intval($customer['order_count']) ?></span></td>
+                                                <td>$<?= number_format($customer['total_spent'] ?? 0, 2) ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         <?php else: ?>
                             <p class="text-muted text-center">No customer data available yet.</p>
                         <?php endif; ?>
@@ -152,37 +181,39 @@
                     </div>
                     <div class="card-body" style="padding: 20px;">
                         <?php if (!empty($recent_orders)): ?>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Order ID</th>
-                                        <th>Customer</th>
-                                        <th>Status</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($recent_orders as $order): ?>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
                                         <tr>
-                                            <td><a href="<?= url("admin/orders/" . intval($order['id'])) ?>">#<?= intval($order['id']) ?></a></td>
-                                            <td><?= htmlspecialchars($order['customer_name'] ?? 'N/A') ?></td>
-                                            <td>
-                                                <?php
-                                                $statusColors = [
-                                                    'pending' => 'warning',
-                                                    'processing' => 'info',
-                                                    'completed' => 'success',
-                                                    'cancelled' => 'danger'
-                                                ];
-                                                $statusColor = $statusColors[$order['status']] ?? 'secondary';
-                                                ?>
-                                                <span class="badge badge-<?= $statusColor ?>"><?= ucfirst($order['status']) ?></span>
-                                            </td>
-                                            <td>$<?= number_format($order['total_amount'] ?? 0, 2) ?></td>
+                                            <th>Order ID</th>
+                                            <th>Customer</th>
+                                            <th>Status</th>
+                                            <th>Total</th>
                                         </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($recent_orders as $order): ?>
+                                            <tr>
+                                                <td><a href="<?= url("admin/orders/" . intval($order['id'])) ?>">#<?= intval($order['id']) ?></a></td>
+                                                <td><?= htmlspecialchars($order['customer_name'] ?? 'N/A') ?></td>
+                                                <td>
+                                                    <?php
+                                                    $statusColors = [
+                                                        'pending' => 'warning',
+                                                        'processing' => 'info',
+                                                        'completed' => 'success',
+                                                        'cancelled' => 'danger'
+                                                    ];
+                                                    $statusColor = $statusColors[$order['status']] ?? 'secondary';
+                                                    ?>
+                                                    <span class="badge badge-<?= $statusColor ?>"><?= ucfirst($order['status']) ?></span>
+                                                </td>
+                                                <td>$<?= number_format($order['total_amount'] ?? 0, 2) ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         <?php else: ?>
                             <p class="text-muted text-center">No recent orders.</p>
                         <?php endif; ?>
