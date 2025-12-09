@@ -83,7 +83,7 @@ class AuthController extends Controller
 
             flash('success', 'Registration successful! Welcome to Peepit.');
             clear_old();
-            $this->redirect(url());
+            $this->redirect(url('dashboard'));
         } catch (\Exception $e) {
             flash('error', 'Registration failed. Please try again.');
             set_old($_POST);
@@ -139,7 +139,7 @@ class AuthController extends Controller
         $this->trackLogin($user['id']);
 
         flash('success', 'Welcome back!');
-        $this->redirect(url());
+        $this->redirect(url('dashboard'));
     }
 
     public function logout()

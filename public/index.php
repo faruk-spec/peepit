@@ -129,6 +129,14 @@ $router->post('/order/submit', function() {
     $controller->submit();
 });
 
+// User Dashboard
+$router->get('/dashboard', function() {
+    require_login();
+    require_once __DIR__ . '/../app/controllers/DashboardController.php';
+    $controller = new \App\Controllers\DashboardController();
+    $controller->index();
+});
+
 $router->get('/my-orders', function() {
     require_login();
     require_once __DIR__ . '/../app/controllers/MyOrdersController.php';
