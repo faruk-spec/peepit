@@ -117,7 +117,7 @@
                                         </div>
                                     </div>
                                     <div class="order-actions">
-                                        <a href="<?= url('my-orders/' . $order['id']) ?>" class="btn btn-sm btn-primary">
+                                        <a href="<?= url('order/' . $order['id']) ?>" class="btn btn-sm btn-primary">
                                             <i class="fas fa-eye"></i> View Details
                                         </a>
                                     </div>
