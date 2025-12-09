@@ -684,6 +684,28 @@ $router->post('/admin/bottles/{id}/pricing/save', function($id) {
     $controller->savePricing($id);
 });
 
+// Bottle custom pricing tier management
+$router->post('/admin/bottles/{id}/pricing/tiers/save', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/BottleController.php';
+    $controller = new \App\Controllers\Admin\BottleController();
+    $controller->savePricingTier($id);
+});
+
+$router->post('/admin/bottles/{id}/pricing/tiers/{tier_id}/update', function($id, $tier_id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/BottleController.php';
+    $controller = new \App\Controllers\Admin\BottleController();
+    $controller->updatePricingTier($id, $tier_id);
+});
+
+$router->post('/admin/bottles/{id}/pricing/tiers/{tier_id}/delete', function($id, $tier_id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/BottleController.php';
+    $controller = new \App\Controllers\Admin\BottleController();
+    $controller->deletePricingTier($id, $tier_id);
+});
+
 // Traffic Tracking Routes
 $router->get('/admin/traffic', function() {
     require_role('manager');

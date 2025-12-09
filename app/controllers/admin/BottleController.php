@@ -232,12 +232,19 @@ class BottleController extends Controller
             [$id]
         );
 
+        // Get custom pricing tiers for this bottle
+        $customTiers = $this->db->fetchAll(
+            "SELECT * FROM bottle_model_pricing WHERE bottle_model_id = ? ORDER BY min_quantity ASC",
+            [$id]
+        );
+
         $csrfToken = $this->generateCSRF();
         $this->view('admin/bottles/pricing', [
             'csrf_token' => $csrfToken,
             'bottle' => $bottle,
             'pricingTiers' => $pricingTiers,
-            'currentPricingTierId' => $currentPricing['pricing_tier_id'] ?? null
+            'currentPricingTierId' => $currentPricing['pricing_tier_id'] ?? null,
+            'customTiers' => $customTiers
         ]);
     }
 
@@ -271,6 +278,203 @@ class BottleController extends Controller
         } catch (\Exception $e) {
             error_log('Failed to assign pricing: ' . $e->getMessage());
             flash('error', 'Failed to assign pricing. Please try again.');
+        }
+
+        $this->redirect(url("admin/bottles/{$id}/pricing"));
+    }
+
+    public function savePricingTier($id)
+    {
+        require_role('manager');
+        $this->validateCSRF();
+
+        $bottleModel = new BottleModel();
+        $bottle = $bottleModel->find($id);
+
+        if (!$bottle) {
+            flash('error', 'Bottle model not found');
+            $this->redirect(url('admin/bottles'));
+        }
+
+        $minQty = (int)($_POST['min_quantity'] ?? 0);
+        $maxQty = !empty($_POST['max_quantity']) ? (int)$_POST['max_quantity'] : null;
+        $price = (float)($_POST['price_per_unit'] ?? 0);
+        $discount = (float)($_POST['discount_percent'] ?? 0);
+        $isActive = isset($_POST['is_active']) ? (int)$_POST['is_active'] : 1;
+        $validFrom = !empty($_POST['valid_from']) ? sanitize($_POST['valid_from']) : null;
+        $validUntil = !empty($_POST['valid_until']) ? sanitize($_POST['valid_until']) : null;
+
+        // Validation
+        if ($minQty < 1) {
+            flash('error', 'Minimum quantity must be at least 1');
+            $this->redirect(url("admin/bottles/{$id}/pricing"));
+        }
+
+        if ($maxQty && $maxQty <= $minQty) {
+            flash('error', 'Maximum quantity must be greater than minimum quantity');
+            $this->redirect(url("admin/bottles/{$id}/pricing"));
+        }
+
+        if ($price <= 0) {
+            flash('error', 'Price must be greater than 0');
+            $this->redirect(url("admin/bottles/{$id}/pricing"));
+        }
+
+        // Check for overlapping ranges
+        $existingTiers = $this->db->fetchAll(
+            "SELECT * FROM bottle_model_pricing WHERE bottle_model_id = ?",
+            [$id]
+        );
+
+        foreach ($existingTiers as $tier) {
+            $tierMin = (int)$tier['min_quantity'];
+            $tierMax = $tier['max_quantity'] ? (int)$tier['max_quantity'] : PHP_INT_MAX;
+            $newMax = $maxQty ?? PHP_INT_MAX;
+
+            if (($minQty >= $tierMin && $minQty <= $tierMax) || 
+                ($newMax >= $tierMin && $newMax <= $tierMax) ||
+                ($minQty <= $tierMin && $newMax >= $tierMax)) {
+                flash('error', 'Quantity range overlaps with existing tier');
+                $this->redirect(url("admin/bottles/{$id}/pricing"));
+            }
+        }
+
+        try {
+            $this->db->query(
+                "INSERT INTO bottle_model_pricing 
+                (bottle_model_id, min_quantity, max_quantity, price_per_unit, discount_percent, is_active, valid_from, valid_until) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                [$id, $minQty, $maxQty, $price, $discount, $isActive, $validFrom, $validUntil]
+            );
+
+            flash('success', 'Pricing tier added successfully');
+        } catch (\Exception $e) {
+            error_log('Failed to add pricing tier: ' . $e->getMessage());
+            flash('error', 'Failed to add pricing tier. Please try again.');
+        }
+
+        $this->redirect(url("admin/bottles/{$id}/pricing"));
+    }
+
+    public function updatePricingTier($id, $tierId)
+    {
+        require_role('manager');
+        $this->validateCSRF();
+
+        $bottleModel = new BottleModel();
+        $bottle = $bottleModel->find($id);
+
+        if (!$bottle) {
+            flash('error', 'Bottle model not found');
+            $this->redirect(url('admin/bottles'));
+        }
+
+        // Verify tier belongs to this bottle
+        $tier = $this->db->fetch(
+            "SELECT * FROM bottle_model_pricing WHERE id = ? AND bottle_model_id = ?",
+            [$tierId, $id]
+        );
+
+        if (!$tier) {
+            flash('error', 'Pricing tier not found');
+            $this->redirect(url("admin/bottles/{$id}/pricing"));
+        }
+
+        $minQty = (int)($_POST['min_quantity'] ?? 0);
+        $maxQty = !empty($_POST['max_quantity']) ? (int)$_POST['max_quantity'] : null;
+        $price = (float)($_POST['price_per_unit'] ?? 0);
+        $discount = (float)($_POST['discount_percent'] ?? 0);
+        $isActive = isset($_POST['is_active']) ? (int)$_POST['is_active'] : 1;
+        $validFrom = !empty($_POST['valid_from']) ? sanitize($_POST['valid_from']) : null;
+        $validUntil = !empty($_POST['valid_until']) ? sanitize($_POST['valid_until']) : null;
+
+        // Validation
+        if ($minQty < 1) {
+            flash('error', 'Minimum quantity must be at least 1');
+            $this->redirect(url("admin/bottles/{$id}/pricing"));
+        }
+
+        if ($maxQty && $maxQty <= $minQty) {
+            flash('error', 'Maximum quantity must be greater than minimum quantity');
+            $this->redirect(url("admin/bottles/{$id}/pricing"));
+        }
+
+        if ($price <= 0) {
+            flash('error', 'Price must be greater than 0');
+            $this->redirect(url("admin/bottles/{$id}/pricing"));
+        }
+
+        // Check for overlapping ranges (exclude current tier)
+        $existingTiers = $this->db->fetchAll(
+            "SELECT * FROM bottle_model_pricing WHERE bottle_model_id = ? AND id != ?",
+            [$id, $tierId]
+        );
+
+        foreach ($existingTiers as $existingTier) {
+            $tierMin = (int)$existingTier['min_quantity'];
+            $tierMax = $existingTier['max_quantity'] ? (int)$existingTier['max_quantity'] : PHP_INT_MAX;
+            $newMax = $maxQty ?? PHP_INT_MAX;
+
+            if (($minQty >= $tierMin && $minQty <= $tierMax) || 
+                ($newMax >= $tierMin && $newMax <= $tierMax) ||
+                ($minQty <= $tierMin && $newMax >= $tierMax)) {
+                flash('error', 'Quantity range overlaps with existing tier');
+                $this->redirect(url("admin/bottles/{$id}/pricing"));
+            }
+        }
+
+        try {
+            $this->db->query(
+                "UPDATE bottle_model_pricing 
+                SET min_quantity = ?, max_quantity = ?, price_per_unit = ?, discount_percent = ?, 
+                    is_active = ?, valid_from = ?, valid_until = ?
+                WHERE id = ? AND bottle_model_id = ?",
+                [$minQty, $maxQty, $price, $discount, $isActive, $validFrom, $validUntil, $tierId, $id]
+            );
+
+            flash('success', 'Pricing tier updated successfully');
+        } catch (\Exception $e) {
+            error_log('Failed to update pricing tier: ' . $e->getMessage());
+            flash('error', 'Failed to update pricing tier. Please try again.');
+        }
+
+        $this->redirect(url("admin/bottles/{$id}/pricing"));
+    }
+
+    public function deletePricingTier($id, $tierId)
+    {
+        require_role('manager');
+        $this->validateCSRF();
+
+        $bottleModel = new BottleModel();
+        $bottle = $bottleModel->find($id);
+
+        if (!$bottle) {
+            flash('error', 'Bottle model not found');
+            $this->redirect(url('admin/bottles'));
+        }
+
+        // Verify tier belongs to this bottle
+        $tier = $this->db->fetch(
+            "SELECT * FROM bottle_model_pricing WHERE id = ? AND bottle_model_id = ?",
+            [$tierId, $id]
+        );
+
+        if (!$tier) {
+            flash('error', 'Pricing tier not found');
+            $this->redirect(url("admin/bottles/{$id}/pricing"));
+        }
+
+        try {
+            $this->db->query(
+                "DELETE FROM bottle_model_pricing WHERE id = ? AND bottle_model_id = ?",
+                [$tierId, $id]
+            );
+
+            flash('success', 'Pricing tier deleted successfully');
+        } catch (\Exception $e) {
+            error_log('Failed to delete pricing tier: ' . $e->getMessage());
+            flash('error', 'Failed to delete pricing tier. Please try again.');
         }
 
         $this->redirect(url("admin/bottles/{$id}/pricing"));
