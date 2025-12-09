@@ -47,14 +47,32 @@
             
             <div class="form-group">
                 <label for="phone">
-                    <i class="fas fa-phone"></i> Phone Number <span class="text-muted">(Optional)</span>
+                    <i class="fas fa-phone"></i> Phone Number
                 </label>
                 <input type="tel" 
                        id="phone" 
                        name="phone" 
                        class="form-control"
-                       placeholder="+1 (555) 123-4567"
-                       value="<?= old('phone') ?>">
+                       placeholder="+91 98765 43210"
+                       pattern="[0-9+\s\-]+"
+                       value="<?= old('phone') ?>"
+                       required>
+            </div>
+            
+            <div class="form-group">
+                <label for="pincode">
+                    <i class="fas fa-map-marker-alt"></i> Pincode
+                </label>
+                <input type="text" 
+                       id="pincode" 
+                       name="pincode" 
+                       class="form-control"
+                       placeholder="Enter 6-digit pincode"
+                       pattern="[0-9]{6}"
+                       maxlength="6"
+                       value="<?= old('pincode') ?>"
+                       required>
+                <small class="text-muted" style="display: block; margin-top: 4px; font-size: 12px;">Must be 6 digits</small>
             </div>
             
             <div class="form-group">
@@ -118,13 +136,26 @@
         background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
         min-height: 100vh;
         display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
+        flex-direction: column;
+        overflow-x: hidden;
     }
     
-    nav, footer {
+    body > .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        padding-top: 80px;
+    }
+    
+    footer {
         display: none !important;
+    }
+    
+    nav {
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
     
     .auth-container {
@@ -133,6 +164,7 @@
         max-width: 500px;
         padding: 20px;
         z-index: 10;
+        margin: 0 auto;
     }
     
     .auth-card {

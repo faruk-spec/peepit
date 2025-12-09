@@ -72,13 +72,26 @@
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         min-height: 100vh;
         display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
+        flex-direction: column;
+        overflow-x: hidden;
     }
     
-    nav, footer {
+    body > .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        padding-top: 80px;
+    }
+    
+    footer {
         display: none !important;
+    }
+    
+    nav {
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
     
     .auth-container {
@@ -87,6 +100,7 @@
         max-width: 480px;
         padding: 20px;
         z-index: 10;
+        margin: 0 auto;
     }
     
     .auth-card {

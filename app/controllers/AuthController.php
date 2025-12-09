@@ -64,8 +64,8 @@ class AuthController extends Controller
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         try {
             $userId = $this->db->query(
-                "INSERT INTO users (name, email, phone, password, role) VALUES (?, ?, ?, ?, 'user')",
-                [$name, $email, $phone, $hashedPassword]
+                "INSERT INTO users (name, email, phone, pincode, password, role) VALUES (?, ?, ?, ?, ?, 'user')",
+                [$name, $email, $phone, $pincode, $hashedPassword]
             );
 
             // Track analytics
