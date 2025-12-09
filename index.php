@@ -54,6 +54,13 @@ if (is_file($publicPath) && $requestUri !== '/index.php') {
     exit;
 }
 
-// For all other requests, change to public directory and load public/index.php
+// For all other requests, ensure URL parameter is set and load public/index.php
+// If URL parameter is not set, extract it from REQUEST_URI
+if (!isset($_GET['url'])) {
+    $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $url = ltrim($url, '/');
+    $_GET['url'] = $url ?: '/';
+}
+
 chdir(__DIR__ . '/public');
 require __DIR__ . '/public/index.php';

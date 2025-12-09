@@ -17,7 +17,7 @@
     # Route everything through root index.php
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ index.php [L,QSA]
+    RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
 </IfModule>
 
 # Block direct access to folders
