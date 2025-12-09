@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `label_templates` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Insert some sample templates
-INSERT INTO `label_templates` (`name`, `category`, `description`, `status`) VALUES
-('Classic Label', 'Business', 'Traditional business label design', 'active'),
-('Modern Minimalist', 'Business', 'Clean and simple modern design', 'active'),
-('Vintage Style', 'Retro', 'Classic vintage label design', 'active');
+INSERT INTO `label_templates` (`name`, `category`, `status`) VALUES
+('Classic Label', 'Business', 'active'),
+('Modern Minimalist', 'Business', 'active'),
+('Vintage Style', 'Retro', 'active');
