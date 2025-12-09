@@ -15,7 +15,13 @@
             <div class="navbar-brand">
                 <a href="<?= url() ?>"><i class="fas fa-wine-bottle"></i> Peepit</a>
             </div>
-            <ul class="navbar-menu">
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <ul class="navbar-menu" id="navbarMenu">
                 <li><a href="<?= url() ?>"><i class="fas fa-home"></i> Home</a></li>
                 <li><a href="<?= url('order/start') ?>"><i class="fas fa-shopping-cart"></i> Order Now</a></li>
                 <?php if (is_logged_in()): ?>
@@ -91,6 +97,32 @@
     </footer>
 
     <script src="<?= url('js/app.js') ?>"></script>
+    <script>
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const navbarMenu = document.getElementById('navbarMenu');
+            
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    navbarMenu.classList.toggle('active');
+                    this.querySelector('i').classList.toggle('fa-bars');
+                    this.querySelector('i').classList.toggle('fa-times');
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (!event.target.closest('.navbar')) {
+                        navbarMenu.classList.remove('active');
+                        if (mobileMenuToggle.querySelector('i')) {
+                            mobileMenuToggle.querySelector('i').classList.add('fa-bars');
+                            mobileMenuToggle.querySelector('i').classList.remove('fa-times');
+                        }
+                    }
+                });
+            }
+        });
+    </script>
     <?= $scripts ?? '' ?>
 </body>
 </html>
