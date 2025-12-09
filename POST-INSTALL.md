@@ -158,18 +158,29 @@ Failed to open stream: No such file or directory
 ```
 
 **Cause:**
-- Configuration file missing
-- OR wrong DocumentRoot setting
+- Configuration files missing (installer not completed or failed)
+- Installation completed before latest fix was applied
 
 **Solution:**
-1. Verify config file exists:
+1. Verify config files exist:
    ```bash
-   ls -la /www/wwwroot/peepit.mymultibranch.com/config/database.php
+   ls -la /www/wwwroot/peepit.mymultibranch.com/config/
    ```
+   Should show: `database.php`, `app.php`, `smtp.php`
    
-2. If missing, re-run installer at `/install/`
+2. If `app.php` is missing but `database.php` exists:
+   ```bash
+   cd /www/wwwroot/peepit.mymultibranch.com
+   git pull origin copilot/add-web-installer-setup
+   # Then delete install/ and re-run installer
+   rm -rf install/
+   git checkout origin/copilot/add-web-installer-setup -- install/
+   # Visit /install/ in browser and complete steps 1-6
+   ```
 
-3. Ensure DocumentRoot is set correctly (use Method 1 or Method 2 above)
+3. If all config files are missing, re-run installer at `/install/`
+
+4. After reinstallation, ensure DocumentRoot is set correctly (use Method 1 or Method 2 above)
 
 ---
 

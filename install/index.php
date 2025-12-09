@@ -134,6 +134,26 @@ if ($step == 5 && isset($_SESSION['installer'])) {
 
             file_put_contents(__DIR__ . '/../config/database.php', $configContent);
 
+            // Create app.php config if it doesn't exist
+            if (!file_exists(__DIR__ . '/../config/app.php')) {
+                $appUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
+                $appConfig = "<?php\nreturn [\n";
+                $appConfig .= "    'app_name' => 'Peepit',\n";
+                $appConfig .= "    'app_url' => " . var_export($appUrl, true) . ",\n";
+                $appConfig .= "    'timezone' => 'Asia/Kolkata',\n";
+                $appConfig .= "    'currency' => '₹',\n";
+                $appConfig .= "    'force_https' => " . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'true' : 'false') . ",\n";
+                $appConfig .= "    'session_lifetime' => 7200, // 2 hours\n";
+                $appConfig .= "    'max_upload_size' => 5242880, // 5MB in bytes\n";
+                $appConfig .= "    'allowed_image_types' => ['image/jpeg', 'image/png', 'image/jpg'],\n";
+                $appConfig .= "    'webmail_url' => 'https://webmail.yourdomain.com',\n";
+                $appConfig .= "    'whatsapp_number' => '+919876543210',\n";
+                $appConfig .= "    'contact_email' => 'contact@yourdomain.com',\n";
+                $appConfig .= "    'contact_phone' => '+919876543210',\n";
+                $appConfig .= "];\n";
+                file_put_contents(__DIR__ . '/../config/app.php', $appConfig);
+            }
+
             // Copy SMTP config example
             if (!file_exists(__DIR__ . '/../config/smtp.php')) {
                 copy(__DIR__ . '/../config/smtp.example.php', __DIR__ . '/../config/smtp.php');
