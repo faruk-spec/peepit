@@ -306,6 +306,28 @@ $router->post('/admin/colors/delete/{id}', function($id) {
     $controller->delete($id);
 });
 
+// Admin Order Management
+$router->get('/admin/orders', function() {
+    require_role('sales');
+    require_once __DIR__ . '/../app/controllers/admin/OrderManagementController.php';
+    $controller = new \App\Controllers\Admin\OrderManagementController();
+    $controller->index();
+});
+
+$router->get('/admin/orders/view/{id}', function($id) {
+    require_role('sales');
+    require_once __DIR__ . '/../app/controllers/admin/OrderManagementController.php';
+    $controller = new \App\Controllers\Admin\OrderManagementController();
+    $controller->view($id);
+});
+
+$router->post('/admin/orders/update-status/{id}', function($id) {
+    require_role('sales');
+    require_once __DIR__ . '/../app/controllers/admin/OrderManagementController.php';
+    $controller = new \App\Controllers\Admin\OrderManagementController();
+    $controller->updateStatus($id);
+});
+
 // Get current URL and method
 $url = $_GET['url'] ?? '/';
 $method = $_SERVER['REQUEST_METHOD'];
