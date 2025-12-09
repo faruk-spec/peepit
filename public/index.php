@@ -826,6 +826,49 @@ $router->get('/admin/traffic/retention', function() {
     $controller->retention();
 });
 
+// Admin Pages Management (CMS)
+$router->get('/admin/pages', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/PagesController.php';
+    $controller = new \App\Controllers\Admin\PagesController();
+    $controller->index();
+});
+
+$router->get('/admin/pages/create', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/PagesController.php';
+    $controller = new \App\Controllers\Admin\PagesController();
+    $controller->create();
+});
+
+$router->post('/admin/pages/store', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/PagesController.php';
+    $controller = new \App\Controllers\Admin\PagesController();
+    $controller->store();
+});
+
+$router->get('/admin/pages/edit/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/PagesController.php';
+    $controller = new \App\Controllers\Admin\PagesController();
+    $controller->edit($id);
+});
+
+$router->post('/admin/pages/update/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/PagesController.php';
+    $controller = new \App\Controllers\Admin\PagesController();
+    $controller->update($id);
+});
+
+$router->post('/admin/pages/delete', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/PagesController.php';
+    $controller = new \App\Controllers\Admin\PagesController();
+    $controller->delete();
+});
+
 // Get current URL and method
 $url = $_GET['url'] ?? '/';
 $method = $_SERVER['REQUEST_METHOD'];

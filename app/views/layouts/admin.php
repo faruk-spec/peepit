@@ -540,6 +540,17 @@
                     </a>
                 </li>
 
+                <!-- CMS Section -->
+                <li class="menu-section">
+                    <div class="menu-section-title">Content Management</div>
+                </li>
+                <li>
+                    <a href="<?= url('admin/pages') ?>" class="<?= ($current_page ?? '') === 'pages' ? 'active' : '' ?>">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Pages</span>
+                    </a>
+                </li>
+
                 <!-- System Section -->
                 <li class="menu-section">
                     <div class="menu-section-title">System</div>
