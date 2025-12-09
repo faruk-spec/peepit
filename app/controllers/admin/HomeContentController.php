@@ -64,16 +64,16 @@ class HomeContentController extends Controller
                 $content = trim($value);
                 
                 // Update or insert the section
-                $existing = $this->db->fetchOne("SELECT id FROM home_content WHERE section = ?", [$key]);
+                $existing = $this->db->fetch("SELECT id FROM home_content WHERE section = ?", [$key]);
                 
                 if ($existing) {
-                    $this->db->execute("
+                    $this->db->query("
                         UPDATE home_content 
                         SET content = ?, updated_by = ?
                         WHERE section = ?
                     ", [$content, $userId, $key]);
                 } else {
-                    $this->db->execute("
+                    $this->db->query("
                         INSERT INTO home_content (section, content, updated_by)
                         VALUES (?, ?, ?)
                     ", [$key, $content, $userId]);
@@ -128,7 +128,7 @@ class HomeContentController extends Controller
             $userId = $_SESSION['user_id'] ?? null;
             $defaultContent = $defaults[$section];
 
-            $this->db->execute("
+            $this->db->query("
                 UPDATE home_content 
                 SET content = ?, updated_by = ?
                 WHERE section = ?

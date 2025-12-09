@@ -23,27 +23,27 @@ class DashboardController extends Controller
             ];
             
             // Total orders count
-            $orderCount = $this->db->fetchOne("
+            $orderCount = $this->db->fetch("
                 SELECT COUNT(*) as count FROM orders WHERE user_id = ?
             ", [$userId]);
             $stats['total_orders'] = $orderCount['count'] ?? 0;
             
             // Pending orders (not completed)
-            $pendingCount = $this->db->fetchOne("
+            $pendingCount = $this->db->fetch("
                 SELECT COUNT(*) as count FROM orders 
                 WHERE user_id = ? AND status NOT IN ('completed', 'cancelled')
             ", [$userId]);
             $stats['pending_orders'] = $pendingCount['count'] ?? 0;
             
             // Completed orders
-            $completedCount = $this->db->fetchOne("
+            $completedCount = $this->db->fetch("
                 SELECT COUNT(*) as count FROM orders 
                 WHERE user_id = ? AND status = 'completed'
             ", [$userId]);
             $stats['completed_orders'] = $completedCount['count'] ?? 0;
             
             // Total amount spent
-            $totalSpent = $this->db->fetchOne("
+            $totalSpent = $this->db->fetch("
                 SELECT SUM(total_amount) as total FROM orders 
                 WHERE user_id = ? AND status != 'cancelled'
             ", [$userId]);

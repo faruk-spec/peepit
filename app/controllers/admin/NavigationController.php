@@ -100,7 +100,7 @@ class NavigationController extends Controller
         }
 
         try {
-            $this->db->execute("
+            $this->db->query("
                 INSERT INTO navigation_items (parent_id, label, url, target, icon, visible_to, `order`, status)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ", [$parent_id, $label, $url, $target, $icon, $visible_to, $order, $status]);
@@ -122,7 +122,7 @@ class NavigationController extends Controller
         require_role('manager');
         
         try {
-            $item = $this->db->fetchOne("SELECT * FROM navigation_items WHERE id = ?", [$id]);
+            $item = $this->db->fetch("SELECT * FROM navigation_items WHERE id = ?", [$id]);
             
             if (!$item) {
                 flash('error', 'Navigation item not found.');
@@ -187,7 +187,7 @@ class NavigationController extends Controller
         }
 
         try {
-            $this->db->execute("
+            $this->db->query("
                 UPDATE navigation_items 
                 SET parent_id = ?, label = ?, url = ?, target = ?, icon = ?, visible_to = ?, `order` = ?, status = ?
                 WHERE id = ?
@@ -214,14 +214,14 @@ class NavigationController extends Controller
 
         try {
             // Check if item has children
-            $children = $this->db->fetchOne("SELECT COUNT(*) as count FROM navigation_items WHERE parent_id = ?", [$id]);
+            $children = $this->db->fetch("SELECT COUNT(*) as count FROM navigation_items WHERE parent_id = ?", [$id]);
             
             if ($children['count'] > 0) {
                 flash('error', 'Cannot delete navigation item with sub-items. Delete children first.');
                 redirect('/admin/navigation');
             }
 
-            $this->db->execute("DELETE FROM navigation_items WHERE id = ?", [$id]);
+            $this->db->query("DELETE FROM navigation_items WHERE id = ?", [$id]);
             flash('success', 'Navigation item deleted successfully!');
         } catch (\Exception $e) {
             error_log('Navigation delete error: ' . $e->getMessage());
@@ -253,7 +253,7 @@ class NavigationController extends Controller
                 $id = intval($item['id']);
                 $order = intval($item['order']);
                 
-                $this->db->execute("UPDATE navigation_items SET `order` = ? WHERE id = ?", [$order, $id]);
+                $this->db->query("UPDATE navigation_items SET `order` = ? WHERE id = ?", [$order, $id]);
             }
 
             $this->json(['success' => true, 'message' => 'Navigation order updated successfully']);

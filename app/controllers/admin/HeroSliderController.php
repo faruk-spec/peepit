@@ -111,7 +111,7 @@ class HeroSliderController extends Controller
             }
 
             // Insert into database
-            $this->db->execute("
+            $this->db->query("
                 INSERT INTO hero_slides (title, description, image, image_alt, button_text, button_url, `order`, status)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ", [$title, $description, $filename, $image_alt, $button_text, $button_url, $order, $status]);
@@ -139,7 +139,7 @@ class HeroSliderController extends Controller
         require_role('manager');
         
         try {
-            $slide = $this->db->fetchOne("SELECT * FROM hero_slides WHERE id = ?", [$id]);
+            $slide = $this->db->fetch("SELECT * FROM hero_slides WHERE id = ?", [$id]);
             
             if (!$slide) {
                 flash('error', 'Hero slide not found.');
@@ -170,7 +170,7 @@ class HeroSliderController extends Controller
 
         try {
             // Get existing slide
-            $slide = $this->db->fetchOne("SELECT * FROM hero_slides WHERE id = ?", [$id]);
+            $slide = $this->db->fetch("SELECT * FROM hero_slides WHERE id = ?", [$id]);
             
             if (!$slide) {
                 flash('error', 'Hero slide not found.');
@@ -226,7 +226,7 @@ class HeroSliderController extends Controller
             }
 
             // Update database
-            $this->db->execute("
+            $this->db->query("
                 UPDATE hero_slides 
                 SET title = ?, description = ?, image = ?, image_alt = ?, button_text = ?, button_url = ?, `order` = ?, status = ?
                 WHERE id = ?
@@ -253,7 +253,7 @@ class HeroSliderController extends Controller
 
         try {
             // Get slide to delete image
-            $slide = $this->db->fetchOne("SELECT * FROM hero_slides WHERE id = ?", [$id]);
+            $slide = $this->db->fetch("SELECT * FROM hero_slides WHERE id = ?", [$id]);
             
             if ($slide) {
                 // Delete image file
@@ -263,7 +263,7 @@ class HeroSliderController extends Controller
                 }
                 
                 // Delete from database
-                $this->db->execute("DELETE FROM hero_slides WHERE id = ?", [$id]);
+                $this->db->query("DELETE FROM hero_slides WHERE id = ?", [$id]);
                 flash('success', 'Hero slide deleted successfully!');
             } else {
                 flash('error', 'Hero slide not found.');

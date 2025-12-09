@@ -85,7 +85,7 @@ class PagesController extends Controller
         }
 
         // Check if slug already exists
-        $existing = $this->db->fetchOne("SELECT id FROM pages WHERE slug = ?", [$slug]);
+        $existing = $this->db->fetch("SELECT id FROM pages WHERE slug = ?", [$slug]);
         if ($existing) {
             flash('error', 'A page with this slug already exists.');
             redirect('/admin/pages/create');
@@ -94,7 +94,7 @@ class PagesController extends Controller
         try {
             $userId = $_SESSION['user_id'] ?? null;
             
-            $this->db->execute("
+            $this->db->query("
                 INSERT INTO pages (title, slug, content, meta_title, meta_description, status, created_by)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             ", [$title, $slug, $content, $meta_title, $meta_description, $status, $userId]);
@@ -116,7 +116,7 @@ class PagesController extends Controller
         require_role('manager');
         
         try {
-            $page = $this->db->fetchOne("SELECT * FROM pages WHERE id = ?", [$id]);
+            $page = $this->db->fetch("SELECT * FROM pages WHERE id = ?", [$id]);
             
             if (!$page) {
                 flash('error', 'Page not found.');
@@ -165,14 +165,14 @@ class PagesController extends Controller
         }
 
         // Check if slug already exists (excluding current page)
-        $existing = $this->db->fetchOne("SELECT id FROM pages WHERE slug = ? AND id != ?", [$slug, $id]);
+        $existing = $this->db->fetch("SELECT id FROM pages WHERE slug = ? AND id != ?", [$slug, $id]);
         if ($existing) {
             flash('error', 'A page with this slug already exists.');
             redirect('/admin/pages/edit/' . $id);
         }
 
         try {
-            $this->db->execute("
+            $this->db->query("
                 UPDATE pages 
                 SET title = ?, slug = ?, content = ?, meta_title = ?, meta_description = ?, status = ?
                 WHERE id = ?
@@ -198,7 +198,7 @@ class PagesController extends Controller
         $id = $_POST['id'] ?? 0;
 
         try {
-            $this->db->execute("DELETE FROM pages WHERE id = ?", [$id]);
+            $this->db->query("DELETE FROM pages WHERE id = ?", [$id]);
             flash('success', 'Page deleted successfully!');
         } catch (\Exception $e) {
             error_log('Page delete error: ' . $e->getMessage());
