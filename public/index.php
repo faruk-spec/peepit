@@ -453,6 +453,85 @@ $router->get('/admin/analytics', function() {
     $controller->index();
 });
 
+$router->get('/admin/analytics/export', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/AnalyticsController.php';
+    $controller = new \App\Controllers\Admin\AnalyticsController();
+    $controller->export();
+});
+
+// Admin Bulk Operations
+$router->get('/admin/bulk-operations', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/BulkOperationsController.php';
+    $controller = new \App\Controllers\Admin\BulkOperationsController();
+    $controller->index();
+});
+
+$router->post('/admin/bulk-operations/import-products', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/BulkOperationsController.php';
+    $controller = new \App\Controllers\Admin\BulkOperationsController();
+    $controller->importProducts();
+});
+
+$router->get('/admin/bulk-operations/export-products', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/BulkOperationsController.php';
+    $controller = new \App\Controllers\Admin\BulkOperationsController();
+    $controller->exportProducts();
+});
+
+$router->get('/admin/bulk-operations/export-orders', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/BulkOperationsController.php';
+    $controller = new \App\Controllers\Admin\BulkOperationsController();
+    $controller->exportOrders();
+});
+
+$router->get('/admin/bulk-operations/export-customers', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/BulkOperationsController.php';
+    $controller = new \App\Controllers\Admin\BulkOperationsController();
+    $controller->exportCustomers();
+});
+
+// Admin Notifications
+$router->get('/admin/notifications', function() {
+    require_role('sales');
+    require_once __DIR__ . '/../app/controllers/admin/NotificationsController.php';
+    $controller = new \App\Controllers\Admin\NotificationsController();
+    $controller->index();
+});
+
+$router->post('/admin/notifications/mark-as-read', function() {
+    require_role('sales');
+    require_once __DIR__ . '/../app/controllers/admin/NotificationsController.php';
+    $controller = new \App\Controllers\Admin\NotificationsController();
+    $controller->markAsRead();
+});
+
+$router->post('/admin/notifications/mark-all-read', function() {
+    require_role('sales');
+    require_once __DIR__ . '/../app/controllers/admin/NotificationsController.php';
+    $controller = new \App\Controllers\Admin\NotificationsController();
+    $controller->markAllAsRead();
+});
+
+$router->post('/admin/notifications/delete', function() {
+    require_role('sales');
+    require_once __DIR__ . '/../app/controllers/admin/NotificationsController.php';
+    $controller = new \App\Controllers\Admin\NotificationsController();
+    $controller->delete();
+});
+
+$router->get('/admin/notifications/unread-count', function() {
+    require_role('sales');
+    require_once __DIR__ . '/../app/controllers/admin/NotificationsController.php';
+    $controller = new \App\Controllers\Admin\NotificationsController();
+    $controller->getUnreadCount();
+});
+
 // Admin Settings
 $router->get('/admin/settings', function() {
     require_role('superadmin');

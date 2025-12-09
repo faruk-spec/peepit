@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analytics - Admin Panel</title>
     <link rel="stylesheet" href="<?= url('css/style.css') ?>">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
     <?php require_once __DIR__ . '/../../layouts/admin.php'; ?>
@@ -69,34 +70,77 @@
                 </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
-                <!-- Top Products -->
+            <!-- Export Button -->
+            <div style="margin-bottom: 30px; text-align: right;">
+                <a href="<?= url('admin/analytics/export?format=csv') ?>" class="btn btn-primary">
+                    📥 Export to CSV
+                </a>
+                <a href="<?= url('admin/analytics/export?format=pdf') ?>" class="btn btn-secondary" style="margin-left: 10px;">
+                    📄 Export to PDF
+                </a>
+            </div>
+
+            <!-- Interactive Charts Row -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 30px; margin-bottom: 30px;">
+                <!-- Revenue Trend Chart -->
                 <div class="glass-card">
                     <div class="card-header" style="padding: 20px; border-bottom: 1px solid #e5e7eb;">
-                        <h3>🏆 Top Selling Products</h3>
+                        <h3>💰 Revenue Trend</h3>
                     </div>
                     <div class="card-body" style="padding: 20px;">
-                        <?php if (!empty($top_products)): ?>
+                        <canvas id="revenueTrendChart" height="300"></canvas>
+                    </div>
+                </div>
+
+                <!-- Order Volume Chart -->
+                <div class="glass-card">
+                    <div class="card-header" style="padding: 20px; border-bottom: 1px solid #e5e7eb;">
+                        <h3>📦 Order Volume</h3>
+                    </div>
+                    <div class="card-body" style="padding: 20px;">
+                        <canvas id="orderVolumeChart" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Products Chart -->
+            <div class="glass-card" style="margin-bottom: 30px;">
+                <div class="card-header" style="padding: 20px; border-bottom: 1px solid #e5e7eb;">
+                    <h3>🏆 Top Selling Products</h3>
+                </div>
+                <div class="card-body" style="padding: 20px;">
+                    <canvas id="topProductsChart" height="100"></canvas>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
+                <!-- Customer Analytics -->
+                <div class="glass-card">
+                    <div class="card-header" style="padding: 20px; border-bottom: 1px solid #e5e7eb;">
+                        <h3>👥 Top Customers</h3>
+                    </div>
+                    <div class="card-body" style="padding: 20px;">
+                        <?php if (!empty($top_customers)): ?>
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Product</th>
+                                        <th>Customer</th>
                                         <th>Orders</th>
-                                        <th>Quantity</th>
+                                        <th>Total Spent</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($top_products as $product): ?>
+                                    <?php foreach ($top_customers as $customer): ?>
                                         <tr>
-                                            <td><?= htmlspecialchars($product['name']) ?></td>
-                                            <td><span class="badge badge-primary"><?= intval($product['order_count']) ?></span></td>
-                                            <td><span class="badge badge-secondary"><?= intval($product['total_quantity']) ?></span></td>
+                                            <td><?= htmlspecialchars($customer['name']) ?></td>
+                                            <td><span class="badge badge-primary"><?= intval($customer['order_count']) ?></span></td>
+                                            <td>$<?= number_format($customer['total_spent'] ?? 0, 2) ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
                         <?php else: ?>
-                            <p class="text-muted text-center">No sales data available yet.</p>
+                            <p class="text-muted text-center">No customer data available yet.</p>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -145,37 +189,122 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Monthly Trend -->
-            <?php if (!empty($monthly_trend)): ?>
-                <div class="glass-card" style="margin-top: 30px;">
-                    <div class="card-header" style="padding: 20px; border-bottom: 1px solid #e5e7eb;">
-                        <h3>📈 Monthly Trend (Last 6 Months)</h3>
-                    </div>
-                    <div class="card-body" style="padding: 20px;">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Month</th>
-                                    <th>Orders</th>
-                                    <th>Revenue</th>
-                                    <th>Avg Order Value</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($monthly_trend as $trend): ?>
-                                    <tr>
-                                        <td><?= date('F Y', strtotime($trend['month'] . '-01')) ?></td>
-                                        <td><span class="badge badge-primary"><?= $trend['order_count'] ?></span></td>
-                                        <td>$<?= number_format($trend['revenue'], 2) ?></td>
-                                        <td>$<?= $trend['order_count'] > 0 ? number_format($trend['revenue'] / $trend['order_count'], 2) : '0.00' ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            <?php endif; ?>
+    <!-- Chart.js Scripts -->
+    <script>
+        // Revenue Trend Chart
+        <?php if (!empty($monthly_trend)): ?>
+        const revenueTrendCtx = document.getElementById('revenueTrendChart').getContext('2d');
+        new Chart(revenueTrendCtx, {
+            type: 'line',
+            data: {
+                labels: [<?php echo implode(',', array_map(function($t) { return '"' . date('M Y', strtotime($t['month'] . '-01')) . '"'; }, $monthly_trend)); ?>],
+                datasets: [{
+                    label: 'Revenue ($)',
+                    data: [<?php echo implode(',', array_column($monthly_trend, 'revenue')); ?>],
+                    borderColor: '#10B981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Order Volume Chart
+        const orderVolumeCtx = document.getElementById('orderVolumeChart').getContext('2d');
+        new Chart(orderVolumeCtx, {
+            type: 'bar',
+            data: {
+                labels: [<?php echo implode(',', array_map(function($t) { return '"' . date('M Y', strtotime($t['month'] . '-01')) . '"'; }, $monthly_trend)); ?>],
+                datasets: [{
+                    label: 'Orders',
+                    data: [<?php echo implode(',', array_column($monthly_trend, 'order_count')); ?>],
+                    backgroundColor: '#0EA5E9',
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+        <?php endif; ?>
+
+        // Top Products Chart
+        <?php if (!empty($top_products)): ?>
+        const topProductsCtx = document.getElementById('topProductsChart').getContext('2d');
+        new Chart(topProductsCtx, {
+            type: 'bar',
+            data: {
+                labels: [<?php echo implode(',', array_map(function($p) { return '"' . htmlspecialchars($p['name']) . '"'; }, $top_products)); ?>],
+                datasets: [{
+                    label: 'Orders',
+                    data: [<?php echo implode(',', array_map(function($p) { return intval($p['order_count']); }, $top_products)); ?>],
+                    backgroundColor: [
+                        '#0EA5E9',
+                        '#10B981',
+                        '#F59E0B',
+                        '#8B5CF6',
+                        '#EF4444'
+                    ],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+        <?php endif; ?>
+    </script>
         </div>
     </div>
 </body>

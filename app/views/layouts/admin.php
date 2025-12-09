@@ -387,6 +387,19 @@
                     </a>
                 </li>
                 <li>
+                    <a href="<?= url('admin/notifications') ?>" class="<?= ($current_page ?? '') === 'notifications' ? 'active' : '' ?>">
+                        <i class="fas fa-bell"></i>
+                        <span>Notifications</span>
+                        <span id="notification-badge" class="badge badge-danger" style="display: none; margin-left: auto; background: #EF4444; color: white; padding: 2px 6px; border-radius: 10px; font-size: 11px;"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="<?= url('admin/bulk-operations') ?>" class="<?= ($current_page ?? '') === 'bulk-operations' ? 'active' : '' ?>">
+                        <i class="fas fa-file-import"></i>
+                        <span>Bulk Operations</span>
+                    </a>
+                </li>
+                <li>
                     <a href="<?= url('admin/settings') ?>" class="<?= ($current_page ?? '') === 'settings' ? 'active' : '' ?>">
                         <i class="fas fa-cog"></i>
                         <span>Settings</span>
