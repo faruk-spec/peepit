@@ -400,6 +400,64 @@ $router->post('/admin/users/delete/{id}', function($id) {
     $controller->delete($id);
 });
 
+// Admin Email Logs
+$router->get('/admin/email-logs', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/EmailLogController.php';
+    $controller = new \App\Controllers\Admin\EmailLogController();
+    $controller->index();
+});
+
+$router->get('/admin/email-logs/view/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/EmailLogController.php';
+    $controller = new \App\Controllers\Admin\EmailLogController();
+    $controller->view($id);
+});
+
+$router->post('/admin/email-logs/delete/{id}', function($id) {
+    require_role('superadmin');
+    require_once __DIR__ . '/../app/controllers/admin/EmailLogController.php';
+    $controller = new \App\Controllers\Admin\EmailLogController();
+    $controller->delete($id);
+});
+
+$router->post('/admin/email-logs/clear', function() {
+    require_role('superadmin');
+    require_once __DIR__ . '/../app/controllers/admin/EmailLogController.php';
+    $controller = new \App\Controllers\Admin\EmailLogController();
+    $controller->clear();
+});
+
+// Admin Settings
+$router->get('/admin/settings', function() {
+    require_role('superadmin');
+    require_once __DIR__ . '/../app/controllers/admin/SettingsController.php';
+    $controller = new \App\Controllers\Admin\SettingsController();
+    $controller->index();
+});
+
+$router->post('/admin/settings/update', function() {
+    require_role('superadmin');
+    require_once __DIR__ . '/../app/controllers/admin/SettingsController.php';
+    $controller = new \App\Controllers\Admin\SettingsController();
+    $controller->update();
+});
+
+$router->get('/admin/settings/smtp', function() {
+    require_role('superadmin');
+    require_once __DIR__ . '/../app/controllers/admin/SettingsController.php';
+    $controller = new \App\Controllers\Admin\SettingsController();
+    $controller->smtp();
+});
+
+$router->post('/admin/settings/smtp/update', function() {
+    require_role('superadmin');
+    require_once __DIR__ . '/../app/controllers/admin/SettingsController.php';
+    $controller = new \App\Controllers\Admin\SettingsController();
+    $controller->updateSmtp();
+});
+
 // Get current URL and method
 $url = $_GET['url'] ?? '/';
 $method = $_SERVER['REQUEST_METHOD'];
