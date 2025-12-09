@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `traffic_logs` (
 -- Manages visitor sessions with metrics
 CREATE TABLE IF NOT EXISTS `visitor_sessions` (
   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `session_id` VARCHAR(64) NOT NULL UNIQUE,
+  `session_id` VARCHAR(64) NOT NULL,
   `visitor_id` VARCHAR(64) NOT NULL,
   `started_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `ended_at` TIMESTAMP NULL DEFAULT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `visitor_sessions` (
   `entry_page` VARCHAR(500) DEFAULT NULL,
   `exit_page` VARCHAR(500) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `session_id` (`session_id`),
+  UNIQUE KEY `unique_session_id` (`session_id`),
   INDEX `idx_visitor` (`visitor_id`),
   INDEX `idx_started` (`started_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
