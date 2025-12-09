@@ -1082,3 +1082,49 @@ section {
     font-size: 14px;
     font-weight: 500;
 }
+
+/* Status Badges */
+.status-badge, .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+    line-height: 1.5;
+}
+
+.badge {
+    background: #E2E8F0;
+    color: #475569;
+}
+
+.status-badge.status-pending {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.status-badge.status-processing {
+    background: #DBEAFE;
+    color: #1E40AF;
+}
+
+.status-badge.status-completed {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.status-badge.status-cancelled {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+.status-badge.status-shipped {
+    background: #E0E7FF;
+    color: #3730A3;
+}
+
+.status-badge.status-delivered {
+    background: #D1FAE5;
+    color: #065F46;
+}
