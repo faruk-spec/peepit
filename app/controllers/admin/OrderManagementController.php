@@ -31,7 +31,7 @@ class OrderManagementController extends Controller
         }
     }
 
-    public function view($id)
+    public function viewOrder($id)
     {
         require_role('sales');
 
@@ -81,7 +81,7 @@ class OrderManagementController extends Controller
 
         if (!in_array($status, ['pending', 'processing', 'completed', 'cancelled'])) {
             flash('error', 'Invalid status');
-            $this->redirect(url("admin/orders/view/{$id}"));
+            $this->redirect(url("admin/orders/{$id}"));
         }
 
         try {
@@ -91,11 +91,11 @@ class OrderManagementController extends Controller
             );
 
             flash('success', 'Order status updated successfully');
-            $this->redirect(url("admin/orders/view/{$id}"));
+            $this->redirect(url("admin/orders/{$id}"));
         } catch (\Exception $e) {
             error_log('Error updating order status: ' . $e->getMessage());
             flash('error', 'Failed to update order status');
-            $this->redirect(url("admin/orders/view/{$id}"));
+            $this->redirect(url("admin/orders/{$id}"));
         }
     }
 }

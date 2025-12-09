@@ -314,11 +314,19 @@ $router->get('/admin/orders', function() {
     $controller->index();
 });
 
+$router->get('/admin/orders/{id}', function($id) {
+    require_role('sales');
+    require_once __DIR__ . '/../app/controllers/admin/OrderManagementController.php';
+    $controller = new \App\Controllers\Admin\OrderManagementController();
+    $controller->viewOrder($id);
+});
+
+// Keep old route for backward compatibility
 $router->get('/admin/orders/view/{id}', function($id) {
     require_role('sales');
     require_once __DIR__ . '/../app/controllers/admin/OrderManagementController.php';
     $controller = new \App\Controllers\Admin\OrderManagementController();
-    $controller->view($id);
+    $controller->viewOrder($id);
 });
 
 $router->post('/admin/orders/update-status/{id}', function($id) {
@@ -408,11 +416,19 @@ $router->get('/admin/email-logs', function() {
     $controller->index();
 });
 
+$router->get('/admin/email-logs/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/EmailLogController.php';
+    $controller = new \App\Controllers\Admin\EmailLogController();
+    $controller->viewLog($id);
+});
+
+// Keep old route for backward compatibility
 $router->get('/admin/email-logs/view/{id}', function($id) {
     require_role('manager');
     require_once __DIR__ . '/../app/controllers/admin/EmailLogController.php';
     $controller = new \App\Controllers\Admin\EmailLogController();
-    $controller->view($id);
+    $controller->viewLog($id);
 });
 
 $router->post('/admin/email-logs/delete/{id}', function($id) {
@@ -427,6 +443,14 @@ $router->post('/admin/email-logs/clear', function() {
     require_once __DIR__ . '/../app/controllers/admin/EmailLogController.php';
     $controller = new \App\Controllers\Admin\EmailLogController();
     $controller->clear();
+});
+
+// Admin Analytics
+$router->get('/admin/analytics', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/AnalyticsController.php';
+    $controller = new \App\Controllers\Admin\AnalyticsController();
+    $controller->index();
 });
 
 // Admin Settings

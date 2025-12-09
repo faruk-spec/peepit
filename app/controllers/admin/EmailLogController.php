@@ -27,7 +27,7 @@ class EmailLogController extends Controller
         }
     }
 
-    public function view($id)
+    public function viewLog($id)
     {
         require_role('manager');
 
