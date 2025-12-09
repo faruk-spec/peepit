@@ -18,7 +18,7 @@
 
             <?php if (has_flash()): ?>
                 <div class="alert alert-<?= flash_type() ?>">
-                    <?= flash() ?>
+                    <?= get_flash() ?>
                 </div>
             <?php endif; ?>
 

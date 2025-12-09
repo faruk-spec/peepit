@@ -14,7 +14,28 @@ function sanitize($input)
 
 function escape($string)
 {
-    return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+    return htmlspecialchars($string ?? '', ENT_QUOTES, 'UTF-8');
+}
+
+function has_flash()
+{
+    return isset($_SESSION['flash']) && !empty($_SESSION['flash']);
+}
+
+function flash_type()
+{
+    if (isset($_SESSION['flash']['success'])) return 'success';
+    if (isset($_SESSION['flash']['error'])) return 'error';
+    if (isset($_SESSION['flash']['warning'])) return 'warning';
+    if (isset($_SESSION['flash']['info'])) return 'info';
+    return 'info';
+}
+
+function get_flash()
+{
+    $type = flash_type();
+    $message = flash($type);
+    return $message;
 }
 
 function csrf_field()

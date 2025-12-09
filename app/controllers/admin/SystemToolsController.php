@@ -320,16 +320,39 @@ class SystemToolsController extends Controller
      */
     private function getDiskInfo()
     {
-        $diskFree = disk_free_space('/');
-        $diskTotal = disk_total_space('/');
-        $diskUsed = $diskTotal - $diskFree;
+        try {
+            // Try to get disk space for the current directory instead of root
+            $path = getcwd();
+            $diskFree = @disk_free_space($path);
+            $diskTotal = @disk_total_space($path);
+            
+            // If failed, return default values
+            if ($diskFree === false || $diskTotal === false || $diskTotal == 0) {
+                return [
+                    'total' => 'N/A',
+                    'used' => 'N/A',
+                    'free' => 'N/A',
+                    'percent' => 0
+                ];
+            }
+            
+            $diskUsed = $diskTotal - $diskFree;
 
-        return [
-            'total' => $this->formatBytes($diskTotal),
-            'used' => $this->formatBytes($diskUsed),
-            'free' => $this->formatBytes($diskFree),
-            'percent' => round(($diskUsed / $diskTotal) * 100, 2)
-        ];
+            return [
+                'total' => $this->formatBytes($diskTotal),
+                'used' => $this->formatBytes($diskUsed),
+                'free' => $this->formatBytes($diskFree),
+                'percent' => round(($diskUsed / $diskTotal) * 100, 2)
+            ];
+        } catch (\Exception $e) {
+            // Return N/A if disk space cannot be determined
+            return [
+                'total' => 'N/A',
+                'used' => 'N/A',
+                'free' => 'N/A',
+                'percent' => 0
+            ];
+        }
     }
 
     /**
