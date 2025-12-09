@@ -78,7 +78,8 @@ class AuthController extends Controller
                 'id' => $_SESSION['user_id'],
                 'name' => $name,
                 'email' => $email,
-                'role' => 'user'
+                'role' => 'user',
+                'created_at' => date('Y-m-d H:i:s')
             ];
 
             flash('success', 'Registration successful! Welcome to Peepit.');
@@ -132,7 +133,8 @@ class AuthController extends Controller
             'id' => $user['id'],
             'name' => $user['name'],
             'email' => $user['email'],
-            'role' => $user['role']
+            'role' => $user['role'],
+            'created_at' => $user['created_at']
         ];
 
         // Track login

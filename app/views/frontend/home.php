@@ -48,7 +48,7 @@
         <h1 class="animate-fade-in"><i class="fas fa-tint"></i> <?= htmlspecialchars($heroTitle) ?></h1>
         <p class="animate-fade-in-delay"><?= htmlspecialchars($heroDescription) ?></p>
         <?php if (is_logged_in()): ?>
-            <a href="<?= url('order/start') ?>" class="btn btn-success animate-fade-in-delay-2"><i class="fas fa-shopping-cart"></i> Start Ordering</a>
+            <a href="<?= url('order/start') ?>" class="btn btn-success animate-fade-in-delay-2"><i class="fas fa-shopping-cart"></i> <?= htmlspecialchars($heroButtonText) ?></a>
         <?php else: ?>
             <a href="<?= url('register') ?>" class="btn btn-success animate-fade-in-delay-2"><i class="fas fa-user-plus"></i> <?= htmlspecialchars($heroButtonText) ?></a>
             <a href="<?= url('login') ?>" class="btn btn-secondary animate-fade-in-delay-2"><i class="fas fa-sign-in-alt"></i> Login</a>
