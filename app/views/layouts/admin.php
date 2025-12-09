@@ -74,6 +74,21 @@
             text-align: center;
         }
 
+        .menu-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-section-title {
+            padding: 8px 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 1px;
+        }
+
         .admin-content {
             flex: 1;
             margin-left: 260px;
@@ -296,17 +311,28 @@
             </div>
 
             <ul class="admin-menu">
+                <!-- Main -->
                 <li>
                     <a href="<?= url('admin') ?>" class="<?= ($current_page ?? '') === 'dashboard' ? 'active' : '' ?>">
                         <i class="fas fa-tachometer-alt"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
+
+                <!-- Orders Section -->
+                <li class="menu-section">
+                    <div class="menu-section-title">Order Management</div>
+                </li>
                 <li>
                     <a href="<?= url('admin/orders') ?>" class="<?= ($current_page ?? '') === 'orders' ? 'active' : '' ?>">
                         <i class="fas fa-shopping-cart"></i>
                         <span>Orders</span>
                     </a>
+                </li>
+
+                <!-- Catalog Section -->
+                <li class="menu-section">
+                    <div class="menu-section-title">Catalog Management</div>
                 </li>
                 <li>
                     <a href="<?= url('admin/bottles') ?>" class="<?= ($current_page ?? '') === 'bottles' ? 'active' : '' ?>">
@@ -315,9 +341,43 @@
                     </a>
                 </li>
                 <li>
+                    <a href="<?= url('admin/sizes') ?>" class="<?= ($current_page ?? '') === 'sizes' ? 'active' : '' ?>">
+                        <i class="fas fa-ruler-vertical"></i>
+                        <span>Bottle Sizes</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="<?= url('admin/colors') ?>" class="<?= ($current_page ?? '') === 'colors' ? 'active' : '' ?>">
+                        <i class="fas fa-palette"></i>
+                        <span>Color Presets</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="<?= url('admin/templates') ?>" class="<?= ($current_page ?? '') === 'templates' ? 'active' : '' ?>">
+                        <i class="fas fa-tags"></i>
+                        <span>Label Templates</span>
+                    </a>
+                </li>
+
+                <!-- User Management Section -->
+                <li class="menu-section">
+                    <div class="menu-section-title">User Management</div>
+                </li>
+                <li>
                     <a href="<?= url('admin/users') ?>" class="<?= ($current_page ?? '') === 'users' ? 'active' : '' ?>">
                         <i class="fas fa-users"></i>
                         <span>Users</span>
+                    </a>
+                </li>
+
+                <!-- System Section -->
+                <li class="menu-section">
+                    <div class="menu-section-title">System</div>
+                </li>
+                <li>
+                    <a href="<?= url('admin/email-logs') ?>" class="<?= ($current_page ?? '') === 'email-logs' ? 'active' : '' ?>">
+                        <i class="fas fa-envelope"></i>
+                        <span>Email Logs</span>
                     </a>
                 </li>
                 <li>
@@ -332,7 +392,12 @@
                         <span>Settings</span>
                     </a>
                 </li>
-                <li style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+
+                <!-- Quick Links -->
+                <li class="menu-section">
+                    <div class="menu-section-title">Quick Links</div>
+                </li>
+                <li>
                     <a href="<?= url() ?>">
                         <i class="fas fa-home"></i>
                         <span>View Website</span>
