@@ -177,6 +177,49 @@ $router->post('/admin/login', function() {
     $controller->doLogin();
 });
 
+// Admin Bottle Management
+$router->get('/admin/bottles', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/BottleController.php';
+    $controller = new \App\Controllers\Admin\BottleController();
+    $controller->index();
+});
+
+$router->get('/admin/bottles/create', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/BottleController.php';
+    $controller = new \App\Controllers\Admin\BottleController();
+    $controller->create();
+});
+
+$router->post('/admin/bottles/store', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/BottleController.php';
+    $controller = new \App\Controllers\Admin\BottleController();
+    $controller->store();
+});
+
+$router->get('/admin/bottles/edit/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/BottleController.php';
+    $controller = new \App\Controllers\Admin\BottleController();
+    $controller->edit($id);
+});
+
+$router->post('/admin/bottles/update/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/BottleController.php';
+    $controller = new \App\Controllers\Admin\BottleController();
+    $controller->update($id);
+});
+
+$router->post('/admin/bottles/delete/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/BottleController.php';
+    $controller = new \App\Controllers\Admin\BottleController();
+    $controller->delete($id);
+});
+
 // Get current URL and method
 $url = $_GET['url'] ?? '/';
 $method = $_SERVER['REQUEST_METHOD'];
