@@ -112,12 +112,23 @@
                     </thead>
                     <tbody>
                         <?php foreach ($recent_orders as $order): ?>
+                            <?php
+                            // Determine badge color based on status
+                            $badgeClass = 'secondary';
+                            if ($order['status'] === 'completed') {
+                                $badgeClass = 'success';
+                            } elseif ($order['status'] === 'pending') {
+                                $badgeClass = 'warning';
+                            } elseif ($order['status'] === 'cancelled') {
+                                $badgeClass = 'danger';
+                            }
+                            ?>
                             <tr>
                                 <td><strong><?= escape($order['order_number']) ?></strong></td>
                                 <td><?= escape($order['user_name']) ?></td>
                                 <td>₹<?= number_format($order['total_amount'], 2) ?></td>
                                 <td>
-                                    <span class="badge bg-<?= $order['status'] === 'completed' ? 'success' : ($order['status'] === 'pending' ? 'warning' : 'secondary') ?>">
+                                    <span class="badge bg-<?= $badgeClass ?>">
                                         <?= ucfirst($order['status']) ?>
                                     </span>
                                 </td>
