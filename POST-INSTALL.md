@@ -122,14 +122,22 @@ File(/www/wwwroot/peepit.mymultibranch.com/vendor/autoload.php)
 is not within the allowed path(s)
 ```
 
-**Cause:** 
-- You set DocumentRoot to `/public` 
-- But didn't update open_basedir setting
+**Causes:** 
+- **Cause A:** You set DocumentRoot to `/public` but didn't update open_basedir setting
+- **Cause B:** You're accessing `/public/` directly in the URL with Method 1
 
-**Solution:**
+**Solutions:**
+
+**If using Method 1 (Root DocumentRoot):**
+- **Don't access** `https://yourdomain.com/public/` directly
+- **Always use** `https://yourdomain.com/` (root URL)
+- The `.htaccess` automatically redirects `/public/` URLs to root
+- Clear your browser cache if needed
+
+**If using Method 2 (Public DocumentRoot):**
 Follow **Method 2** above completely, especially steps 6-11 for open_basedir configuration.
 
-**Quick Fix:**
+**Quick Fix for Method 2:**
 ```bash
 # In aaPanel → Website → Your Site → Site Directory → Security
 # Change open_basedir from:

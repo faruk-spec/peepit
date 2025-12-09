@@ -6,6 +6,11 @@
     # RewriteCond %{HTTPS} off
     # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
     
+    # Redirect /public/ URLs to root (Method 1 deployment)
+    # This prevents accessing /public/ directly
+    RewriteCond %{REQUEST_URI} ^/public/(.*)$
+    RewriteRule ^public/(.*)$ /$1 [R=301,L]
+    
     # Block access to sensitive directories (but allow install during setup)
     RewriteRule ^(app|config|vendor)/.*$ - [F,L]
     

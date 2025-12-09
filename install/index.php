@@ -475,10 +475,20 @@ if ($step == 6) {
                     <pre style="background: #fff; padding: 10px; margin-top: 10px; border-radius: 3px;">rm -rf /www/wwwroot/yourdomain.com/install</pre>
                 </div>
 
+                <div class="alert alert-info mt-20">
+                    <strong>📝 Important Notes:</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px; text-align: left; line-height: 1.8;">
+                        <li>After configuration, access your site at: <code>https://yourdomain.com/</code></li>
+                        <li><strong>Do NOT</strong> access <code>https://yourdomain.com/public/</code> directly</li>
+                        <li>Clear your browser cache if you see errors</li>
+                        <li>Restart Apache after configuration changes</li>
+                    </ul>
+                </div>
+
                 <div class="text-center mt-20">
                     <p style="margin-bottom: 10px;">After completing the configuration above:</p>
-                    <a href="../" class="btn btn-success">Go to Home Page</a>
-                    <a href="../admin/login" class="btn" style="margin-left: 10px;">Admin Login</a>
+                    <a href="/" class="btn btn-success">Go to Home Page</a>
+                    <a href="/admin/login" class="btn" style="margin-left: 10px;">Admin Login</a>
                 </div>
             <?php endif; ?>
         </div>

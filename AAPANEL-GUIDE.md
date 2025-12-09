@@ -15,6 +15,7 @@ This guide specifically addresses deployment on aaPanel (BaoTa Panel) servers.
 3. **Ensure `index.php` exists in the root directory** (pull latest changes)
 4. **No need to modify open_basedir settings**
 5. The root `index.php` handles all routing automatically
+6. **⚠️ IMPORTANT: Access site at `https://yourdomain.com/` NOT `https://yourdomain.com/public/`**
 
 **To verify your setup:**
 ```bash
@@ -22,6 +23,11 @@ cd /www/wwwroot/yourdomain.com
 ls -la index.php  # Should exist in root
 ls -la .htaccess  # Should exist in root
 ```
+
+**Common Mistake:**
+- ❌ **DON'T access:** `https://yourdomain.com/public/` 
+- ✅ **DO access:** `https://yourdomain.com/`
+- The `.htaccess` automatically redirects `/public/` URLs to root
 
 ### Alternative: Method A (More Secure but Requires open_basedir Configuration)
 
