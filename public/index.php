@@ -17,7 +17,7 @@ if (is_dir(__DIR__ . '/../install') && !file_exists(__DIR__ . '/../config/databa
 
 // Check if vendor/autoload exists
 if (!file_exists(__DIR__ . '/../vendor/autoload.php')) {
-    die('<h1>Composer Dependencies Missing</h1><p>Please run: <code>composer install</code> or <code>composer dump-autoload</code></p><p>This error means the PHP autoloader needs to be generated.</p>');
+    die('<h1>Composer Dependencies Missing</h1><p>Please run: <code>composer install</code> or <code>composer dump-autoload</code></p><p>This error means the PHP autoloader needs to be generated.</p><hr><p><strong>Quick Fix:</strong></p><pre>cd /www/wwwroot/peepit.mymultibranch.com\ncomposer dump-autoload</pre>');
 }
 
 // Autoload

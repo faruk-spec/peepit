@@ -45,11 +45,16 @@ class Database
     {
         try {
             $stmt = $this->connection->prepare($sql);
-            $stmt->execute($params);
+            $result = $stmt->execute($params);
+            if (!$result) {
+                $errorInfo = $stmt->errorInfo();
+                error_log('Database query error: ' . $errorInfo[2]);
+                throw new \Exception('Database query failed: ' . $errorInfo[2]);
+            }
             return $stmt;
         } catch (PDOException $e) {
             error_log('Database query error: ' . $e->getMessage());
-            throw new \Exception('Database query failed');
+            throw new \Exception('Database query failed: ' . $e->getMessage());
         }
     }
 
