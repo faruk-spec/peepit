@@ -669,6 +669,21 @@ $router->post('/admin/pricing/bottle-models/assign', function() {
     $controller->assignToBottle();
 });
 
+// Individual Bottle Pricing Routes
+$router->get('/admin/bottles/{id}/pricing', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/BottleController.php';
+    $controller = new \App\Controllers\Admin\BottleController();
+    $controller->pricing($id);
+});
+
+$router->post('/admin/bottles/{id}/pricing/save', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/BottleController.php';
+    $controller = new \App\Controllers\Admin\BottleController();
+    $controller->savePricing($id);
+});
+
 // Traffic Tracking Routes
 $router->get('/admin/traffic', function() {
     require_role('manager');

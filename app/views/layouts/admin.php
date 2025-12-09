@@ -429,6 +429,12 @@
                                 <span>Price Setup</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="<?= url('admin/pricing/bottle-models') ?>" class="<?= ($current_page ?? '') === 'bottle-model-pricing' ? 'active' : '' ?>">
+                                <i class="fas fa-link"></i>
+                                <span>Bottle Model Pricing</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 

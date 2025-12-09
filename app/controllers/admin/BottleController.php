@@ -208,4 +208,71 @@ class BottleController extends Controller
 
         $this->redirect(url('admin/bottles'));
     }
+
+    public function pricing($id)
+    {
+        require_role('manager');
+
+        $bottleModel = new BottleModel();
+        $bottle = $bottleModel->find($id);
+
+        if (!$bottle) {
+            flash('error', 'Bottle model not found');
+            $this->redirect(url('admin/bottles'));
+        }
+
+        // Get all pricing tiers
+        $pricingTiers = $this->db->fetchAll(
+            "SELECT * FROM pricing_tiers WHERE product_type = 'bottle' AND is_active = 1 ORDER BY min_quantity ASC"
+        );
+
+        // Get current pricing assignment
+        $currentPricing = $this->db->fetch(
+            "SELECT pricing_tier_id FROM bottle_models WHERE id = ?",
+            [$id]
+        );
+
+        $csrfToken = $this->generateCSRF();
+        $this->view('admin/bottles/pricing', [
+            'csrf_token' => $csrfToken,
+            'bottle' => $bottle,
+            'pricingTiers' => $pricingTiers,
+            'currentPricingTierId' => $currentPricing['pricing_tier_id'] ?? null
+        ]);
+    }
+
+    public function savePricing($id)
+    {
+        require_role('manager');
+        $this->validateCSRF();
+
+        $bottleModel = new BottleModel();
+        $bottle = $bottleModel->find($id);
+
+        if (!$bottle) {
+            flash('error', 'Bottle model not found');
+            $this->redirect(url('admin/bottles'));
+        }
+
+        $pricingTierId = sanitize($_POST['pricing_tier_id'] ?? '');
+
+        // Allow NULL for general pricing
+        if ($pricingTierId === '' || $pricingTierId === 'general') {
+            $pricingTierId = null;
+        }
+
+        try {
+            $this->db->query(
+                "UPDATE bottle_models SET pricing_tier_id = ? WHERE id = ?",
+                [$pricingTierId, $id]
+            );
+
+            flash('success', 'Pricing assigned successfully');
+        } catch (\Exception $e) {
+            error_log('Failed to assign pricing: ' . $e->getMessage());
+            flash('error', 'Failed to assign pricing. Please try again.');
+        }
+
+        $this->redirect(url("admin/bottles/{$id}/pricing"));
+    }
 }
