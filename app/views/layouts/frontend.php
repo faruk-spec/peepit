@@ -5,43 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?? 'Peepit - Custom Water Bottles' ?></title>
     <link rel="stylesheet" href="<?= url('css/style.css') ?>">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <?= $head ?? '' ?>
 </head>
 <body>
     <nav class="navbar">
         <div class="container">
             <div class="navbar-brand">
-                <a href="<?= url() ?>">🚰 Peepit</a>
+                <a href="<?= url() ?>"><i class="fas fa-wine-bottle"></i> Peepit</a>
             </div>
             <ul class="navbar-menu">
-                <li><a href="<?= url() ?>">Home</a></li>
-                <li><a href="<?= url('order/start') ?>">Order Now</a></li>
+                <li><a href="<?= url() ?>"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="<?= url('order/start') ?>"><i class="fas fa-shopping-cart"></i> Order Now</a></li>
                 <?php if (is_logged_in()): ?>
-                    <li><a href="<?= url('my-orders') ?>">My Orders</a></li>
+                    <li><a href="<?= url('my-orders') ?>"><i class="fas fa-list-alt"></i> My Orders</a></li>
                     <li class="dropdown">
-                        <a href="#"><?= escape(current_user()['name']) ?> ▼</a>
+                        <a href="#"><i class="fas fa-user-circle"></i> <?= escape(current_user()['name']) ?> <i class="fas fa-chevron-down"></i></a>
                         <ul class="dropdown-menu">
-                            <li><a href="<?= url('profile') ?>">Profile</a></li>
+                            <li><a href="<?= url('profile') ?>"><i class="fas fa-user-edit"></i> Profile</a></li>
                             <?php if (has_role('sales')): ?>
-                                <li><a href="<?= url('admin') ?>">Admin Panel</a></li>
+                                <li><a href="<?= url('admin') ?>"><i class="fas fa-tachometer-alt"></i> Admin Panel</a></li>
                             <?php endif; ?>
-                            <li><a href="<?= url('logout') ?>">Logout</a></li>
+                            <li><a href="<?= url('logout') ?>"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                         </ul>
                     </li>
                 <?php else: ?>
-                    <li><a href="<?= url('login') ?>">Login</a></li>
-                    <li><a href="<?= url('register') ?>" class="btn-primary">Register</a></li>
+                    <li><a href="<?= url('login') ?>"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                    <li><a href="<?= url('register') ?>" class="btn-primary"><i class="fas fa-user-plus"></i> Register</a></li>
                 <?php endif; ?>
             </ul>
         </div>
     </nav>
 
     <?php if (flash('success')): ?>
-        <div class="alert alert-success"><?= escape(flash('success')) ?></div>
+        <div class="alert alert-success"><i class="fas fa-check-circle"></i> <?= escape(flash('success')) ?></div>
     <?php endif; ?>
 
     <?php if (flash('error')): ?>
-        <div class="alert alert-error"><?= escape(flash('error')) ?></div>
+        <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <?= escape(flash('error')) ?></div>
     <?php endif; ?>
 
     <main>
@@ -52,38 +54,38 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>About Peepit</h3>
-                    <p>Custom water bottle ordering made easy. Design your perfect bottle today!</p>
+                    <h3><i class="fas fa-wine-bottle"></i> About Peepit</h3>
+                    <p>Custom water bottle ordering made easy. Design your perfect bottle today with our professional customization tools and fast delivery service.</p>
                 </div>
                 <div class="footer-section">
-                    <h3>Quick Links</h3>
+                    <h3><i class="fas fa-link"></i> Quick Links</h3>
                     <ul>
-                        <li><a href="<?= url() ?>">Home</a></li>
-                        <li><a href="<?= url('order/start') ?>">Order Now</a></li>
-                        <li><a href="<?= url('contact') ?>">Contact Us</a></li>
+                        <li><a href="<?= url() ?>"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="<?= url('order/start') ?>"><i class="fas fa-shopping-cart"></i> Order Now</a></li>
+                        <li><a href="<?= url('my-orders') ?>"><i class="fas fa-list-alt"></i> My Orders</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h3>Contact Us</h3>
+                    <h3><i class="fas fa-phone-alt"></i> Contact Us</h3>
                     <p>
                         <a href="https://wa.me/<?= str_replace('+', '', config('whatsapp_number')) ?>" target="_blank" class="contact-btn whatsapp">
-                            WhatsApp
+                            <i class="fab fa-whatsapp"></i> WhatsApp
                         </a>
                     </p>
                     <p>
                         <a href="mailto:<?= config('contact_email') ?>" class="contact-btn email">
-                            Email Us
+                            <i class="fas fa-envelope"></i> Email Us
                         </a>
                     </p>
                     <p>
                         <a href="tel:<?= config('contact_phone') ?>" class="contact-btn phone">
-                            Call Us
+                            <i class="fas fa-phone"></i> Call Us
                         </a>
                     </p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; <?= date('Y') ?> Peepit. All rights reserved.</p>
+                <p>&copy; <?= date('Y') ?> Peepit. All rights reserved. <i class="fas fa-heart" style="color: var(--secondary);"></i></p>
             </div>
         </div>
     </footer>
