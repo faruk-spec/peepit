@@ -307,6 +307,11 @@
 
         .dropdown-menu a {
             padding-left: 52px !important;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .dropdown-menu a:hover {
+            color: white;
         }
 
         @media (max-width: 1024px) {
