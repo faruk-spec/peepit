@@ -11,43 +11,130 @@ class PricingController extends Controller
         require_role('manager');
 
         try {
-            // Fetch all active pricing tiers
-            $bottleTiers = $this->db->fetchAll(
-                "SELECT * FROM pricing_tiers WHERE product_type = 'bottle' AND is_active = 1 ORDER BY min_quantity ASC"
+            // Fetch all pricing tiers
+            $tiers = $this->db->fetchAll(
+                "SELECT * FROM pricing_tiers ORDER BY product_type ASC, min_quantity ASC"
             );
-            
-            $labelTiers = $this->db->fetchAll(
-                "SELECT * FROM pricing_tiers WHERE product_type = 'label' AND is_active = 1 ORDER BY min_quantity ASC"
-            );
-            
-            $printingTiers = $this->db->fetchAll(
-                "SELECT * FROM pricing_tiers WHERE product_type = 'printing' AND is_active = 1 ORDER BY min_quantity ASC"
-            );
-            
-            // Fetch active rules
-            $activeRules = $this->db->fetchAll(
-                "SELECT * FROM pricing_rules WHERE is_active = 1 ORDER BY created_at DESC LIMIT 10"
-            );
-            
-            // Calculate statistics
-            $stats = [
-                'total_tiers' => $this->db->fetch("SELECT COUNT(*) as count FROM pricing_tiers WHERE is_active = 1")['count'],
-                'total_rules' => $this->db->fetch("SELECT COUNT(*) as count FROM pricing_rules WHERE is_active = 1")['count'],
-                'avg_bottle_price' => $this->db->fetch("SELECT AVG(price_per_unit) as avg FROM pricing_tiers WHERE product_type = 'bottle' AND is_active = 1")['avg'],
-            ];
 
-            $csrfToken = $this->generateCSRF();
             $this->view('admin/pricing/index', [
-                'csrf_token' => $csrfToken,
-                'bottle_tiers' => $bottleTiers,
-                'label_tiers' => $labelTiers,
-                'printing_tiers' => $printingTiers,
-                'active_rules' => $activeRules,
-                'stats' => $stats
+                'tiers' => $tiers
             ]);
         } catch (\Exception $e) {
             error_log('Error loading pricing: ' . $e->getMessage());
             flash('error', 'Unable to load pricing information');
+            redirect('admin');
+        }
+    }
+
+    public function tiers()
+    {
+        require_role('manager');
+
+        $action = $_GET['action'] ?? 'list';
+        $id = $_GET['id'] ?? null;
+        
+        $tier = null;
+        if ($action === 'edit' && $id) {
+            $tier = $this->db->fetch(
+                "SELECT * FROM pricing_tiers WHERE id = ?",
+                [$id]
+            );
+            
+            if (!$tier) {
+                flash('error', 'Pricing tier not found');
+                redirect('admin/pricing');
+                return;
+            }
+        }
+
+        $this->view('admin/pricing/tiers', [
+            'action' => $action,
+            'tier' => $tier
+        ]);
+    }
+
+    public function saveTier()
+    {
+        require_role('manager');
+
+        if (!$this->validateCSRF()) {
+            flash('error', 'Invalid request');
+            redirect('admin/pricing');
+            return;
+        }
+
+        try {
+            $id = $_POST['id'] ?? null;
+            $productType = $_POST['product_type'] ?? '';
+            $minQuantity = $_POST['min_quantity'] ?? 0;
+            $maxQuantity = $_POST['max_quantity'] ?? null;
+            $pricePerUnit = $_POST['price_per_unit'] ?? 0;
+            $discountPercent = $_POST['discount_percent'] ?? 0;
+            $isActive = isset($_POST['is_active']) ? 1 : 0;
+
+            // Validation
+            if (empty($productType) || $minQuantity < 1 || $pricePerUnit <= 0) {
+                flash('error', 'Please fill all required fields correctly');
+                redirect('admin/pricing/tiers?action=' . ($id ? 'edit&id=' . $id : 'create'));
+                return;
+            }
+
+            if ($id) {
+                // Update existing tier
+                $this->db->query(
+                    "UPDATE pricing_tiers 
+                     SET product_type = ?, min_quantity = ?, max_quantity = ?, 
+                         price_per_unit = ?, discount_percent = ?, is_active = ?
+                     WHERE id = ?",
+                    [$productType, $minQuantity, $maxQuantity, $pricePerUnit, $discountPercent, $isActive, $id]
+                );
+                flash('success', 'Pricing tier updated successfully');
+            } else {
+                // Create new tier
+                $this->db->query(
+                    "INSERT INTO pricing_tiers 
+                     (product_type, min_quantity, max_quantity, price_per_unit, discount_percent, is_active) 
+                     VALUES (?, ?, ?, ?, ?, ?)",
+                    [$productType, $minQuantity, $maxQuantity, $pricePerUnit, $discountPercent, $isActive]
+                );
+                flash('success', 'Pricing tier created successfully');
+            }
+
+            redirect('admin/pricing');
+        } catch (\Exception $e) {
+            error_log('Error saving pricing tier: ' . $e->getMessage());
+            flash('error', 'Failed to save pricing tier: ' . $e->getMessage());
+            redirect('admin/pricing/tiers?action=' . ($id ?? 'create'));
+        }
+    }
+
+    public function deleteTier()
+    {
+        require_role('manager');
+
+        if (!$this->validateCSRF()) {
+            flash('error', 'Invalid request');
+            redirect('admin/pricing');
+            return;
+        }
+
+        try {
+            $id = $_POST['id'] ?? null;
+
+            if (!$id) {
+                flash('error', 'Invalid pricing tier');
+                redirect('admin/pricing');
+                return;
+            }
+
+            $this->db->query("DELETE FROM pricing_tiers WHERE id = ?", [$id]);
+            flash('success', 'Pricing tier deleted successfully');
+        } catch (\Exception $e) {
+            error_log('Error deleting pricing tier: ' . $e->getMessage());
+            flash('error', 'Failed to delete pricing tier');
+        }
+
+        redirect('admin/pricing');
             $this->redirect(url('admin'));
         }
     }
