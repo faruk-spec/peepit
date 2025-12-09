@@ -87,6 +87,76 @@ $router->post('/order/step2', function() {
     $controller->step2();
 });
 
+$router->post('/order/step3', function() {
+    require_login();
+    require_once __DIR__ . '/../app/controllers/OrderController.php';
+    $controller = new \App\Controllers\OrderController();
+    $controller->step3();
+});
+
+$router->post('/order/step4', function() {
+    require_login();
+    require_once __DIR__ . '/../app/controllers/OrderController.php';
+    $controller = new \App\Controllers\OrderController();
+    $controller->step4();
+});
+
+$router->post('/order/step5', function() {
+    require_login();
+    require_once __DIR__ . '/../app/controllers/OrderController.php';
+    $controller = new \App\Controllers\OrderController();
+    $controller->step5();
+});
+
+$router->post('/order/step6', function() {
+    require_login();
+    require_once __DIR__ . '/../app/controllers/OrderController.php';
+    $controller = new \App\Controllers\OrderController();
+    $controller->step6();
+});
+
+$router->post('/order/step7', function() {
+    require_login();
+    require_once __DIR__ . '/../app/controllers/OrderController.php';
+    $controller = new \App\Controllers\OrderController();
+    $controller->step7();
+});
+
+$router->post('/order/submit', function() {
+    require_login();
+    require_once __DIR__ . '/../app/controllers/OrderController.php';
+    $controller = new \App\Controllers\OrderController();
+    $controller->submit();
+});
+
+$router->get('/my-orders', function() {
+    require_login();
+    require_once __DIR__ . '/../app/controllers/MyOrdersController.php';
+    $controller = new \App\Controllers\MyOrdersController();
+    $controller->index();
+});
+
+$router->get('/order/{id}', function($id) {
+    require_login();
+    require_once __DIR__ . '/../app/controllers/MyOrdersController.php';
+    $controller = new \App\Controllers\MyOrdersController();
+    $controller->view($id);
+});
+
+$router->get('/profile', function() {
+    require_login();
+    require_once __DIR__ . '/../app/controllers/ProfileController.php';
+    $controller = new \App\Controllers\ProfileController();
+    $controller->index();
+});
+
+$router->post('/profile/update', function() {
+    require_login();
+    require_once __DIR__ . '/../app/controllers/ProfileController.php';
+    $controller = new \App\Controllers\ProfileController();
+    $controller->update();
+});
+
 // Admin routes
 $router->get('/admin', function() {
     require_role('sales');
