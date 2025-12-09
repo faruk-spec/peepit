@@ -52,10 +52,10 @@
                             </button>
                         </form>
                         
-                        <a href="<?= url('admin/bulk-operations/template-products') ?>" 
+                        <a href="<?= url('admin/bulk-operations/export-products') ?>" 
                            class="btn btn-secondary" 
                            style="width: 100%; margin-top: 10px; display: inline-block; text-align: center;">
-                            📄 Download Template
+                            📄 Download Sample CSV
                         </a>
                     </div>
                 </div>
@@ -73,13 +73,7 @@
                         <div class="stats-row" style="display: flex; justify-content: space-around; margin-bottom: 20px; padding: 15px; background: rgba(16, 185, 129, 0.1); border-radius: 8px;">
                             <div class="text-center">
                                 <div style="font-size: 1.5rem; font-weight: bold; color: #10B981;">
-                                    <?php 
-                                    $productCount = 0;
-                                    try {
-                                        $productCount = $this->db->fetch("SELECT COUNT(*) as count FROM bottle_models")['count'] ?? 0;
-                                    } catch (\Exception $e) {}
-                                    echo $productCount;
-                                    ?>
+                                    <?= $product_count ?? 0 ?>
                                 </div>
                                 <div style="font-size: 0.875rem; color: #64748b;">Products</div>
                             </div>
@@ -106,13 +100,7 @@
                         <div class="stats-row" style="display: flex; justify-content: space-around; margin-bottom: 20px; padding: 15px; background: rgba(14, 165, 233, 0.1); border-radius: 8px;">
                             <div class="text-center">
                                 <div style="font-size: 1.5rem; font-weight: bold; color: #0EA5E9;">
-                                    <?php 
-                                    $orderCount = 0;
-                                    try {
-                                        $orderCount = $this->db->fetch("SELECT COUNT(*) as count FROM orders")['count'] ?? 0;
-                                    } catch (\Exception $e) {}
-                                    echo $orderCount;
-                                    ?>
+                                    <?= $order_count ?? 0 ?>
                                 </div>
                                 <div style="font-size: 0.875rem; color: #64748b;">Orders</div>
                             </div>
@@ -139,13 +127,7 @@
                         <div class="stats-row" style="display: flex; justify-content: space-around; margin-bottom: 20px; padding: 15px; background: rgba(245, 158, 11, 0.1); border-radius: 8px;">
                             <div class="text-center">
                                 <div style="font-size: 1.5rem; font-weight: bold; color: #F59E0B;">
-                                    <?php 
-                                    $customerCount = 0;
-                                    try {
-                                        $customerCount = $this->db->fetch("SELECT COUNT(*) as count FROM users WHERE role = 'customer'")['count'] ?? 0;
-                                    } catch (\Exception $e) {}
-                                    echo $customerCount;
-                                    ?>
+                                    <?= $customer_count ?? 0 ?>
                                 </div>
                                 <div style="font-size: 0.875rem; color: #64748b;">Customers</div>
                             </div>

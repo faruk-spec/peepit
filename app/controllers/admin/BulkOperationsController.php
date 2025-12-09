@@ -10,9 +10,24 @@ class BulkOperationsController extends Controller
     {
         require_role('manager');
         
+        // Get statistics for display
+        try {
+            $productCount = $this->db->fetch("SELECT COUNT(*) as count FROM bottle_models")['count'] ?? 0;
+            $orderCount = $this->db->fetch("SELECT COUNT(*) as count FROM orders")['count'] ?? 0;
+            $customerCount = $this->db->fetch("SELECT COUNT(*) as count FROM users WHERE role = 'customer'")['count'] ?? 0;
+        } catch (\Exception $e) {
+            error_log('Error fetching stats: ' . $e->getMessage());
+            $productCount = 0;
+            $orderCount = 0;
+            $customerCount = 0;
+        }
+        
         $csrfToken = $this->generateCSRF();
         $this->view('admin/bulk-operations/index', [
-            'csrf_token' => $csrfToken
+            'csrf_token' => $csrfToken,
+            'product_count' => $productCount,
+            'order_count' => $orderCount,
+            'customer_count' => $customerCount
         ]);
     }
     
