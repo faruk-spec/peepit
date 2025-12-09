@@ -625,6 +625,35 @@ $router->post('/admin/settings/smtp/update', function() {
     $controller->updateSmtp();
 });
 
+// Pricing Routes
+$router->get('/admin/pricing', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/PricingController.php';
+    $controller = new \App\Controllers\Admin\PricingController();
+    $controller->index();
+});
+
+$router->get('/admin/pricing/tiers', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/PricingController.php';
+    $controller = new \App\Controllers\Admin\PricingController();
+    $controller->tiers();
+});
+
+$router->post('/admin/pricing/tiers/save', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/PricingController.php';
+    $controller = new \App\Controllers\Admin\PricingController();
+    $controller->saveTier();
+});
+
+$router->post('/admin/pricing/tiers/delete', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/PricingController.php';
+    $controller = new \App\Controllers\Admin\PricingController();
+    $controller->deleteTier();
+});
+
 // Traffic Tracking Routes
 $router->get('/admin/traffic', function() {
     require_role('manager');

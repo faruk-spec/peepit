@@ -423,6 +423,12 @@
                                 <span>Label Templates</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="<?= url('admin/pricing') ?>" class="<?= ($current_page ?? '') === 'pricing' ? 'active' : '' ?>">
+                                <i class="fas fa-dollar-sign"></i>
+                                <span>Price Setup</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
