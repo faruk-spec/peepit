@@ -137,6 +137,68 @@ class PricingController extends Controller
         redirect('admin/pricing');
     }
 
+    public function bottleModelPricing()
+    {
+        require_role('manager');
+
+        try {
+            // Load pricing helper
+            require_once __DIR__ . '/../../helpers/pricing_helper.php';
+
+            // Fetch all bottle models
+            $bottles = $this->db->fetchAll(
+                "SELECT * FROM bottle_models WHERE status = 'active' ORDER BY name ASC"
+            );
+
+            $this->view('admin/pricing/bottle_models', [
+                'bottles' => $bottles
+            ]);
+        } catch (\Exception $e) {
+            error_log('Error loading bottle pricing: ' . $e->getMessage());
+            flash('error', 'Unable to load bottle pricing information');
+            redirect('admin/pricing');
+        }
+    }
+
+    public function assignToBottle()
+    {
+        require_role('manager');
+        
+        if (!$this->validateCSRF()) {
+            flash('error', 'Invalid request');
+            redirect('admin/pricing/bottle-models');
+            return;
+        }
+
+        $bottleId = $_POST['bottle_id'] ?? null;
+        $tierId = $_POST['tier_id'] ?? null;
+
+        if (!$bottleId) {
+            flash('error', 'Invalid bottle model');
+            redirect('admin/pricing/bottle-models');
+            return;
+        }
+
+        try {
+            // Update bottle model with pricing tier
+            $result = $this->db->query(
+                "UPDATE bottle_models SET pricing_tier_id = ? WHERE id = ?",
+                [$tierId, $bottleId]
+            );
+
+            if ($result) {
+                flash('success', 'Pricing tier assigned successfully');
+            } else {
+                flash('error', 'Failed to assign pricing tier');
+            }
+        } catch (\Exception $e) {
+            error_log('Error assigning pricing tier: ' . $e->getMessage());
+            flash('error', 'An error occurred while assigning pricing');
+        }
+
+        redirect('admin/pricing/bottle-models');
+    }
+
     public function rules()
     {
         require_role('manager');

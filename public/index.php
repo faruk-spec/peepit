@@ -654,6 +654,21 @@ $router->post('/admin/pricing/tiers/delete', function() {
     $controller->deleteTier();
 });
 
+// Bottle Model Pricing Routes
+$router->get('/admin/pricing/bottle-models', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/PricingController.php';
+    $controller = new \App\Controllers\Admin\PricingController();
+    $controller->bottleModelPricing();
+});
+
+$router->post('/admin/pricing/bottle-models/assign', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/PricingController.php';
+    $controller = new \App\Controllers\Admin\PricingController();
+    $controller->assignToBottle();
+});
+
 // Traffic Tracking Routes
 $router->get('/admin/traffic', function() {
     require_role('manager');
