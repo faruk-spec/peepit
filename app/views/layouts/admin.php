@@ -894,53 +894,58 @@
             overlay.classList.toggle('active');
         }
 
-        // Close sidebar when clicking outside on mobile
-        const mobileMediaQuery = window.matchMedia('(max-width: 1024px)');
-        
-        document.addEventListener('click', function(event) {
-            if (!mobileMediaQuery.matches) return;
+        // Initialize after DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cache media query for mobile detection
+            const mobileMediaQuery = window.matchMedia('(max-width: 1024px)');
             
-            const sidebar = document.getElementById('adminSidebar');
-            const toggle = document.querySelector('.mobile-menu-toggle');
-            const overlay = document.getElementById('sidebarOverlay');
-            
-            if (sidebar.classList.contains('open') && 
-                !sidebar.contains(event.target) && 
-                !toggle.contains(event.target)) {
-                sidebar.classList.remove('open');
-                overlay.classList.remove('active');
-            }
-        });
-
-        // Dropdown toggle functionality
-        document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
-            toggle.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const dropdown = this.parentElement;
-                const section = this.dataset.section;
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (!mobileMediaQuery.matches) return;
                 
-                // Close other dropdowns
-                document.querySelectorAll('.dropdown').forEach(d => {
-                    if (d !== dropdown && d.classList.contains('open')) {
-                        d.classList.remove('open');
-                    }
-                });
+                const sidebar = document.getElementById('adminSidebar');
+                const toggle = document.querySelector('.mobile-menu-toggle');
+                const overlay = document.getElementById('sidebarOverlay');
                 
-                dropdown.classList.toggle('open');
-                
-                if (dropdown.classList.contains('open')) {
-                    localStorage.setItem('dropdown_' + section, 'open');
-                } else {
-                    localStorage.removeItem('dropdown_' + section);
+                if (sidebar && toggle && overlay &&
+                    sidebar.classList.contains('open') && 
+                    !sidebar.contains(event.target) && 
+                    !toggle.contains(event.target)) {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
                 }
             });
-        });
 
-        // Restore dropdown states on page load
-        document.addEventListener('DOMContentLoaded', function() {
+            // Cache dropdown elements for performance
+            const allDropdowns = document.querySelectorAll('.dropdown');
+            
+            // Dropdown toggle functionality
+            document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const dropdown = this.parentElement;
+                    const section = this.dataset.section;
+                    
+                    // Close other dropdowns using cached list
+                    allDropdowns.forEach(d => {
+                        if (d !== dropdown && d.classList.contains('open')) {
+                            d.classList.remove('open');
+                        }
+                    });
+                    
+                    dropdown.classList.toggle('open');
+                    
+                    if (dropdown.classList.contains('open')) {
+                        localStorage.setItem('dropdown_' + section, 'open');
+                    } else {
+                        localStorage.removeItem('dropdown_' + section);
+                    }
+                });
+            });
+
             // Restore dropdown states
-            document.querySelectorAll('.dropdown').forEach(dropdown => {
+            allDropdowns.forEach(dropdown => {
                 const toggle = dropdown.querySelector('.dropdown-toggle');
                 const section = toggle?.dataset.section;
                 
@@ -958,20 +963,11 @@
             });
 
             // Update notification badge
-            fetch('/admin/notifications/unread-count')
-                .then(res => res.json())
-                .then(data => {
-                    const badge = document.getElementById('notification-badge');
-                    if (badge && data.count > 0) {
-                        badge.textContent = data.count;
-                        badge.style.display = 'inline';
-                    }
-                })
-                .catch(err => console.log('Failed to fetch notification count'));
+            updateNotificationBadge();
         });
 
-        // Auto-refresh notification badge every 30 seconds
-        const notificationInterval = setInterval(function() {
+        // Notification badge update function
+        function updateNotificationBadge() {
             fetch('/admin/notifications/unread-count')
                 .then(res => res.json())
                 .then(data => {
@@ -986,7 +982,10 @@
                     }
                 })
                 .catch(err => console.log('Failed to fetch notification count'));
-        }, 30000);
+        }
+
+        // Auto-refresh notification badge every 30 seconds
+        const notificationInterval = setInterval(updateNotificationBadge, 30000);
 
         // Clear interval on page unload to prevent memory leaks
         window.addEventListener('beforeunload', function() {
