@@ -266,6 +266,49 @@
             background: var(--light);
         }
 
+        /* Dropdown Styles */
+        .dropdown-menu {
+            list-style: none;
+            padding-left: 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .dropdown.open .dropdown-menu {
+            max-height: 2000px;
+        }
+
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dropdown-toggle:hover {
+            background: rgba(14, 165, 233, 0.2);
+            color: white;
+        }
+
+        .dropdown-toggle::after {
+            content: '▼';
+            margin-left: auto;
+            font-size: 10px;
+            transition: transform 0.3s;
+        }
+
+        .dropdown.open .dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu a {
+            padding-left: 52px !important;
+        }
+
         @media (max-width: 1024px) {
             .admin-sidebar {
                 transform: translateX(-100%);
@@ -334,29 +377,128 @@
                 <li class="menu-section">
                     <div class="menu-section-title">Catalog Management</div>
                 </li>
-                <li>
-                    <a href="<?= url('admin/bottles') ?>" class="<?= ($current_page ?? '') === 'bottles' ? 'active' : '' ?>">
-                        <i class="fas fa-wine-bottle"></i>
-                        <span>Bottle Models</span>
-                    </a>
+                <li class="dropdown">
+                    <div class="dropdown-toggle" data-section="catalog">
+                        <i class="fas fa-box"></i>
+                        <span>Catalog</span>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="<?= url('admin/bottles') ?>" class="<?= ($current_page ?? '') === 'bottles' ? 'active' : '' ?>">
+                                <i class="fas fa-wine-bottle"></i>
+                                <span>Bottle Models</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url('admin/sizes') ?>" class="<?= ($current_page ?? '') === 'sizes' ? 'active' : '' ?>">
+                                <i class="fas fa-ruler-vertical"></i>
+                                <span>Bottle Sizes</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url('admin/colors') ?>" class="<?= ($current_page ?? '') === 'colors' ? 'active' : '' ?>">
+                                <i class="fas fa-palette"></i>
+                                <span>Color Presets</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url('admin/templates') ?>" class="<?= ($current_page ?? '') === 'templates' ? 'active' : '' ?>">
+                                <i class="fas fa-tags"></i>
+                                <span>Label Templates</span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li>
-                    <a href="<?= url('admin/sizes') ?>" class="<?= ($current_page ?? '') === 'sizes' ? 'active' : '' ?>">
-                        <i class="fas fa-ruler-vertical"></i>
-                        <span>Bottle Sizes</span>
-                    </a>
+
+                <!-- Traffic Tracking Section -->
+                <li class="menu-section">
+                    <div class="menu-section-title">Traffic Tracking</div>
                 </li>
-                <li>
-                    <a href="<?= url('admin/colors') ?>" class="<?= ($current_page ?? '') === 'colors' ? 'active' : '' ?>">
-                        <i class="fas fa-palette"></i>
-                        <span>Color Presets</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= url('admin/templates') ?>" class="<?= ($current_page ?? '') === 'templates' ? 'active' : '' ?>">
-                        <i class="fas fa-tags"></i>
-                        <span>Label Templates</span>
-                    </a>
+                <li class="dropdown">
+                    <div class="dropdown-toggle" data-section="traffic">
+                        <i class="fas fa-chart-area"></i>
+                        <span>Traffic Analytics</span>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="<?= url('admin/traffic') ?>" class="<?= ($current_page ?? '') === 'traffic' ? 'active' : '' ?>">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url('admin/traffic/realtime') ?>" class="<?= ($current_page ?? '') === 'traffic-realtime' ? 'active' : '' ?>">
+                                <i class="fas fa-bolt"></i>
+                                <span>Real-Time Visitors</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url('admin/traffic/sources') ?>" class="<?= ($current_page ?? '') === 'traffic-sources' ? 'active' : '' ?>">
+                                <i class="fas fa-link"></i>
+                                <span>Traffic Sources</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url('admin/traffic/geo') ?>" class="<?= ($current_page ?? '') === 'traffic-geo' ? 'active' : '' ?>">
+                                <i class="fas fa-globe"></i>
+                                <span>Geo-Location</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url('admin/traffic/devices') ?>" class="<?= ($current_page ?? '') === 'traffic-devices' ? 'active' : '' ?>">
+                                <i class="fas fa-laptop"></i>
+                                <span>Devices & Browsers</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url('admin/traffic/behavior') ?>" class="<?= ($current_page ?? '') === 'traffic-behavior' ? 'active' : '' ?>">
+                                <i class="fas fa-user-check"></i>
+                                <span>User Behavior</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url('admin/traffic/campaigns') ?>" class="<?= ($current_page ?? '') === 'traffic-campaigns' ? 'active' : '' ?>">
+                                <i class="fas fa-bullhorn"></i>
+                                <span>UTM Campaigns</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url('admin/traffic/reports') ?>" class="<?= ($current_page ?? '') === 'traffic-reports' ? 'active' : '' ?>">
+                                <i class="fas fa-file-alt"></i>
+                                <span>Reports & Export</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url('admin/traffic/alerts') ?>" class="<?= ($current_page ?? '') === 'traffic-alerts' ? 'active' : '' ?>">
+                                <i class="fas fa-bell"></i>
+                                <span>Alerts</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url('admin/traffic/bots') ?>" class="<?= ($current_page ?? '') === 'traffic-bots' ? 'active' : '' ?>">
+                                <i class="fas fa-robot"></i>
+                                <span>Bot Detection</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url('admin/traffic/heatmaps') ?>" class="<?= ($current_page ?? '') === 'traffic-heatmaps' ? 'active' : '' ?>">
+                                <i class="fas fa-fire"></i>
+                                <span>Heatmaps</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url('admin/traffic/conversions') ?>" class="<?= ($current_page ?? '') === 'traffic-conversions' ? 'active' : '' ?>">
+                                <i class="fas fa-bullseye"></i>
+                                <span>Conversions</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url('admin/traffic/retention') ?>" class="<?= ($current_page ?? '') === 'traffic-retention' ? 'active' : '' ?>">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Retention</span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
 
                 <!-- User Management Section -->
@@ -477,6 +619,63 @@
         function toggleSidebar() {
             document.getElementById('adminSidebar').classList.toggle('open');
         }
+
+        // Dropdown toggle functionality
+        document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                const dropdown = this.parentElement;
+                const section = this.dataset.section;
+                
+                dropdown.classList.toggle('open');
+                
+                if (dropdown.classList.contains('open')) {
+                    localStorage.setItem('dropdown_' + section, 'open');
+                } else {
+                    localStorage.removeItem('dropdown_' + section);
+                }
+            });
+        });
+
+        // Restore dropdown states on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.dropdown').forEach(dropdown => {
+                const toggle = dropdown.querySelector('.dropdown-toggle');
+                const section = toggle?.dataset.section;
+                
+                if (section && localStorage.getItem('dropdown_' + section) === 'open') {
+                    dropdown.classList.add('open');
+                }
+            });
+
+            // Update notification badge
+            fetch('<?= url("admin/notifications/unread-count") ?>')
+                .then(res => res.json())
+                .then(data => {
+                    const badge = document.getElementById('notification-badge');
+                    if (data.count > 0) {
+                        badge.textContent = data.count;
+                        badge.style.display = 'inline';
+                    }
+                })
+                .catch(err => console.log('Failed to fetch notification count'));
+        });
+
+        // Auto-refresh notification badge every 30 seconds
+        setInterval(function() {
+            fetch('<?= url("admin/notifications/unread-count") ?>')
+                .then(res => res.json())
+                .then(data => {
+                    const badge = document.getElementById('notification-badge');
+                    if (data.count > 0) {
+                        badge.textContent = data.count;
+                        badge.style.display = 'inline';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                })
+                .catch(err => console.log('Failed to fetch notification count'));
+        }, 30000);
     </script>
     <script src="<?= url('js/app.js') ?>"></script>
     <?= $scripts ?? '' ?>

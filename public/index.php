@@ -625,6 +625,126 @@ $router->post('/admin/settings/smtp/update', function() {
     $controller->updateSmtp();
 });
 
+// Traffic Tracking Routes
+$router->get('/admin/traffic', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TrafficController.php';
+    $controller = new \App\Controllers\Admin\TrafficController();
+    $controller->index();
+});
+
+$router->get('/admin/traffic/realtime', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TrafficController.php';
+    $controller = new \App\Controllers\Admin\TrafficController();
+    $controller->realtime();
+});
+
+$router->get('/admin/traffic/sources', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TrafficController.php';
+    $controller = new \App\Controllers\Admin\TrafficController();
+    $controller->sources();
+});
+
+$router->get('/admin/traffic/geo', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TrafficController.php';
+    $controller = new \App\Controllers\Admin\TrafficController();
+    $controller->geo();
+});
+
+$router->get('/admin/traffic/devices', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TrafficController.php';
+    $controller = new \App\Controllers\Admin\TrafficController();
+    $controller->devices();
+});
+
+$router->get('/admin/traffic/behavior', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TrafficController.php';
+    $controller = new \App\Controllers\Admin\TrafficController();
+    $controller->behavior();
+});
+
+$router->get('/admin/traffic/campaigns', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TrafficController.php';
+    $controller = new \App\Controllers\Admin\TrafficController();
+    $controller->campaigns();
+});
+
+$router->get('/admin/traffic/reports', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TrafficController.php';
+    $controller = new \App\Controllers\Admin\TrafficController();
+    $controller->reports();
+});
+
+$router->post('/admin/traffic/reports/export', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TrafficController.php';
+    $controller = new \App\Controllers\Admin\TrafficController();
+    $controller->exportReport();
+});
+
+$router->get('/admin/traffic/alerts', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TrafficController.php';
+    $controller = new \App\Controllers\Admin\TrafficController();
+    $controller->alerts();
+});
+
+$router->post('/admin/traffic/alerts/save', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TrafficController.php';
+    $controller = new \App\Controllers\Admin\TrafficController();
+    $controller->saveAlerts();
+});
+
+$router->get('/admin/traffic/bots', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TrafficController.php';
+    $controller = new \App\Controllers\Admin\TrafficController();
+    $controller->bots();
+});
+
+$router->post('/admin/traffic/bots/filter', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TrafficController.php';
+    $controller = new \App\Controllers\Admin\TrafficController();
+    $controller->filterBots();
+});
+
+$router->get('/admin/traffic/heatmaps', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TrafficController.php';
+    $controller = new \App\Controllers\Admin\TrafficController();
+    $controller->heatmaps();
+});
+
+$router->get('/admin/traffic/conversions', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TrafficController.php';
+    $controller = new \App\Controllers\Admin\TrafficController();
+    $controller->conversions();
+});
+
+$router->post('/admin/traffic/conversions/goal', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TrafficController.php';
+    $controller = new \App\Controllers\Admin\TrafficController();
+    $controller->createGoal();
+});
+
+$router->get('/admin/traffic/retention', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/TrafficController.php';
+    $controller = new \App\Controllers\Admin\TrafficController();
+    $controller->retention();
+});
+
 // Get current URL and method
 $url = $_GET['url'] ?? '/';
 $method = $_SERVER['REQUEST_METHOD'];
