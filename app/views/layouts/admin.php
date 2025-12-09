@@ -420,12 +420,15 @@
         }
 
         .dropdown-toggle::after {
-            content: '\f107';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
+            content: '';
             margin-left: auto;
             font-size: 12px;
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid currentColor;
         }
 
         .dropdown.open .dropdown-toggle {
@@ -892,13 +895,16 @@
         }
 
         // Close sidebar when clicking outside on mobile
+        const isMobile = () => window.matchMedia('(max-width: 1024px)').matches;
+        
         document.addEventListener('click', function(event) {
+            if (!isMobile()) return;
+            
             const sidebar = document.getElementById('adminSidebar');
             const toggle = document.querySelector('.mobile-menu-toggle');
             const overlay = document.getElementById('sidebarOverlay');
             
-            if (window.innerWidth <= 1024 && 
-                sidebar.classList.contains('open') && 
+            if (sidebar.classList.contains('open') && 
                 !sidebar.contains(event.target) && 
                 !toggle.contains(event.target)) {
                 sidebar.classList.remove('open');
@@ -956,7 +962,7 @@
                 .then(res => res.json())
                 .then(data => {
                     const badge = document.getElementById('notification-badge');
-                    if (data.count > 0) {
+                    if (badge && data.count > 0) {
                         badge.textContent = data.count;
                         badge.style.display = 'inline';
                     }
@@ -965,20 +971,27 @@
         });
 
         // Auto-refresh notification badge every 30 seconds
-        setInterval(function() {
+        const notificationInterval = setInterval(function() {
             fetch('/admin/notifications/unread-count')
                 .then(res => res.json())
                 .then(data => {
                     const badge = document.getElementById('notification-badge');
-                    if (data.count > 0) {
-                        badge.textContent = data.count;
-                        badge.style.display = 'inline';
-                    } else {
-                        badge.style.display = 'none';
+                    if (badge) {
+                        if (data.count > 0) {
+                            badge.textContent = data.count;
+                            badge.style.display = 'inline';
+                        } else {
+                            badge.style.display = 'none';
+                        }
                     }
                 })
                 .catch(err => console.log('Failed to fetch notification count'));
         }, 30000);
+
+        // Clear interval on page unload to prevent memory leaks
+        window.addEventListener('beforeunload', function() {
+            clearInterval(notificationInterval);
+        });
     </script>
     <script src="<?= url('js/app.js') ?>"></script>
     <?= $scripts ?? '' ?>
