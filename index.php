@@ -2,32 +2,33 @@
 /**
  * Peepit - Root Index File
  * 
- * This file serves as a fallback when the DocumentRoot is pointing to the project root
- * instead of the public/ directory. It redirects all requests to the public/ directory.
+ * This file serves as the entry point when the DocumentRoot is pointing to the project root
+ * instead of the public/ directory (Method B deployment).
  * 
- * IMPORTANT: For production, configure your web server to point directly to the public/ directory.
- * This file is only a fallback for situations where DocumentRoot configuration cannot be changed.
+ * For Method A (recommended for security): Configure DocumentRoot to point to public/ directory
+ * For Method B (simpler setup): Keep DocumentRoot at root and use this file
  */
 
-// Get the request URI
-$requestUri = $_SERVER['REQUEST_URI'];
+// Get the request URI and remove query string
+$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// If accessing the installer, redirect to install folder
-if (strpos($requestUri, '/install') === 0 || $requestUri === '/install/') {
-    header('Location: /install/index.php');
-    exit;
+// If accessing the installer, serve it directly
+if (strpos($requestUri, '/install') === 0) {
+    // Let Apache/PHP handle the install directory naturally
+    return false;
 }
 
 // Check if the request is for a static file in the public directory
 $publicPath = __DIR__ . '/public' . $requestUri;
 
-// If it's a file in the public directory, serve it directly
-if (is_file($publicPath)) {
+// If it's a static file in the public directory, serve it directly
+if (is_file($publicPath) && $requestUri !== '/index.php') {
     // Set appropriate content type
     $extension = pathinfo($publicPath, PATHINFO_EXTENSION);
     $mimeTypes = [
         'css' => 'text/css',
         'js' => 'application/javascript',
+        'json' => 'application/json',
         'png' => 'image/png',
         'jpg' => 'image/jpeg',
         'jpeg' => 'image/jpeg',
@@ -37,6 +38,8 @@ if (is_file($publicPath)) {
         'woff' => 'font/woff',
         'woff2' => 'font/woff2',
         'ttf' => 'font/ttf',
+        'eot' => 'application/vnd.ms-fontobject',
+        'otf' => 'font/otf',
     ];
     
     if (isset($mimeTypes[$extension])) {
@@ -47,6 +50,6 @@ if (is_file($publicPath)) {
     exit;
 }
 
-// For all other requests, include the public/index.php
+// For all other requests, change to public directory and load public/index.php
 chdir(__DIR__ . '/public');
 require __DIR__ . '/public/index.php';

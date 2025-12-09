@@ -4,36 +4,42 @@ This guide specifically addresses deployment on aaPanel (BaoTa Panel) servers.
 
 ## Quick Fix for Common Errors
 
-### Problem 1: "This page isn't working" - No matching DirectoryIndex
+### Recommended Approach: Use Method B (Root DocumentRoot)
 
-**Solution:**
-1. Login to aaPanel
-2. Go to **Website** → Select your site → **Site Directory**
-3. Change **Running Directory** from `/` to `/public`
-4. Click **Save**
-5. Proceed to Problem 2 below
+**This is the SIMPLEST solution that avoids open_basedir issues entirely:**
 
-### Problem 2: open_basedir Restriction (CRITICAL - Do this after Problem 1)
+1. **Keep DocumentRoot at root level:** `/www/wwwroot/yourdomain.com`
+2. **Ensure the root `.htaccess` is configured correctly** (pull latest changes)
+3. **Ensure `index.php` exists in the root directory** (pull latest changes)
+4. **No need to modify open_basedir settings**
+5. The root `index.php` handles all routing automatically
 
-**Error:** `open_basedir restriction in effect` or `Failed opening required vendor/autoload.php`
+**To verify your setup:**
+```bash
+cd /www/wwwroot/yourdomain.com
+ls -la index.php  # Should exist in root
+ls -la .htaccess  # Should exist in root
+```
 
-**Solution:**
-1. In aaPanel, **Website** → Your site → **Site Directory**
-2. Scroll to **Security** section (or **防跨站设置**)
-3. Find **Open Basedir** setting
-4. Change from: `/www/wwwroot/yourdomain.com/public/:/tmp/`
-5. Change to: `/www/wwwroot/yourdomain.com/:/tmp/`
+### Alternative: Method A (More Secure but Requires open_basedir Configuration)
+
+If you prefer to set DocumentRoot to `/public`:
+
+**Step 1:** Set DocumentRoot to `/public`
+1. aaPanel → **Website** → Your site → **Site Directory**
+2. Change **Running Directory** from `/` to `/public`
+3. Click **Save**
+
+**Step 2:** Configure open_basedir (CRITICAL)
+1. Same page, scroll to **Security** section
+2. Find **Open Basedir** setting
+3. Change from: `/www/wwwroot/yourdomain.com/public/:/tmp/`
+4. Change to: `/www/wwwroot/yourdomain.com/:/tmp/`
    - **Remove `/public` from the path**
-6. Click **Save**
-7. Restart PHP-FPM
+5. Click **Save**
+6. Restart PHP-FPM
 
-**Note:** If you can't change DocumentRoot, use the root `index.php` fallback instead (see Option 2 below).
-
-#### Option 2: Use Root Index Fallback (Alternative)
-If you cannot change the DocumentRoot:
-1. Ensure `index.php` exists in your project root (not in public/)
-2. This file will automatically redirect to the correct location
-3. No need to modify open_basedir in this case
+**Note:** Method B (root DocumentRoot) is recommended for aaPanel deployments as it avoids the open_basedir configuration step entirely.
 
 ## Complete aaPanel Setup Guide
 
@@ -57,7 +63,9 @@ Ensure these folders exist:
 
 Choose ONE of the following methods:
 
-#### Method A: DocumentRoot to /public (RECOMMENDED for Security)
+#### Method A: DocumentRoot to /public (More Secure - Requires open_basedir Config)
+
+This method is more secure but requires additional configuration of `open_basedir`.
 
 **For Apache:**
 1. Website → Your Site → **Site Directory**
@@ -74,16 +82,16 @@ location / {
 }
 ```
 
-**Then proceed to Step 3 to configure open_basedir.**
+**Then proceed to Step 3 to configure open_basedir (REQUIRED for Method A).**
 
-#### Method B: DocumentRoot to Root Directory (Simpler Configuration)
+#### Method B: DocumentRoot to Root Directory (RECOMMENDED for aaPanel - Simpler)
 
-If you prefer to keep DocumentRoot at the root level or want to avoid open_basedir configuration:
+This is the **recommended method for aaPanel** deployments as it avoids open_basedir configuration issues.
 
-**For Apache - Edit Config File:**
-1. Website → Your Site → **Config File**
-2. Keep `DocumentRoot "/www/wwwroot/yourdomain.com"` (root directory)
-3. Ensure these settings in the `<Directory>` section:
+**For Apache:**
+1. Website → Your Site → **Config File** (or keep default settings)
+2. Ensure `DocumentRoot` points to root: `"/www/wwwroot/yourdomain.com"`
+3. Verify the `<Directory>` section has:
 ```apache
 <Directory "/www/wwwroot/yourdomain.com">
     SetOutputFilter DEFLATE
@@ -96,19 +104,34 @@ If you prefer to keep DocumentRoot at the root level or want to avoid open_based
 4. Save and restart Apache
 
 **For Nginx:**
-1. Keep root directive pointing to project root
-2. Ensure proper rewrite rules
+1. Keep root directive pointing to project root: `/www/wwwroot/yourdomain.com`
+2. Ensure proper rewrite rules in site config:
+```nginx
+location / {
+    try_files $uri $uri/ /index.php?$query_string;
+}
+```
+
+**What happens:**
+- The root `index.php` file acts as a router
+- It automatically serves files from `/public` directory
+- It handles installer access at `/install/`
+- No need to modify `open_basedir` settings
 
 **Advantages of Method B:**
-- No need to modify `open_basedir` settings
-- Simpler configuration
-- The root `index.php` file handles all routing automatically
+- ✅ No need to modify `open_basedir` settings
+- ✅ Simpler configuration
+- ✅ Fewer permission issues
+- ✅ The root `index.php` file handles all routing automatically
+- ✅ Works out of the box with aaPanel defaults
 
 **Disadvantages of Method B:**
-- Slightly less secure (all files potentially accessible)
-- Not the standard MVC pattern deployment
+- ❌ Slightly less secure (project files accessible if .htaccess fails)
+- ❌ Not the standard MVC pattern deployment
 
-**Choose Method A if you want maximum security. Choose Method B if you want simplicity and are having issues with open_basedir.**
+**Security Note:** The root `.htaccess` file blocks direct access to sensitive directories (app/, config/, vendor/) even with Method B.
+
+**Skip to Step 4 (Install PHP Extensions) if you chose Method B.**
 
 ### Step 3: Configure PHP Security Settings (Only for Method A)
 

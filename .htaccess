@@ -2,21 +2,31 @@
     RewriteEngine On
     RewriteBase /
     
-    # Force HTTPS
-    RewriteCond %{HTTPS} off
-    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    # Force HTTPS (optional - comment out if not using HTTPS)
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
     
-    # Redirect to public folder
+    # Allow installer access
+    RewriteCond %{REQUEST_URI} ^/install/
+    RewriteRule ^ - [L]
+    
+    # Route everything through root index.php
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ public/$1 [L,QSA]
+    RewriteRule ^(.*)$ index.php [L,QSA]
 </IfModule>
 
 # Block direct access to folders
 Options -Indexes
 
-# Protect config and install folders
+# Protect sensitive files and folders
 <FilesMatch "^\.">
     Order allow,deny
     Deny from all
 </FilesMatch>
+
+# Block access to sensitive directories
+<DirectoryMatch "^.*(app|config|vendor).*">
+    Order allow,deny
+    Deny from all
+</DirectoryMatch>

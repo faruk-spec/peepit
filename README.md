@@ -270,11 +270,20 @@ Tracks:
 ## Troubleshooting
 
 ### Issue: "This page isn't working" or "No matching DirectoryIndex" (aaPanel/BT Panel)
-**Solution:** 
+
+**Recommended Solution (Method B - Simpler):**
+1. Keep DocumentRoot at root level: `/www/wwwroot/yourdomain.com`
+2. Ensure `index.php` and `.htaccess` exist in root directory (pull latest changes)
+3. No need to modify open_basedir settings
+4. Restart Apache/Nginx
+
+**Alternative Solution (Method A - More Secure):**
 1. In aaPanel, go to Website > Your Site > Site Directory
 2. Set "Running Directory" to `/public`
-3. Save and restart the web server
-4. If you can't change the DocumentRoot, ensure the `index.php` file exists in the root directory
+3. Configure open_basedir: Change `/www/wwwroot/yourdomain.com/public/:/tmp/` to `/www/wwwroot/yourdomain.com/:/tmp/`
+4. Save and restart PHP-FPM
+
+**See AAPANEL-GUIDE.md for detailed instructions.**
 
 ### Issue: White screen after installation
 **Solution:** Check PHP error logs, ensure all permissions are correct
