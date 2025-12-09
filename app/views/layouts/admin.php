@@ -654,7 +654,7 @@
             });
 
             // Update notification badge
-            fetch('<?= url("admin/notifications/unread-count") ?>')
+            fetch('/admin/notifications/unread-count')
                 .then(res => res.json())
                 .then(data => {
                     const badge = document.getElementById('notification-badge');
@@ -668,7 +668,7 @@
 
         // Auto-refresh notification badge every 30 seconds
         setInterval(function() {
-            fetch('<?= url("admin/notifications/unread-count") ?>')
+            fetch('/admin/notifications/unread-count')
                 .then(res => res.json())
                 .then(data => {
                     const badge = document.getElementById('notification-badge');
