@@ -278,11 +278,15 @@
             margin-top: 5px;
             margin-bottom: 5px;
             position: relative;
-            pointer-events: auto;
+            pointer-events: none;
+            opacity: 0;
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
         }
 
         .dropdown.open .dropdown-menu {
             max-height: 2000px;
+            pointer-events: auto;
+            opacity: 1;
         }
 
         .dropdown-toggle {
