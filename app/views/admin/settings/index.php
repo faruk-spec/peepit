@@ -35,21 +35,21 @@
                                 
                                 <?php foreach ($settings as $setting): ?>
                                     <div class="form-group">
-                                        <label for="<?= $setting['key'] ?>">
-                                            <?= ucwords(str_replace('_', ' ', $setting['key'])) ?>
+                                        <label for="<?= htmlspecialchars($setting['key']) ?>">
+                                            <?= htmlspecialchars(ucwords(str_replace('_', ' ', $setting['key']))) ?>
                                         </label>
                                         <?php if (strlen($setting['value']) > 100): ?>
                                             <textarea 
-                                                name="<?= $setting['key'] ?>" 
-                                                id="<?= $setting['key'] ?>"
+                                                name="<?= htmlspecialchars($setting['key']) ?>" 
+                                                id="<?= htmlspecialchars($setting['key']) ?>"
                                                 rows="4"
                                                 class="form-control"
                                             ><?= htmlspecialchars($setting['value']) ?></textarea>
                                         <?php else: ?>
                                             <input 
                                                 type="text" 
-                                                name="<?= $setting['key'] ?>" 
-                                                id="<?= $setting['key'] ?>"
+                                                name="<?= htmlspecialchars($setting['key']) ?>" 
+                                                id="<?= htmlspecialchars($setting['key']) ?>"
                                                 value="<?= htmlspecialchars($setting['value']) ?>"
                                                 class="form-control"
                                             >

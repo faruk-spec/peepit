@@ -89,8 +89,8 @@
                                     <?php foreach ($top_products as $product): ?>
                                         <tr>
                                             <td><?= htmlspecialchars($product['name']) ?></td>
-                                            <td><span class="badge badge-primary"><?= $product['order_count'] ?></span></td>
-                                            <td><span class="badge badge-secondary"><?= $product['total_quantity'] ?></span></td>
+                                            <td><span class="badge badge-primary"><?= intval($product['order_count']) ?></span></td>
+                                            <td><span class="badge badge-secondary"><?= intval($product['total_quantity']) ?></span></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -120,7 +120,7 @@
                                 <tbody>
                                     <?php foreach ($recent_orders as $order): ?>
                                         <tr>
-                                            <td><a href="<?= url("admin/orders/{$order['id']}") ?>">#<?= $order['id'] ?></a></td>
+                                            <td><a href="<?= url("admin/orders/" . intval($order['id'])) ?>">#<?= intval($order['id']) ?></a></td>
                                             <td><?= htmlspecialchars($order['customer_name'] ?? 'N/A') ?></td>
                                             <td>
                                                 <?php
