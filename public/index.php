@@ -969,6 +969,28 @@ $router->post('/admin/hero-slider/delete', function() {
     $controller->delete();
 });
 
+// Admin Homepage Content Management (CMS)
+$router->get('/admin/home-content', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/HomeContentController.php';
+    $controller = new \App\Controllers\Admin\HomeContentController();
+    $controller->index();
+});
+
+$router->post('/admin/home-content/update', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/HomeContentController.php';
+    $controller = new \App\Controllers\Admin\HomeContentController();
+    $controller->update();
+});
+
+$router->post('/admin/home-content/reset', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/HomeContentController.php';
+    $controller = new \App\Controllers\Admin\HomeContentController();
+    $controller->reset();
+});
+
 // Get current URL and method
 $url = $_GET['url'] ?? '/';
 $method = $_SERVER['REQUEST_METHOD'];

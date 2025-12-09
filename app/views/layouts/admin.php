@@ -562,6 +562,12 @@
                         <span>Hero Slider</span>
                     </a>
                 </li>
+                <li>
+                    <a href="<?= url('admin/home-content') ?>" class="<?= ($current_page ?? '') === 'home-content' ? 'active' : '' ?>">
+                        <i class="fas fa-home"></i>
+                        <span>Homepage Content</span>
+                    </a>
+                </li>
 
                 <!-- System Section -->
                 <li class="menu-section">

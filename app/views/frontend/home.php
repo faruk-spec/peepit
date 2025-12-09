@@ -1,18 +1,56 @@
 <?php ob_start(); ?>
 
-<!-- Hero Section - Full Width with Advanced Water Effects -->
+<!-- Hero Section - Full Width with Advanced Water Effects and Slider -->
 <div class="hero full-width water-effect">
+    <?php if (!empty($hero_slides) && count($hero_slides) > 1): ?>
+        <!-- Hero Slider with Multiple Images -->
+        <div class="hero-slider">
+            <?php foreach ($hero_slides as $index => $slide): ?>
+                <div class="hero-slide <?= $index === 0 ? 'active' : '' ?>" 
+                     style="background-image: url('<?= url('uploads/hero/' . htmlspecialchars($slide['image'])) ?>');">
+                </div>
+            <?php endforeach; ?>
+        </div>
+        
+        <!-- Slider Navigation -->
+        <div class="slider-nav">
+            <?php foreach ($hero_slides as $index => $slide): ?>
+                <button class="slider-dot <?= $index === 0 ? 'active' : '' ?>" 
+                        onclick="changeSlide(<?= $index ?>)" 
+                        aria-label="Go to slide <?= $index + 1 ?>"></button>
+            <?php endforeach; ?>
+        </div>
+        
+        <button class="slider-arrow slider-prev" onclick="prevSlide()" aria-label="Previous slide">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="slider-arrow slider-next" onclick="nextSlide()" aria-label="Next slide">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    <?php elseif (!empty($hero_slides) && count($hero_slides) === 1): ?>
+        <!-- Single Hero Image -->
+        <div class="hero-background" 
+             style="background-image: url('<?= url('uploads/hero/' . htmlspecialchars($hero_slides[0]['image'])) ?>');">
+        </div>
+    <?php endif; ?>
+    
     <div class="water-droplets"></div>
     <div class="wave-layer wave1"></div>
     <div class="wave-layer wave2"></div>
     <div class="wave-layer wave3"></div>
+    
     <div class="container hero-content">
-        <h1 class="animate-fade-in"><i class="fas fa-tint"></i> Welcome to Peepit</h1>
-        <p class="animate-fade-in-delay">Create Your Perfect Custom Water Bottle</p>
+        <?php 
+        $heroTitle = $home_content['hero_title'] ?? 'Welcome to Peepit';
+        $heroDescription = $home_content['hero_description'] ?? 'Create Your Perfect Custom Water Bottle';
+        $heroButtonText = $home_content['hero_button_text'] ?? 'Get Started';
+        ?>
+        <h1 class="animate-fade-in"><i class="fas fa-tint"></i> <?= htmlspecialchars($heroTitle) ?></h1>
+        <p class="animate-fade-in-delay"><?= htmlspecialchars($heroDescription) ?></p>
         <?php if (is_logged_in()): ?>
             <a href="<?= url('order/start') ?>" class="btn btn-success animate-fade-in-delay-2"><i class="fas fa-shopping-cart"></i> Start Ordering</a>
         <?php else: ?>
-            <a href="<?= url('register') ?>" class="btn btn-success animate-fade-in-delay-2"><i class="fas fa-user-plus"></i> Get Started</a>
+            <a href="<?= url('register') ?>" class="btn btn-success animate-fade-in-delay-2"><i class="fas fa-user-plus"></i> <?= htmlspecialchars($heroButtonText) ?></a>
             <a href="<?= url('login') ?>" class="btn btn-secondary animate-fade-in-delay-2"><i class="fas fa-sign-in-alt"></i> Login</a>
         <?php endif; ?>
     </div>
@@ -27,6 +65,134 @@
 .hero-content {
     position: relative;
     z-index: 10;
+}
+
+/* Hero Slider Styles */
+.hero-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.hero-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.hero-slide.active {
+    opacity: 0.3;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.3;
+    z-index: 0;
+}
+
+/* Slider Navigation */
+.slider-nav {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 11;
+}
+
+.slider-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.slider-dot:hover {
+    background: rgba(255, 255, 255, 0.8);
+    transform: scale(1.2);
+}
+
+.slider-dot.active {
+    background: rgba(255, 255, 255, 1);
+    transform: scale(1.3);
+}
+
+.slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: all 0.3s;
+    z-index: 11;
+    backdrop-filter: blur(5px);
+}
+
+.slider-arrow:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.slider-prev {
+    left: 20px;
+}
+
+.slider-next {
+    right: 20px;
+}
+
+@media (max-width: 768px) {
+    .slider-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .slider-prev {
+        left: 10px;
+    }
+    
+    .slider-next {
+        right: 10px;
+    }
+    
+    .slider-nav {
+        bottom: 20px;
+    }
+    
+    .slider-dot {
+        width: 10px;
+        height: 10px;
+    }
 }
 
 /* Water Droplets Animation */
@@ -137,34 +303,56 @@
 }
 </style>
 
-<!-- How It Works Section -->
+<!-- How It Works Section with Horizontal Timeline -->
 <section class="wave-bg">
     <div class="container">
         <div class="text-center mb-40">
-            <h2>How It Works</h2>
-            <p>Simple steps to get your custom water bottle</p>
+            <h2><?= htmlspecialchars($home_content['how_it_works_title'] ?? 'How It Works') ?></h2>
+            <p><?= htmlspecialchars($home_content['how_it_works_description'] ?? 'Simple steps to get your custom water bottle') ?></p>
         </div>
         
-        <div class="grid grid-4">
-            <div class="card text-center glass-card">
-                <div class="feature-icon"><i class="fas fa-user-plus"></i></div>
-                <h3>1. Register</h3>
-                <p>Create your free account in seconds</p>
+        <!-- Horizontal Timeline -->
+        <div class="timeline-horizontal">
+            <div class="timeline-line"></div>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <div class="timeline-content glass-card">
+                    <h3>1. Register</h3>
+                    <p>Create your free account in seconds</p>
+                </div>
             </div>
-            <div class="card text-center glass-card">
-                <div class="feature-icon"><i class="fas fa-palette"></i></div>
-                <h3>2. Design</h3>
-                <p>Choose model, size, color & label</p>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot">
+                    <i class="fas fa-palette"></i>
+                </div>
+                <div class="timeline-content glass-card">
+                    <h3>2. Design</h3>
+                    <p>Choose model, size, color & label</p>
+                </div>
             </div>
-            <div class="card text-center glass-card">
-                <div class="feature-icon"><i class="fas fa-shopping-bag"></i></div>
-                <h3>3. Order</h3>
-                <p>Select quantity & place order</p>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
+                <div class="timeline-content glass-card">
+                    <h3>3. Order</h3>
+                    <p>Select quantity & place order</p>
+                </div>
             </div>
-            <div class="card text-center glass-card">
-                <div class="feature-icon"><i class="fas fa-truck"></i></div>
-                <h3>4. Delivery</h3>
-                <p>Get it delivered to your door</p>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="timeline-content glass-card">
+                    <h3>4. Delivery</h3>
+                    <p>Get it delivered to your door</p>
+                </div>
             </div>
         </div>
     </div>
@@ -173,7 +361,7 @@
 <!-- Features Section -->
 <section>
     <div class="container">
-        <h2 class="text-center mb-40">Why Choose Peepit?</h2>
+        <h2 class="text-center mb-40"><?= htmlspecialchars($home_content['why_choose_title'] ?? 'Why Choose Peepit?') ?></h2>
         <div class="grid grid-3">
             <div class="card">
                 <div class="feature-icon"><i class="fas fa-fill-drip"></i></div>
@@ -236,8 +424,8 @@
 <!-- CTA Section -->
 <div class="cta-section">
     <div class="container">
-        <h2><i class="fas fa-rocket"></i> Ready to Create Your Custom Bottle?</h2>
-        <p>Join thousands of satisfied customers who trust Peepit for their custom water bottle needs</p>
+        <h2><i class="fas fa-rocket"></i> <?= htmlspecialchars($home_content['cta_title'] ?? 'Ready to Create Your Custom Bottle?') ?></h2>
+        <p><?= htmlspecialchars($home_content['cta_description'] ?? 'Join thousands of satisfied customers who trust Peepit for their custom water bottle needs') ?></p>
         <?php if (is_logged_in()): ?>
             <a href="<?= url('order/start') ?>" class="btn btn-success btn-lg"><i class="fas fa-play-circle"></i> Start Your Order Now</a>
         <?php else: ?>
@@ -249,7 +437,7 @@
 <!-- Statistics Section -->
 <section class="section-light">
     <div class="container">
-        <h2 class="text-center mb-40">Trusted by Thousands</h2>
+        <h2 class="text-center mb-40"><?= htmlspecialchars($home_content['stats_title'] ?? 'Trusted by Thousands') ?></h2>
         <div class="stats-counter grid grid-4">
             <div class="counter-item card glass-card text-center">
                 <div class="counter-icon"><i class="fas fa-users"></i></div>
@@ -473,6 +661,162 @@
 
     counters.forEach(counter => observer.observe(counter));
 </script>
+
+<!-- Hero Slider JavaScript -->
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots = document.querySelectorAll('.slider-dot');
+    const slideCount = slides.length;
+    
+    if (slideCount > 1) {
+        function showSlide(index) {
+            // Remove active class from all slides and dots
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            // Add active class to current slide and dot
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+            
+            currentSlide = index;
+        }
+        
+        function nextSlide() {
+            let next = (currentSlide + 1) % slideCount;
+            showSlide(next);
+        }
+        
+        function prevSlide() {
+            let prev = (currentSlide - 1 + slideCount) % slideCount;
+            showSlide(prev);
+        }
+        
+        function changeSlide(index) {
+            showSlide(index);
+        }
+        
+        // Auto-advance slides every 5 seconds
+        setInterval(nextSlide, 5000);
+    }
+</script>
+
+<!-- Timeline Styles -->
+<style>
+    /* Horizontal Timeline */
+    .timeline-horizontal {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 40px 0;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    .timeline-line {
+        position: absolute;
+        top: 40px;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, 
+            var(--primary) 0%, 
+            var(--secondary) 50%, 
+            var(--primary) 100%
+        );
+        border-radius: 2px;
+        z-index: 0;
+    }
+    
+    .timeline-item {
+        position: relative;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 1;
+    }
+    
+    .timeline-dot {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border: 4px solid white;
+        box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 32px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .timeline-dot:hover {
+        transform: scale(1.15);
+        box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+    }
+    
+    .timeline-content {
+        text-align: center;
+        padding: 20px;
+        min-height: 140px;
+        transition: all 0.3s ease;
+    }
+    
+    .timeline-content:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .timeline-content h3 {
+        margin: 0 0 10px;
+        color: var(--primary);
+        font-size: 1.2rem;
+    }
+    
+    .timeline-content p {
+        margin: 0;
+        color: var(--text-light);
+        font-size: 0.95rem;
+    }
+    
+    @media (max-width: 1024px) {
+        .timeline-horizontal {
+            flex-wrap: wrap;
+            max-width: 600px;
+        }
+        
+        .timeline-item {
+            flex: 0 0 50%;
+            margin-bottom: 40px;
+        }
+        
+        .timeline-line {
+            display: none;
+        }
+    }
+    
+    @media (max-width: 640px) {
+        .timeline-item {
+            flex: 0 0 100%;
+        }
+        
+        .timeline-dot {
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+        }
+        
+        .timeline-content {
+            min-height: auto;
+        }
+    }
+</style>
 
 <?php
 $content = ob_get_clean();
