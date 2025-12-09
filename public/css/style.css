@@ -1120,11 +1120,11 @@ section {
 }
 
 .status-badge.status-shipped {
-    background: #E0E7FF;
-    color: #3730A3;
+    background: #DBEAFE;
+    color: #1E40AF;
 }
 
 .status-badge.status-delivered {
-    background: #E0E7FF;
-    color: #3730A3;
+    background: #D1FAE5;
+    color: #047857;
 }
