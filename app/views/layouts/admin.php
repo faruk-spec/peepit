@@ -928,18 +928,20 @@
                     const section = this.dataset.section;
                     
                     // Close other dropdowns using cached list
+                    const isOpen = dropdown.classList.contains('open');
                     allDropdowns.forEach(d => {
                         if (d !== dropdown && d.classList.contains('open')) {
                             d.classList.remove('open');
                         }
                     });
                     
-                    dropdown.classList.toggle('open');
-                    
-                    if (dropdown.classList.contains('open')) {
-                        localStorage.setItem('dropdown_' + section, 'open');
-                    } else {
+                    // Toggle current dropdown
+                    if (isOpen) {
+                        dropdown.classList.remove('open');
                         localStorage.removeItem('dropdown_' + section);
+                    } else {
+                        dropdown.classList.add('open');
+                        localStorage.setItem('dropdown_' + section, 'open');
                     }
                 });
             });

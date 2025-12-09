@@ -1090,8 +1090,11 @@ section {
     border-radius: 20px;
     font-size: 12px;
     font-weight: 600;
-    text-transform: capitalize;
     line-height: 1.5;
+}
+
+.status-badge {
+    text-transform: capitalize;
 }
 
 .badge {
