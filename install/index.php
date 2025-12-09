@@ -437,13 +437,48 @@ if ($step == 6) {
                     <div class="success-icon">✓</div>
                     <h2>Installation Complete!</h2>
                     <p class="mt-20">Peepit has been successfully installed.</p>
-                    <p>You can now login to your admin panel.</p>
-                    <div class="mt-20">
-                        <a href="../public/admin/login" class="btn btn-success">Go to Admin Panel</a>
-                    </div>
                 </div>
+                
+                <div class="alert alert-warning mt-20">
+                    <strong>⚠️ Important: Configuration Required</strong>
+                    <p style="margin-top: 10px;">Before accessing your site, please complete ONE of these options:</p>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 15px; text-align: left;">
+                    <h3 style="color: #667eea; margin-bottom: 10px;">Option 1: Keep DocumentRoot at Root (RECOMMENDED for aaPanel)</h3>
+                    <p style="margin-bottom: 10px;">Your DocumentRoot should point to: <code>/www/wwwroot/yourdomain.com</code></p>
+                    <ol style="margin-left: 20px; line-height: 1.8;">
+                        <li>In aaPanel: Website → Your Site → <strong>Site Directory</strong></li>
+                        <li>Set <strong>Running Directory</strong> to: <code>/</code> (root)</li>
+                        <li>Click <strong>Save</strong></li>
+                        <li>Restart Apache/Nginx</li>
+                    </ol>
+                    <p style="margin-top: 10px;"><strong>✅ Advantage:</strong> No open_basedir changes needed!</p>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 15px; text-align: left;">
+                    <h3 style="color: #667eea; margin-bottom: 10px;">Option 2: Set DocumentRoot to /public (More Secure)</h3>
+                    <p style="margin-bottom: 10px;">Your DocumentRoot should point to: <code>/www/wwwroot/yourdomain.com/public</code></p>
+                    <ol style="margin-left: 20px; line-height: 1.8;">
+                        <li>In aaPanel: Website → Your Site → <strong>Site Directory</strong></li>
+                        <li>Set <strong>Running Directory</strong> to: <code>/public</code></li>
+                        <li>Scroll to <strong>Security</strong> section</li>
+                        <li>Find <strong>Open Basedir</strong> setting</li>
+                        <li>Change from: <code>/www/wwwroot/yourdomain.com/public/:/tmp/</code></li>
+                        <li>Change to: <code>/www/wwwroot/yourdomain.com/:/tmp/</code> (remove /public)</li>
+                        <li>Click <strong>Save</strong> and restart PHP-FPM</li>
+                    </ol>
+                </div>
+
                 <div class="alert alert-error mt-20">
-                    <strong>Important:</strong> For security reasons, please delete the <code>/install</code> directory from your server.
+                    <strong>🔒 Security:</strong> After configuration, delete the <code>/install</code> directory:
+                    <pre style="background: #fff; padding: 10px; margin-top: 10px; border-radius: 3px;">rm -rf /www/wwwroot/yourdomain.com/install</pre>
+                </div>
+
+                <div class="text-center mt-20">
+                    <p style="margin-bottom: 10px;">After completing the configuration above:</p>
+                    <a href="../" class="btn btn-success">Go to Home Page</a>
+                    <a href="../admin/login" class="btn" style="margin-left: 10px;">Admin Login</a>
                 </div>
             <?php endif; ?>
         </div>

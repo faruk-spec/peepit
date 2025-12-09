@@ -2,6 +2,8 @@
 
 This guide specifically addresses deployment on aaPanel (BaoTa Panel) servers.
 
+> **📢 AFTER INSTALLATION:** See [POST-INSTALL.md](POST-INSTALL.md) for required configuration steps!
+
 ## Quick Fix for Common Errors
 
 ### Recommended Approach: Use Method B (Root DocumentRoot)

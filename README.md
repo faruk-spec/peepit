@@ -89,13 +89,23 @@ The installer will guide you through:
 4. Admin user creation
 5. Configuration file generation
 
-### Step 5: Delete Installer
-After successful installation, delete the `/install` directory for security:
+> **⚠️ IMPORTANT:** After installation completes, follow the configuration steps shown on the completion page!
+> See [POST-INSTALL.md](POST-INSTALL.md) for detailed post-installation configuration.
+
+### Step 5: Configure Server (Required!)
+Choose ONE method:
+- **Method 1 (Recommended for aaPanel):** Keep DocumentRoot at root `/`
+- **Method 2:** Set DocumentRoot to `/public` and configure open_basedir
+
+**See [POST-INSTALL.md](POST-INSTALL.md) for complete instructions!**
+
+### Step 6: Delete Installer
+After successful installation AND configuration, delete the `/install` directory:
 ```bash
 rm -rf /path/to/peepit/install
 ```
 
-### Step 6: Configure SMTP (Optional)
+### Step 7: Configure SMTP (Optional)
 Edit `/config/smtp.php` to configure email notifications:
 ```php
 return [
