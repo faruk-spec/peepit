@@ -550,6 +550,12 @@
                         <span>Pages</span>
                     </a>
                 </li>
+                <li>
+                    <a href="<?= url('admin/navigation') ?>" class="<?= ($current_page ?? '') === 'navigation' ? 'active' : '' ?>">
+                        <i class="fas fa-bars"></i>
+                        <span>Navigation</span>
+                    </a>
+                </li>
 
                 <!-- System Section -->
                 <li class="menu-section">

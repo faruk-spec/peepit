@@ -876,6 +876,56 @@ $router->post('/admin/pages/delete', function() {
     $controller->delete();
 });
 
+// Admin Navigation Management (CMS)
+$router->get('/admin/navigation', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/NavigationController.php';
+    $controller = new \App\Controllers\Admin\NavigationController();
+    $controller->index();
+});
+
+$router->get('/admin/navigation/create', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/NavigationController.php';
+    $controller = new \App\Controllers\Admin\NavigationController();
+    $controller->create();
+});
+
+$router->post('/admin/navigation/store', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/NavigationController.php';
+    $controller = new \App\Controllers\Admin\NavigationController();
+    $controller->store();
+});
+
+$router->get('/admin/navigation/edit/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/NavigationController.php';
+    $controller = new \App\Controllers\Admin\NavigationController();
+    $controller->edit($id);
+});
+
+$router->post('/admin/navigation/update/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/NavigationController.php';
+    $controller = new \App\Controllers\Admin\NavigationController();
+    $controller->update($id);
+});
+
+$router->post('/admin/navigation/delete', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/NavigationController.php';
+    $controller = new \App\Controllers\Admin\NavigationController();
+    $controller->delete();
+});
+
+$router->post('/admin/navigation/reorder', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/NavigationController.php';
+    $controller = new \App\Controllers\Admin\NavigationController();
+    $controller->reorder();
+});
+
 // Get current URL and method
 $url = $_GET['url'] ?? '/';
 $method = $_SERVER['REQUEST_METHOD'];
