@@ -926,6 +926,49 @@ $router->post('/admin/navigation/reorder', function() {
     $controller->reorder();
 });
 
+// Admin Hero Slider Management (CMS)
+$router->get('/admin/hero-slider', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/HeroSliderController.php';
+    $controller = new \App\Controllers\Admin\HeroSliderController();
+    $controller->index();
+});
+
+$router->get('/admin/hero-slider/create', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/HeroSliderController.php';
+    $controller = new \App\Controllers\Admin\HeroSliderController();
+    $controller->create();
+});
+
+$router->post('/admin/hero-slider/store', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/HeroSliderController.php';
+    $controller = new \App\Controllers\Admin\HeroSliderController();
+    $controller->store();
+});
+
+$router->get('/admin/hero-slider/edit/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/HeroSliderController.php';
+    $controller = new \App\Controllers\Admin\HeroSliderController();
+    $controller->edit($id);
+});
+
+$router->post('/admin/hero-slider/update/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/HeroSliderController.php';
+    $controller = new \App\Controllers\Admin\HeroSliderController();
+    $controller->update($id);
+});
+
+$router->post('/admin/hero-slider/delete', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/HeroSliderController.php';
+    $controller = new \App\Controllers\Admin\HeroSliderController();
+    $controller->delete();
+});
+
 // Get current URL and method
 $url = $_GET['url'] ?? '/';
 $method = $_SERVER['REQUEST_METHOD'];

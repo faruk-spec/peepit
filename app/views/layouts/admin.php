@@ -556,6 +556,12 @@
                         <span>Navigation</span>
                     </a>
                 </li>
+                <li>
+                    <a href="<?= url('admin/hero-slider') ?>" class="<?= ($current_page ?? '') === 'hero-slider' ? 'active' : '' ?>">
+                        <i class="fas fa-images"></i>
+                        <span>Hero Slider</span>
+                    </a>
+                </li>
 
                 <!-- System Section -->
                 <li class="menu-section">
