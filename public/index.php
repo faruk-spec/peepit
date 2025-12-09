@@ -157,6 +157,13 @@ $router->post('/profile/update', function() {
     $controller->update();
 });
 
+// Custom Pages Route
+$router->get('/page/{slug}', function($slug) {
+    require_once __DIR__ . '/../app/controllers/PageController.php';
+    $controller = new \App\Controllers\PageController();
+    $controller->show($slug);
+});
+
 // Admin routes
 $router->get('/admin', function() {
     require_role('sales');
