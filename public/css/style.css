@@ -584,27 +584,6 @@ section {
         padding: 0 0 0 20px;
         background: var(--light);
     }
-
-    .navbar .container {
-        flex-direction: row;
-        gap: 0;
-    }
-    
-    .navbar-menu {
-        flex-direction: column;
-        gap: 10px;
-        width: 100%;
-        text-align: center;
-    }
-    
-    .navbar-menu li {
-        width: 100%;
-    }
-    
-    .navbar-menu a {
-        display: block;
-        width: 100%;
-    }
     
     .hero {
         padding: 80px 0;

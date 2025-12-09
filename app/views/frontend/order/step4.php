@@ -424,8 +424,14 @@
         
         const files = e.dataTransfer.files;
         if (files.length > 0) {
-            labelImage.files = files;
-            labelImage.dispatchEvent(new Event('change'));
+            // Create a new change event
+            const dt = new DataTransfer();
+            dt.items.add(files[0]);
+            labelImage.files = dt.files;
+            
+            // Trigger change event
+            const event = new Event('change', { bubbles: true });
+            labelImage.dispatchEvent(event);
         }
     });
 </script>

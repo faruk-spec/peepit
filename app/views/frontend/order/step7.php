@@ -41,7 +41,17 @@
                 </div>
                 <div class="summary-item">
                     <span class="label">Label Design:</span>
-                    <span class="value"><?= isset($orderData['label_image']) ? 'Custom Upload' : (isset($orderData['label_design']) ? 'Template #' . $orderData['label_design'] : 'Plain') ?></span>
+                    <span class="value">
+                        <?php 
+                        if (isset($orderData['label_image'])) {
+                            echo 'Custom Upload';
+                        } elseif (isset($orderData['label_design'])) {
+                            echo 'Template #' . $orderData['label_design'];
+                        } else {
+                            echo 'Plain';
+                        }
+                        ?>
+                    </span>
                 </div>
                 <div class="summary-item">
                     <span class="label">Quantity:</span>

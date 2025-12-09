@@ -436,6 +436,7 @@
     // Counter Animation
     function animateCounter(element) {
         const target = parseInt(element.getAttribute('data-target'));
+        const hasPercent = element.parentElement.textContent.includes('%');
         const duration = 2000;
         const step = target / (duration / 16);
         let current = 0;
@@ -443,7 +444,10 @@
         const timer = setInterval(() => {
             current += step;
             if (current >= target) {
-                element.textContent = target.toLocaleString() + (element.textContent.includes('%') ? '%' : '');
+                element.textContent = target.toLocaleString();
+                if (hasPercent) {
+                    element.textContent += '%';
+                }
                 clearInterval(timer);
             } else {
                 element.textContent = Math.floor(current).toLocaleString();
