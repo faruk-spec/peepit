@@ -303,6 +303,77 @@
 }
 </style>
 
+
+<?php if (!empty($bottle_models)): ?>
+<!-- Bottle Models Section -->
+<section class="section-light">
+    <div class="container">
+        <h2 class="text-center mb-40">Our Bottle Models</h2>
+        <div class="grid grid-3">
+            <?php foreach ($bottle_models as $model): ?>
+                <div class="card">
+                    <?php if ($model['image']): ?>
+                        <img src="<?= url('uploads/bottles/' . escape($model['image'])) ?>" alt="<?= escape($model['name']) ?>" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
+                    <?php else: ?>
+                        <div style="width: 100%; height: 200px; background: var(--light); border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; font-size: 64px; color: var(--primary);">
+                            <i class="fas fa-wine-bottle"></i>
+                        </div>
+                    <?php endif; ?>
+                    <h3><?= escape($model['name']) ?></h3>
+                    <p><?= escape($model['description']) ?></p>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
+<?php if (!empty($gallery_images)): ?>
+<!-- 3D Gallery Section -->
+<section class="gallery-3d-section">
+    <div class="container">
+        <h2 class="text-center mb-40">
+            <i class="fas fa-images"></i> Our Showcase Gallery
+        </h2>
+        <p class="text-center text-muted mb-60" style="max-width: 700px; margin-left: auto; margin-right: auto;">
+            Explore our stunning collection of custom bottle designs and company projects
+        </p>
+    </div>
+    
+    <div class="gallery-3d-wrapper">
+        <div class="gallery-3d-container">
+            <?php foreach ($gallery_images as $index => $image): ?>
+                <div class="gallery-3d-item" data-index="<?= $index ?>">
+                    <div class="gallery-3d-card">
+                        <div class="gallery-3d-image">
+                            <img src="<?= url('uploads/gallery/' . htmlspecialchars($image['image_path'])) ?>" 
+                                 alt="<?= htmlspecialchars($image['caption'] ?: 'Gallery image') ?>">
+                        </div>
+                        <?php if ($image['caption'] || $image['description']): ?>
+                            <div class="gallery-3d-info">
+                                <?php if ($image['caption']): ?>
+                                    <h4><?= htmlspecialchars($image['caption']) ?></h4>
+                                <?php endif; ?>
+                                <?php if ($image['description']): ?>
+                                    <p><?= htmlspecialchars($image['description']) ?></p>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        
+        <button class="gallery-3d-nav gallery-3d-prev" onclick="scrollGallery('prev')">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="gallery-3d-nav gallery-3d-next" onclick="scrollGallery('next')">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+</section>
+<?php endif; ?>
+
 <!-- How It Works Section with Horizontal Timeline -->
 <section class="wave-bg">
     <div class="container">
@@ -380,6 +451,7 @@
     </div>
 </section>
 
+
 <!-- Features Section -->
 <section>
     <div class="container">
@@ -419,75 +491,6 @@
     </div>
 </section>
 
-<?php if (!empty($bottle_models)): ?>
-<!-- Bottle Models Section -->
-<section class="section-light">
-    <div class="container">
-        <h2 class="text-center mb-40">Our Bottle Models</h2>
-        <div class="grid grid-3">
-            <?php foreach ($bottle_models as $model): ?>
-                <div class="card">
-                    <?php if ($model['image']): ?>
-                        <img src="<?= url('uploads/bottles/' . escape($model['image'])) ?>" alt="<?= escape($model['name']) ?>" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
-                    <?php else: ?>
-                        <div style="width: 100%; height: 200px; background: var(--light); border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; font-size: 64px; color: var(--primary);">
-                            <i class="fas fa-wine-bottle"></i>
-                        </div>
-                    <?php endif; ?>
-                    <h3><?= escape($model['name']) ?></h3>
-                    <p><?= escape($model['description']) ?></p>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</section>
-<?php endif; ?>
-
-<?php if (!empty($gallery_images)): ?>
-<!-- 3D Gallery Section -->
-<section class="gallery-3d-section">
-    <div class="container">
-        <h2 class="text-center mb-40">
-            <i class="fas fa-images"></i> Our Showcase Gallery
-        </h2>
-        <p class="text-center text-muted mb-60" style="max-width: 700px; margin-left: auto; margin-right: auto;">
-            Explore our stunning collection of custom bottle designs and company projects
-        </p>
-    </div>
-    
-    <div class="gallery-3d-wrapper">
-        <div class="gallery-3d-container">
-            <?php foreach ($gallery_images as $index => $image): ?>
-                <div class="gallery-3d-item" data-index="<?= $index ?>">
-                    <div class="gallery-3d-card">
-                        <div class="gallery-3d-image">
-                            <img src="<?= url('uploads/gallery/' . htmlspecialchars($image['image_path'])) ?>" 
-                                 alt="<?= htmlspecialchars($image['caption'] ?: 'Gallery image') ?>">
-                        </div>
-                        <?php if ($image['caption'] || $image['description']): ?>
-                            <div class="gallery-3d-info">
-                                <?php if ($image['caption']): ?>
-                                    <h4><?= htmlspecialchars($image['caption']) ?></h4>
-                                <?php endif; ?>
-                                <?php if ($image['description']): ?>
-                                    <p><?= htmlspecialchars($image['description']) ?></p>
-                                <?php endif; ?>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-        
-        <button class="gallery-3d-nav gallery-3d-prev" onclick="scrollGallery('prev')">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="gallery-3d-nav gallery-3d-next" onclick="scrollGallery('next')">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-    </div>
-</section>
-<?php endif; ?>
 
 <!-- CTA Section -->
 <div class="cta-section">
@@ -530,6 +533,7 @@
         </div>
     </div>
 </section>
+
 
 <!-- Testimonials Section -->
 <section>
@@ -729,6 +733,7 @@
 
     counters.forEach(counter => observer.observe(counter));
 </script>
+
 
 <!-- Hero Slider JavaScript -->
 <script>
