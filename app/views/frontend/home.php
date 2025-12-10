@@ -785,7 +785,19 @@
         font-size: 0.95rem;
     }
     
-    @media (max-width: 1024px) {
+    /* Desktop - show all 4 items in a row */
+    @media (min-width: 769px) {
+        .timeline-horizontal {
+            flex-wrap: nowrap;
+        }
+        
+        .timeline-item {
+            flex: 1;
+        }
+    }
+    
+    /* Tablet - show 2 items per row */
+    @media (max-width: 768px) and (min-width: 481px) {
         .timeline-horizontal {
             flex-wrap: wrap;
             max-width: 600px;
@@ -801,9 +813,19 @@
         }
     }
     
-    @media (max-width: 640px) {
+    /* Mobile - show 1 item per row */
+    @media (max-width: 480px) {
+        .timeline-horizontal {
+            flex-wrap: wrap;
+        }
+        
         .timeline-item {
             flex: 0 0 100%;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-line {
+            display: none;
         }
         
         .timeline-dot {
