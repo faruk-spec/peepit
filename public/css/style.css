@@ -1,4 +1,4 @@
-/* Peepit - Water-Based Theme with Animations */
+/* Peepit - Water-Based Theme with Animations + 3D Futuristic Cards */
 :root {
     /* Water-based color palette */
     --primary: #0EA5E9;        /* Sky Blue */
@@ -18,6 +18,12 @@
     --gradient-primary: linear-gradient(135deg, #0EA5E9 0%, #06B6D4 100%);
     --gradient-hero: linear-gradient(135deg, #0369A1 0%, #0EA5E9 50%, #06B6D4 100%);
     --gradient-card: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+    
+    /* Neon colors for futuristic 3D cards */
+    --neon-cyan: #00D4FF;
+    --neon-blue: #0EA5E9;
+    --neon-glow: rgba(0, 212, 255, 0.5);
+    --neon-glow-bright: rgba(0, 212, 255, 0.8);
 }
 
 /* Keyframe Animations */
@@ -128,13 +134,22 @@
     }
 }
 
+@keyframes neonPulse {
+    0%, 100% {
+        box-shadow: 0 0 15px var(--neon-glow), 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 30px var(--neon-glow-bright), 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+}
+
 @keyframes slideInTimeline {
     from {
-        width: 0;
+        height: 0;
         opacity: 0;
     }
     to {
-        width: 100%;
+        height: 100%;
         opacity: 1;
     }
 }
@@ -550,32 +565,64 @@ p { margin-bottom: 1rem; color: var(--text-light); }
     color: white;
 }
 
-/* Cards */
-/* Cards with Animations */
+/* Cards - 3D Futuristic with Neon Borders */
 .card {
     background: white;
-    border-radius: 16px;
+    border-radius: 20px;
     padding: 30px;
-    box-shadow: 0 4px 20px rgba(14, 165, 233, 0.08);
+    box-shadow: 0 0 15px var(--neon-glow), 
+                0 10px 40px rgba(0, 0, 0, 0.2),
+                0 20px 60px rgba(0, 0, 0, 0.15);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid var(--border);
+    border: 2px solid var(--neon-cyan);
     opacity: 0;
     transform: translateY(30px);
-    animation: fadeInUp 0.6s ease-out forwards;
+    animation: fadeInUp 0.6s ease-out forwards, neonPulse 2s infinite;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(14, 165, 233, 0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
 }
 
 .card:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 15px 40px rgba(14, 165, 233, 0.2);
+    transform: perspective(1000px) rotateX(5deg) rotateY(5deg) translateZ(20px) scale(1.02);
+    box-shadow: 0 0 30px var(--neon-glow-bright), 
+                0 15px 50px rgba(0, 0, 0, 0.3),
+                0 25px 70px rgba(0, 0, 0, 0.2);
+    border-color: var(--neon-blue);
+}
+
+.card:hover::before {
+    opacity: 1;
 }
 
 .glass-card {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 32px 0 rgba(14, 165, 233, 0.1);
-    animation: scaleIn 0.6s ease-out;
+    border: 2px solid var(--neon-cyan);
+    box-shadow: 0 0 15px var(--neon-glow), 0 8px 32px 0 rgba(14, 165, 233, 0.1);
+    animation: scaleIn 0.6s ease-out, neonPulse 2s infinite;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.glass-card:hover {
+    transform: perspective(1000px) rotateX(5deg) rotateY(5deg) translateZ(20px) scale(1.02);
+    box-shadow: 0 0 30px var(--neon-glow-bright), 0 15px 50px rgba(0, 0, 0, 0.3);
 }
 
 /* Enhanced Glassmorphism Effects */
@@ -1520,10 +1567,12 @@ section p {
     color: #047857;
 }
 
-/* Timeline/Process Steps Animations */
+/* Timeline/Process Steps Animations - FIXED FOR DESKTOP */
 .timeline {
     position: relative;
     padding: 40px 0;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .timeline::before {
@@ -1533,9 +1582,10 @@ section p {
     top: 0;
     bottom: 0;
     width: 4px;
-    background: var(--gradient-primary);
+    background: linear-gradient(180deg, var(--neon-cyan) 0%, var(--neon-blue) 100%);
     transform: translateX(-50%);
     animation: slideInTimeline 2s ease-out;
+    box-shadow: 0 0 15px var(--neon-glow);
 }
 
 .timeline-item {
@@ -1544,6 +1594,9 @@ section p {
     animation: fadeInUp 0.8s ease-out;
     opacity: 0;
     animation-fill-mode: forwards;
+    width: 100%;
+    display: flex;
+    align-items: center;
 }
 
 .timeline-item:nth-child(1) { animation-delay: 0.2s; }
@@ -1552,60 +1605,110 @@ section p {
 .timeline-item:nth-child(4) { animation-delay: 0.8s; }
 .timeline-item:nth-child(5) { animation-delay: 1s; }
 
-.timeline-item:nth-child(odd) {
-    padding-right: 50%;
-    text-align: right;
+/* Desktop layout - proper alternating sides */
+@media (min-width: 768px) {
+    .timeline-item:nth-child(odd) {
+        justify-content: flex-end;
+        padding-right: calc(50% + 30px);
+        text-align: right;
+    }
+
+    .timeline-item:nth-child(even) {
+        justify-content: flex-start;
+        padding-left: calc(50% + 30px);
+        text-align: left;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-content {
+        margin-right: 0;
+    }
+
+    .timeline-item:nth-child(even) .timeline-content {
+        margin-left: 0;
+    }
 }
 
-.timeline-item:nth-child(even) {
-    padding-left: 50%;
-    text-align: left;
+/* Mobile layout - single column */
+@media (max-width: 767px) {
+    .timeline::before {
+        left: 30px;
+    }
+
+    .timeline-item {
+        padding-left: 60px;
+        text-align: left;
+    }
+
+    .timeline-dot {
+        left: 30px !important;
+    }
+
+    .timeline-item:nth-child(even) .timeline-content::before,
+    .timeline-item:nth-child(odd) .timeline-content::before {
+        left: -10px;
+        right: auto;
+    }
 }
 
 .timeline-dot {
     position: absolute;
     left: 50%;
-    top: 0;
-    width: 20px;
-    height: 20px;
+    top: 10px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
     transform: translateX(-50%);
-    box-shadow: 0 0 0 4px white, 0 0 0 6px var(--primary);
+    box-shadow: 0 0 0 4px white, 0 0 0 6px var(--neon-cyan), 0 0 20px var(--neon-glow);
     animation: pulse 2s infinite;
-    z-index: 1;
+    z-index: 10;
 }
 
 .timeline-content {
-    padding: 20px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(14, 165, 233, 0.1);
-    transition: all 0.3s ease;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    border: 2px solid var(--neon-cyan);
+    box-shadow: 0 0 15px var(--neon-glow), 
+                0 10px 40px rgba(0, 0, 0, 0.2),
+                0 20px 60px rgba(0, 0, 0, 0.15);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    max-width: 450px;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    animation: neonPulse 2s infinite;
 }
 
 .timeline-content:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 30px rgba(14, 165, 233, 0.2);
+    transform: perspective(1000px) rotateX(5deg) rotateY(5deg) translateZ(20px) scale(1.02);
+    box-shadow: 0 0 30px var(--neon-glow-bright), 
+                0 15px 50px rgba(0, 0, 0, 0.3),
+                0 25px 70px rgba(0, 0, 0, 0.2);
+    border-color: var(--neon-blue);
 }
 
 .timeline-content::before {
     content: '';
     position: absolute;
-    top: 15px;
+    top: 20px;
     width: 20px;
     height: 20px;
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid var(--neon-cyan);
     transform: rotate(45deg);
+    box-shadow: 0 0 10px var(--neon-glow);
 }
 
-.timeline-item:nth-child(odd) .timeline-content::before {
-    right: -10px;
-}
+@media (min-width: 768px) {
+    .timeline-item:nth-child(odd) .timeline-content::before {
+        right: -11px;
+    }
 
-.timeline-item:nth-child(even) .timeline-content::before {
-    left: -10px;
+    .timeline-item:nth-child(even) .timeline-content::before {
+        left: -11px;
+    }
 }
 
 /* Process Steps (Horizontal Timeline) */
@@ -1651,7 +1754,7 @@ section p {
     width: 80px;
     height: 80px;
     margin: 0 auto 20px;
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
     color: white;
     border-radius: 50%;
     display: flex;
@@ -1659,14 +1762,16 @@ section p {
     justify-content: center;
     font-size: 2rem;
     font-weight: 700;
-    box-shadow: 0 0 0 4px white, 0 0 0 6px var(--primary);
-    animation: bounceIn 1s ease-out;
-    transition: all 0.3s ease;
+    border: 3px solid var(--neon-cyan);
+    box-shadow: 0 0 0 4px white, 0 0 0 8px var(--neon-cyan), 0 0 20px var(--neon-glow);
+    animation: bounceIn 1s ease-out, neonPulse 2s infinite;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
 }
 
 .process-step:hover .process-number {
-    transform: scale(1.2) rotate(360deg);
-    box-shadow: 0 0 0 4px white, 0 0 20px var(--primary);
+    transform: perspective(500px) scale(1.2) rotate(360deg) translateZ(20px);
+    box-shadow: 0 0 0 4px white, 0 0 0 8px var(--neon-blue), 0 0 30px var(--neon-glow-bright);
 }
 
 .process-title {
@@ -1758,4 +1863,320 @@ html {
 
 .loading {
     animation: spin 1s linear infinite;
+}
+
+/* ===== BOTTLE CARD DESIGN - Navy Blue + White + Theme Colors ===== */
+
+/* Bottle Card Container */
+.bottle-card {
+    background: linear-gradient(135deg, #1a2035 0%, #0F172A 50%, #1a2035 100%);
+    border-radius: 24px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    border: 3px solid var(--neon-cyan);
+    box-shadow: 0 0 20px var(--neon-glow), 
+                0 15px 50px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+    perspective: 1500px;
+    animation: fadeInUp 0.8s ease-out, neonPulse 3s infinite;
+}
+
+/* Animated gradient overlay */
+.bottle-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+    animation: float 6s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* Accent line animation */
+.bottle-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--neon-cyan) 25%, 
+        var(--neon-blue) 50%, 
+        var(--neon-cyan) 75%, 
+        transparent 100%);
+    animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.bottle-card:hover {
+    transform: perspective(1500px) rotateX(8deg) rotateY(8deg) translateZ(30px) scale(1.03);
+    box-shadow: 0 0 40px var(--neon-glow-bright), 
+                0 20px 70px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-color: var(--neon-blue);
+}
+
+/* Bottle Card Header */
+.bottle-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+}
+
+.bottle-card-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+    text-shadow: 0 0 10px var(--neon-glow);
+    letter-spacing: 0.5px;
+}
+
+.bottle-card-badge {
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+    color: #0F172A;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    box-shadow: 0 0 15px var(--neon-glow);
+    animation: pulse 2s infinite;
+}
+
+/* Bottle Image Container */
+.bottle-card-image {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px 0;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.bottle-card-image img {
+    max-width: 80%;
+    max-height: 280px;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 30px rgba(0, 212, 255, 0.3));
+    transition: all 0.5s ease;
+    animation: float 4s ease-in-out infinite;
+}
+
+.bottle-card:hover .bottle-card-image img {
+    transform: scale(1.1) rotateY(10deg);
+    filter: drop-shadow(0 15px 40px rgba(0, 212, 255, 0.5));
+}
+
+/* Bottle Card Body */
+.bottle-card-body {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.7;
+}
+
+.bottle-card-specs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    margin: 25px 0;
+}
+
+.bottle-spec-item {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.bottle-spec-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--neon-cyan);
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px var(--neon-glow);
+}
+
+.bottle-spec-label {
+    font-size: 0.875rem;
+    color: var(--neon-cyan);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.bottle-spec-value {
+    font-size: 1.25rem;
+    color: white;
+    font-weight: 700;
+}
+
+/* Bottle Card Footer */
+.bottle-card-footer {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 2px solid rgba(0, 212, 255, 0.3);
+}
+
+.bottle-card-btn {
+    flex: 1;
+    padding: 15px 30px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    border: 2px solid var(--neon-cyan);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.bottle-card-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.bottle-card-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.bottle-card-btn-primary {
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+    color: #0F172A;
+    box-shadow: 0 0 20px var(--neon-glow);
+}
+
+.bottle-card-btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 30px var(--neon-glow-bright);
+}
+
+.bottle-card-btn-secondary {
+    background: transparent;
+    color: white;
+}
+
+.bottle-card-btn-secondary:hover {
+    background: rgba(0, 212, 255, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 0 20px var(--neon-glow);
+}
+
+/* Price Tag */
+.bottle-card-price {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #10B981, #059669);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+    animation: pulse 2s infinite;
+    z-index: 10;
+}
+
+/* Color Options */
+.bottle-card-colors {
+    display: flex;
+    gap: 12px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.bottle-color-option {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.bottle-color-option:hover,
+.bottle-color-option.active {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 15px var(--neon-glow);
+    transform: scale(1.2);
+}
+
+.bottle-color-option::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 1.2rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.bottle-color-option.active::after {
+    opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .bottle-card {
+        padding: 25px;
+    }
+
+    .bottle-card-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .bottle-card-image {
+        height: 250px;
+    }
+
+    .bottle-card-specs {
+        grid-template-columns: 1fr;
+    }
+
+    .bottle-card-footer {
+        flex-direction: column;
+    }
+
+    .bottle-card:hover {
+        transform: perspective(1500px) scale(1.02);
+    }
 }
