@@ -999,6 +999,56 @@ $router->post('/admin/home-content/reset', function() {
     $controller->reset();
 });
 
+// Admin Gallery Management
+$router->get('/admin/gallery', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/GalleryController.php';
+    $controller = new \App\Controllers\Admin\GalleryController();
+    $controller->index();
+});
+
+$router->get('/admin/gallery/create', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/GalleryController.php';
+    $controller = new \App\Controllers\Admin\GalleryController();
+    $controller->create();
+});
+
+$router->post('/admin/gallery/store', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/GalleryController.php';
+    $controller = new \App\Controllers\Admin\GalleryController();
+    $controller->store();
+});
+
+$router->get('/admin/gallery/edit/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/GalleryController.php';
+    $controller = new \App\Controllers\Admin\GalleryController();
+    $controller->edit($id);
+});
+
+$router->post('/admin/gallery/update/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/GalleryController.php';
+    $controller = new \App\Controllers\Admin\GalleryController();
+    $controller->update($id);
+});
+
+$router->post('/admin/gallery/delete/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/GalleryController.php';
+    $controller = new \App\Controllers\Admin\GalleryController();
+    $controller->delete($id);
+});
+
+$router->post('/admin/gallery/toggle-status/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/GalleryController.php';
+    $controller = new \App\Controllers\Admin\GalleryController();
+    $controller->toggleStatus($id);
+});
+
 // Get current URL and method
 $url = $_GET['url'] ?? '/';
 $method = $_SERVER['REQUEST_METHOD'];
