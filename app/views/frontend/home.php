@@ -443,6 +443,52 @@
 </section>
 <?php endif; ?>
 
+<?php if (!empty($gallery_images)): ?>
+<!-- 3D Gallery Section -->
+<section class="gallery-3d-section">
+    <div class="container">
+        <h2 class="text-center mb-40">
+            <i class="fas fa-images"></i> Our Showcase Gallery
+        </h2>
+        <p class="text-center text-muted mb-60" style="max-width: 700px; margin-left: auto; margin-right: auto;">
+            Explore our stunning collection of custom bottle designs and company projects
+        </p>
+    </div>
+    
+    <div class="gallery-3d-wrapper">
+        <div class="gallery-3d-container">
+            <?php foreach ($gallery_images as $index => $image): ?>
+                <div class="gallery-3d-item" data-index="<?= $index ?>">
+                    <div class="gallery-3d-card">
+                        <div class="gallery-3d-image">
+                            <img src="<?= url('uploads/gallery/' . htmlspecialchars($image['image_path'])) ?>" 
+                                 alt="<?= htmlspecialchars($image['caption'] ?: 'Gallery image') ?>">
+                        </div>
+                        <?php if ($image['caption'] || $image['description']): ?>
+                            <div class="gallery-3d-info">
+                                <?php if ($image['caption']): ?>
+                                    <h4><?= htmlspecialchars($image['caption']) ?></h4>
+                                <?php endif; ?>
+                                <?php if ($image['description']): ?>
+                                    <p><?= htmlspecialchars($image['description']) ?></p>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        
+        <button class="gallery-3d-nav gallery-3d-prev" onclick="scrollGallery('prev')">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="gallery-3d-nav gallery-3d-next" onclick="scrollGallery('next')">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+</section>
+<?php endif; ?>
+
 <!-- CTA Section -->
 <div class="cta-section">
     <div class="container">
@@ -907,7 +953,272 @@
             d: path("M0,30 Q50,20 100,30 T200,30 T300,30 T400,30 T500,30 T600,30 T700,30 T800,30 T900,30 T1000,30");
         }
     }
+    
+    /* 3D Gallery Styles */
+    .gallery-3d-section {
+        padding: 100px 0;
+        background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0F172A 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .gallery-3d-section h2 {
+        color: #00D4FF;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    }
+    
+    .gallery-3d-section h2 i {
+        margin-right: 15px;
+        color: #0EA5E9;
+    }
+    
+    .gallery-3d-section .text-muted {
+        color: rgba(255, 255, 255, 0.7) !important;
+        font-size: 1.1rem;
+    }
+    
+    .gallery-3d-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 40px 60px;
+    }
+    
+    .gallery-3d-container {
+        display: flex;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-behavior: smooth;
+        gap: 40px;
+        padding: 40px 20px;
+        perspective: 1500px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    
+    .gallery-3d-container::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .gallery-3d-item {
+        flex: 0 0 400px;
+        min-width: 400px;
+        height: 450px;
+        transform-style: preserve-3d;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .gallery-3d-item:hover {
+        transform: translateZ(30px) scale(1.05) rotateY(5deg);
+    }
+    
+    .gallery-3d-card {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+        border-radius: 20px;
+        border: 3px solid #00D4FF;
+        box-shadow: 
+            0 0 30px rgba(0, 212, 255, 0.4),
+            0 20px 60px rgba(0, 0, 0, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+        position: relative;
+        transform-style: preserve-3d;
+        animation: neonPulse 3s ease-in-out infinite;
+    }
+    
+    @keyframes neonPulse {
+        0%, 100% {
+            box-shadow: 
+                0 0 30px rgba(0, 212, 255, 0.4),
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        50% {
+            box-shadow: 
+                0 0 40px rgba(0, 212, 255, 0.6),
+                0 25px 70px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+    }
+    
+    .gallery-3d-image {
+        width: 100%;
+        height: 320px;
+        overflow: hidden;
+        position: relative;
+        background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    }
+    
+    .gallery-3d-image::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(180deg, transparent 0%, rgba(0, 212, 255, 0.1) 100%);
+        pointer-events: none;
+        z-index: 1;
+    }
+    
+    .gallery-3d-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        filter: brightness(0.9);
+    }
+    
+    .gallery-3d-item:hover .gallery-3d-image img {
+        transform: scale(1.1);
+        filter: brightness(1);
+    }
+    
+    .gallery-3d-info {
+        padding: 20px;
+        background: linear-gradient(180deg, rgba(0, 212, 255, 0.05) 0%, transparent 100%);
+        border-top: 2px solid rgba(0, 212, 255, 0.2);
+    }
+    
+    .gallery-3d-info h4 {
+        color: #00D4FF;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 0 0 8px 0;
+        text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+    }
+    
+    .gallery-3d-info p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
+        margin: 0;
+        line-height: 1.5;
+    }
+    
+    .gallery-3d-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #0EA5E9 0%, #00D4FF 100%);
+        border: 3px solid #00D4FF;
+        border-radius: 50%;
+        color: #0F172A;
+        font-size: 24px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+    }
+    
+    .gallery-3d-nav:hover {
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0 0 30px rgba(0, 212, 255, 0.8);
+        background: linear-gradient(135deg, #00D4FF 0%, #0EA5E9 100%);
+    }
+    
+    .gallery-3d-nav:active {
+        transform: translateY(-50%) scale(0.95);
+    }
+    
+    .gallery-3d-prev {
+        left: 0;
+    }
+    
+    .gallery-3d-next {
+        right: 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .gallery-3d-item {
+            flex: 0 0 300px;
+            min-width: 300px;
+            height: 380px;
+        }
+        
+        .gallery-3d-image {
+            height: 260px;
+        }
+        
+        .gallery-3d-wrapper {
+            padding: 20px 50px;
+        }
+        
+        .gallery-3d-nav {
+            width: 45px;
+            height: 45px;
+            font-size: 18px;
+        }
+        
+        .gallery-3d-section h2 {
+            font-size: 2rem;
+        }
+    }
 </style>
+
+<script>
+function scrollGallery(direction) {
+    const container = document.querySelector('.gallery-3d-container');
+    const scrollAmount = 440; // item width + gap
+    
+    if (direction === 'prev') {
+        container.scrollBy({
+            left: -scrollAmount,
+            behavior: 'smooth'
+        });
+    } else {
+        container.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth'
+        });
+    }
+}
+
+// Auto-play gallery (optional)
+let galleryAutoplay = setInterval(() => {
+    const container = document.querySelector('.gallery-3d-container');
+    if (container) {
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        if (container.scrollLeft >= maxScroll - 10) {
+            container.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+            scrollGallery('next');
+        }
+    }
+}, 5000);
+
+// Pause autoplay on hover
+document.addEventListener('DOMContentLoaded', function() {
+    const gallery = document.querySelector('.gallery-3d-container');
+    if (gallery) {
+        gallery.addEventListener('mouseenter', () => {
+            clearInterval(galleryAutoplay);
+        });
+        
+        gallery.addEventListener('mouseleave', () => {
+            galleryAutoplay = setInterval(() => {
+                const maxScroll = gallery.scrollWidth - gallery.clientWidth;
+                if (gallery.scrollLeft >= maxScroll - 10) {
+                    gallery.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    scrollGallery('next');
+                }
+            }, 5000);
+        });
+    }
+});
+</script>
 
 <?php
 $content = ob_get_clean();

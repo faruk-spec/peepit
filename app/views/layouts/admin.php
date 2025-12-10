@@ -665,6 +665,9 @@
                 <li><a href="<?= url('admin/hero-slider') ?>" class="nav-link <?= ($current_page ?? '') === 'hero-slider' ? 'active' : '' ?>">
                     <i class="fas fa-images"></i> Hero Slider
                 </a></li>
+                <li><a href="<?= url('admin/gallery') ?>" class="nav-link <?= ($current_page ?? '') === 'gallery' ? 'active' : '' ?>">
+                    <i class="fas fa-th"></i> Gallery
+                </a></li>
                 <li><a href="<?= url('admin/home-content') ?>" class="nav-link <?= ($current_page ?? '') === 'home-content' ? 'active' : '' ?>">
                     <i class="fas fa-home"></i> Homepage Content
                 </a></li>
