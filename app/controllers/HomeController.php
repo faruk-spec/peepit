@@ -14,6 +14,7 @@ class HomeController extends Controller
         $bottleModels = [];
         $heroSlides = [];
         $homeContent = [];
+        $galleryImages = [];
         
         if ($this->db) {
             try {
@@ -31,6 +32,13 @@ class HomeController extends Controller
                 foreach ($contentRows as $row) {
                     $homeContent[$row['section']] = $row['content'];
                 }
+                
+                // Get active gallery images
+                $galleryImages = $this->db->fetchAll("
+                    SELECT * FROM gallery 
+                    WHERE is_enabled = 1 
+                    ORDER BY priority ASC, created_at DESC
+                ");
             } catch (\Exception $e) {
                 // Ignore if tables don't exist yet
                 error_log('Homepage data load error: ' . $e->getMessage());
@@ -41,7 +49,8 @@ class HomeController extends Controller
             'csrf_token' => $csrfToken,
             'bottle_models' => $bottleModels,
             'hero_slides' => $heroSlides,
-            'home_content' => $homeContent
+            'home_content' => $homeContent,
+            'gallery_images' => $galleryImages
         ]);
     }
 }

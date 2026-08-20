@@ -1,73 +1,86 @@
 <?php ob_start(); ?>
 
-<div class="mb-30" style="display: flex; justify-content: space-between; align-items: center;">
-    <div>
-        <h2 style="margin: 0 0 5px;">Bottle Sizes</h2>
-        <p style="margin: 0; color: var(--text-light);">Manage available bottle capacities</p>
+<div class="page-breadcrumb mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h4>Bottle Sizes</h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="<?= url('admin') ?>">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Bottle Sizes</li>
+                </ol>
+            </nav>
+        </div>
+        <a href="<?= url('admin/sizes/create') ?>" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-2"></i> Add New Size
+        </a>
     </div>
-    <a href="<?= url('admin/sizes/create') ?>" class="btn btn-primary">
-        <i class="fas fa-plus-circle"></i> Add New Size
-    </a>
 </div>
 
 <?php if (!empty($sizes)): ?>
-    <div class="card admin-table">
-        <table>
-            <thead>
-                <tr>
-                    <th>Size</th>
-                    <th>Capacity (ml)</th>
-                    <th>Status</th>
-                    <th>Created</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($sizes as $size): ?>
-                    <tr>
-                        <td><strong><?= escape($size['size']) ?></strong></td>
-                        <td><?= number_format($size['capacity_ml']) ?> ml</td>
-                        <td>
-                            <span class="status-badge status-<?= $size['status'] === 'active' ? 'completed' : 'cancelled' ?>">
-                                <?= ucfirst($size['status']) ?>
-                            </span>
-                        </td>
-                        <td><?= date('d M Y', strtotime($size['created_at'])) ?></td>
-                        <td>
-                            <div style="display: flex; gap: 8px;">
-                                <a href="<?= url('admin/sizes/edit/' . $size['id']) ?>" 
-                                   class="btn btn-primary" 
-                                   style="padding: 6px 12px; font-size: 14px;">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form method="POST" 
-                                      action="<?= url('admin/sizes/delete/' . $size['id']) ?>" 
-                                      style="display: inline;"
-                                      onsubmit="return confirm('Are you sure? This may affect existing orders.');">
-                                    <?= csrf_field() ?>
-                                    <button type="submit" 
-                                            class="btn" 
-                                            style="padding: 6px 12px; font-size: 14px; background: var(--error); color: white;">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">All Bottle Sizes</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Size</th>
+                            <th>Capacity (ml)</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($sizes as $size): ?>
+                            <tr>
+                                <td><strong><?= escape($size['size']) ?></strong></td>
+                                <td><?= number_format($size['capacity_ml']) ?> ml</td>
+                                <td>
+                                    <span class="badge bg-<?= $size['status'] === 'active' ? 'success' : 'danger' ?>">
+                                        <?= ucfirst($size['status']) ?>
+                                    </span>
+                                </td>
+                                <td><?= date('d M Y', strtotime($size['created_at'])) ?></td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a href="<?= url('admin/sizes/edit/' . $size['id']) ?>" 
+                                           class="btn btn-sm btn-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form method="POST" 
+                                              action="<?= url('admin/sizes/delete/' . $size['id']) ?>" 
+                                              class="d-inline"
+                                              onsubmit="return confirm('Are you sure? This may affect existing orders.');">
+                                            <?= csrf_field() ?>
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 <?php else: ?>
-    <div class="card text-center" style="padding: 60px 20px;">
-        <div style="font-size: 64px; color: var(--text-light); margin-bottom: 20px;">
-            <i class="fas fa-ruler-combined"></i>
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <div style="font-size: 64px; color: #8897ad; margin-bottom: 20px;">
+                <i class="fas fa-ruler-combined"></i>
+            </div>
+            <h3 class="mb-3">No Bottle Sizes Yet</h3>
+            <p class="text-muted mb-4">Add bottle size options for customers</p>
+            <a href="<?= url('admin/sizes/create') ?>" class="btn btn-primary">
+                <i class="fas fa-plus-circle me-2"></i> Add First Size
+            </a>
         </div>
-        <h3>No Bottle Sizes Yet</h3>
-        <p style="color: var(--text-light); margin-bottom: 20px;">Add bottle size options for customers</p>
-        <a href="<?= url('admin/sizes/create') ?>" class="btn btn-primary">
-            <i class="fas fa-plus-circle"></i> Add First Size
-        </a>
     </div>
 <?php endif; ?>
 

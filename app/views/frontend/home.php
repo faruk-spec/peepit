@@ -303,6 +303,77 @@
 }
 </style>
 
+
+<?php if (!empty($bottle_models)): ?>
+<!-- Bottle Models Section -->
+<section class="section-light">
+    <div class="container">
+        <h2 class="text-center mb-40">Our Bottle Models</h2>
+        <div class="grid grid-3">
+            <?php foreach ($bottle_models as $model): ?>
+                <div class="card">
+                    <?php if ($model['image']): ?>
+                        <img src="<?= url('uploads/bottles/' . escape($model['image'])) ?>" alt="<?= escape($model['name']) ?>" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
+                    <?php else: ?>
+                        <div style="width: 100%; height: 200px; background: var(--light); border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; font-size: 64px; color: var(--primary);">
+                            <i class="fas fa-wine-bottle"></i>
+                        </div>
+                    <?php endif; ?>
+                    <h3><?= escape($model['name']) ?></h3>
+                    <p><?= escape($model['description']) ?></p>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
+<?php if (!empty($gallery_images)): ?>
+<!-- 3D Gallery Section -->
+<section class="gallery-3d-section">
+    <div class="container">
+        <h2 class="text-center mb-40">
+            <i class="fas fa-images"></i> Our Showcase Gallery
+        </h2>
+        <p class="text-center text-muted mb-60" style="max-width: 700px; margin-left: auto; margin-right: auto;">
+            Explore our stunning collection of custom bottle designs and company projects
+        </p>
+    </div>
+    
+    <div class="gallery-3d-wrapper">
+        <div class="gallery-3d-container">
+            <?php foreach ($gallery_images as $index => $image): ?>
+                <div class="gallery-3d-item" data-index="<?= $index ?>">
+                    <div class="gallery-3d-card">
+                        <div class="gallery-3d-image">
+                            <img src="<?= url('uploads/gallery/' . htmlspecialchars($image['image_path'])) ?>" 
+                                 alt="<?= htmlspecialchars($image['caption'] ?: 'Gallery image') ?>">
+                        </div>
+                        <?php if ($image['caption'] || $image['description']): ?>
+                            <div class="gallery-3d-info">
+                                <?php if ($image['caption']): ?>
+                                    <h4><?= htmlspecialchars($image['caption']) ?></h4>
+                                <?php endif; ?>
+                                <?php if ($image['description']): ?>
+                                    <p><?= htmlspecialchars($image['description']) ?></p>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        
+        <button class="gallery-3d-nav gallery-3d-prev" onclick="scrollGallery('prev')">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="gallery-3d-nav gallery-3d-next" onclick="scrollGallery('next')">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+</section>
+<?php endif; ?>
+
 <!-- How It Works Section with Horizontal Timeline -->
 <section class="wave-bg">
     <div class="container">
@@ -313,7 +384,29 @@
         
         <!-- Horizontal Timeline -->
         <div class="timeline-horizontal">
-            <div class="timeline-line"></div>
+            <div class="timeline-line">
+                <svg viewBox="0 0 1000 60" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#0EA5E9;stop-opacity:1" />
+                            <stop offset="50%" style="stop-color:#8B5CF6;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#0EA5E9;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M0,30 Q50,20 100,30 T200,30 T300,30 T400,30 T500,30 T600,30 T700,30 T800,30 T900,30 T1000,30" 
+                          stroke="url(#waveGradient)" 
+                          stroke-width="4" 
+                          fill="none" 
+                          stroke-linecap="round">
+                        <animate attributeName="d"
+                                 dur="3s"
+                                 repeatCount="indefinite"
+                                 values="M0,30 Q50,20 100,30 T200,30 T300,30 T400,30 T500,30 T600,30 T700,30 T800,30 T900,30 T1000,30;
+                                         M0,30 Q50,40 100,30 T200,30 T300,30 T400,30 T500,30 T600,30 T700,30 T800,30 T900,30 T1000,30;
+                                         M0,30 Q50,20 100,30 T200,30 T300,30 T400,30 T500,30 T600,30 T700,30 T800,30 T900,30 T1000,30"/>
+                    </path>
+                </svg>
+            </div>
             
             <div class="timeline-item">
                 <div class="timeline-dot">
@@ -358,6 +451,7 @@
     </div>
 </section>
 
+
 <!-- Features Section -->
 <section>
     <div class="container">
@@ -397,29 +491,6 @@
     </div>
 </section>
 
-<?php if (!empty($bottle_models)): ?>
-<!-- Bottle Models Section -->
-<section class="section-light">
-    <div class="container">
-        <h2 class="text-center mb-40">Our Bottle Models</h2>
-        <div class="grid grid-3">
-            <?php foreach ($bottle_models as $model): ?>
-                <div class="card">
-                    <?php if ($model['image']): ?>
-                        <img src="<?= url('uploads/bottles/' . escape($model['image'])) ?>" alt="<?= escape($model['name']) ?>" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
-                    <?php else: ?>
-                        <div style="width: 100%; height: 200px; background: var(--light); border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; font-size: 64px; color: var(--primary);">
-                            <i class="fas fa-wine-bottle"></i>
-                        </div>
-                    <?php endif; ?>
-                    <h3><?= escape($model['name']) ?></h3>
-                    <p><?= escape($model['description']) ?></p>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</section>
-<?php endif; ?>
 
 <!-- CTA Section -->
 <div class="cta-section">
@@ -462,6 +533,7 @@
         </div>
     </div>
 </section>
+
 
 <!-- Testimonials Section -->
 <section>
@@ -662,6 +734,7 @@
     counters.forEach(counter => observer.observe(counter));
 </script>
 
+
 <!-- Hero Slider JavaScript -->
 <script>
     let currentSlide = 0;
@@ -703,120 +776,490 @@
 
 <!-- Timeline Styles -->
 <style>
-    /* Horizontal Timeline */
+    /* Horizontal Timeline - Override any vertical timeline styles */
     .timeline-horizontal {
-        position: relative;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        padding: 40px 0;
-        max-width: 1000px;
-        margin: 0 auto;
+        position: relative !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: flex-start !important;
+        padding: 40px 0 !important;
+        max-width: 1000px !important;
+        margin: 0 auto !important;
     }
     
+    .timeline-horizontal::before {
+        display: none !important; /* Hide vertical timeline line */
+    }
+    
+    /* Wavy line connecting timeline items */
     .timeline-line {
         position: absolute;
         top: 40px;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, 
-            var(--primary) 0%, 
-            var(--secondary) 50%, 
-            var(--primary) 100%
-        );
-        border-radius: 2px;
+        left: 5%;
+        right: 5%;
+        height: 60px;
         z-index: 0;
+        pointer-events: none;
     }
     
-    .timeline-item {
-        position: relative;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        z-index: 1;
+    .timeline-line svg {
+        width: 100%;
+        height: 100%;
     }
     
-    .timeline-dot {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        border: 4px solid white;
-        box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 32px;
-        margin-bottom: 20px;
-        transition: all 0.3s ease;
-        position: relative;
-        z-index: 2;
+    .timeline-horizontal .timeline-item {
+        position: relative !important;
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        z-index: 1 !important;
+        margin-bottom: 0 !important;
+        padding: 0 !important;
+        text-align: center !important;
+        justify-content: flex-start !important;
+        animation: fadeInUp 0.8s ease-out forwards !important;
+        opacity: 0;
     }
     
-    .timeline-dot:hover {
-        transform: scale(1.15);
-        box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+    /* Animation delays for horizontal timeline items */
+    .timeline-horizontal .timeline-item:nth-child(1) { animation-delay: 0.2s; }
+    .timeline-horizontal .timeline-item:nth-child(2) { animation-delay: 0.4s; }
+    .timeline-horizontal .timeline-item:nth-child(3) { animation-delay: 0.6s; }
+    .timeline-horizontal .timeline-item:nth-child(4) { animation-delay: 0.8s; }
+    
+    .timeline-horizontal .timeline-dot {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        width: 80px !important;
+        height: 80px !important;
+        border-radius: 50% !important;
+        background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
+        border: 4px solid white !important;
+        box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        color: white !important;
+        font-size: 32px !important;
+        margin-bottom: 20px !important;
+        transition: all 0.3s ease !important;
+        z-index: 2 !important;
+        transform: none !important;
     }
     
-    .timeline-content {
-        text-align: center;
-        padding: 20px;
-        min-height: 140px;
-        transition: all 0.3s ease;
+    .timeline-horizontal .timeline-dot:hover {
+        transform: scale(1.15) !important;
+        box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5) !important;
     }
     
-    .timeline-content:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    .timeline-horizontal .timeline-content {
+        text-align: center !important;
+        padding: 20px !important;
+        min-height: 140px !important;
+        transition: all 0.3s ease !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        transform: none !important;
     }
     
-    .timeline-content h3 {
+    .timeline-horizontal .timeline-content::before {
+        display: none !important; /* Hide arrow */
+    }
+    
+    .timeline-horizontal .timeline-content:hover {
+        transform: translateY(-5px) !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .timeline-horizontal .timeline-content h3 {
         margin: 0 0 10px;
         color: var(--primary);
         font-size: 1.2rem;
     }
     
-    .timeline-content p {
+    .timeline-horizontal .timeline-content p {
         margin: 0;
         color: var(--text-light);
         font-size: 0.95rem;
     }
     
-    @media (max-width: 1024px) {
+    /* Desktop - show all 4 items in a single row */
+    @media (min-width: 769px) {
         .timeline-horizontal {
-            flex-wrap: wrap;
-            max-width: 600px;
+            flex-wrap: nowrap !important;
         }
         
-        .timeline-item {
-            flex: 0 0 50%;
-            margin-bottom: 40px;
+        .timeline-horizontal .timeline-item {
+            flex: 1 !important;
+            max-width: 25% !important;
         }
         
         .timeline-line {
-            display: none;
+            display: block;
         }
     }
     
-    @media (max-width: 640px) {
-        .timeline-item {
-            flex: 0 0 100%;
+    /* Tablet - show 2 items per row */
+    @media (max-width: 768px) and (min-width: 481px) {
+        .timeline-horizontal {
+            flex-wrap: wrap !important;
+            max-width: 600px !important;
         }
         
-        .timeline-dot {
-            width: 60px;
-            height: 60px;
-            font-size: 24px;
+        .timeline-horizontal .timeline-item {
+            flex: 0 0 50% !important;
+            max-width: 50% !important;
+            margin-bottom: 40px !important;
         }
         
-        .timeline-content {
-            min-height: auto;
+        .timeline-line {
+            display: none !important;
+        }
+    }
+    
+    /* Mobile - show 1 item per row */
+    @media (max-width: 480px) {
+        .timeline-horizontal {
+            flex-wrap: wrap !important;
+        }
+        
+        .timeline-horizontal .timeline-item {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+            margin-bottom: 30px !important;
+        }
+        
+        .timeline-line {
+            display: none !important;
+        }
+        
+        .timeline-horizontal .timeline-dot {
+            width: 60px !important;
+            height: 60px !important;
+            font-size: 24px !important;
+        }
+        
+        .timeline-horizontal .timeline-content {
+            min-height: auto !important;
+        }
+    }
+    
+    /* Wave animation for the line */
+    @keyframes waveFlow {
+        0% {
+            d: path("M0,30 Q50,20 100,30 T200,30 T300,30 T400,30 T500,30 T600,30 T700,30 T800,30 T900,30 T1000,30");
+        }
+        50% {
+            d: path("M0,30 Q50,40 100,30 T200,30 T300,30 T400,30 T500,30 T600,30 T700,30 T800,30 T900,30 T1000,30");
+        }
+        100% {
+            d: path("M0,30 Q50,20 100,30 T200,30 T300,30 T400,30 T500,30 T600,30 T700,30 T800,30 T900,30 T1000,30");
+        }
+    }
+    
+    /* 3D Gallery Styles - Water Theme */
+    .gallery-3d-section {
+        padding: 100px 0;
+        background: linear-gradient(135deg, #E0F7FF 0%, #B3E5FC 25%, #81D4FA 50%, #4FC3F7 75%, #29B6F6 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Animated wavy background */
+    .gallery-3d-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 100%;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,165.3C384,171,480,149,576,154.7C672,160,768,192,864,197.3C960,203,1056,181,1152,154.7C1248,128,1344,96,1392,80L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') repeat-x;
+        animation: wave 20s linear infinite;
+        opacity: 0.3;
+    }
+    
+    .gallery-3d-section::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 200%;
+        height: 150px;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100"><path fill="%23ffffff" fill-opacity="0.15" d="M0,60 C240,40 480,80 720,60 C960,40 1200,80 1440,60 L1440,100 L0,100 Z"></path></svg>') repeat-x;
+        animation: wave 15s linear infinite reverse;
+        opacity: 0.4;
+    }
+    
+    .gallery-3d-section h2 {
+        color: #0277BD;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-shadow: 0 2px 10px rgba(2, 119, 189, 0.2);
+        position: relative;
+        z-index: 2;
+    }
+    
+    .gallery-3d-section h2 i {
+        margin-right: 15px;
+        color: #0EA5E9;
+    }
+    
+    .gallery-3d-section .text-muted {
+        color: rgba(1, 87, 155, 0.8) !important;
+        font-size: 1.1rem;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .gallery-3d-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 40px 60px;
+        z-index: 2;
+    }
+    
+    .gallery-3d-container {
+        display: flex;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-behavior: smooth;
+        gap: 40px;
+        padding: 40px 20px;
+        perspective: 1500px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    
+    .gallery-3d-container::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .gallery-3d-item {
+        flex: 0 0 400px;
+        min-width: 400px;
+        height: 450px;
+        transform-style: preserve-3d;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .gallery-3d-item:hover {
+        transform: translateZ(30px) scale(1.05) rotateY(5deg);
+    }
+    
+    .gallery-3d-card {
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 3px solid rgba(14, 165, 233, 0.5);
+        box-shadow: 
+            0 8px 32px rgba(14, 165, 233, 0.2),
+            0 20px 60px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        overflow: hidden;
+        position: relative;
+        transform-style: preserve-3d;
+        animation: waterShimmer 3s ease-in-out infinite;
+    }
+    
+    @keyframes waterShimmer {
+        0%, 100% {
+            box-shadow: 
+                0 8px 32px rgba(14, 165, 233, 0.2),
+                0 20px 60px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+        50% {
+            box-shadow: 
+                0 8px 32px rgba(14, 165, 233, 0.4),
+                0 25px 70px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 1);
+        }
+    }
+    
+    .gallery-3d-image {
+        width: 100%;
+        height: 320px;
+        overflow: hidden;
+        position: relative;
+        background: linear-gradient(135deg, #E1F5FE 0%, #B3E5FC 100%);
+    }
+    
+    .gallery-3d-image::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(180deg, transparent 0%, rgba(14, 165, 233, 0.1) 100%);
+        pointer-events: none;
+        z-index: 1;
+    }
+    
+    .gallery-3d-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        filter: brightness(0.95);
+    }
+    
+    .gallery-3d-item:hover .gallery-3d-image img {
+        transform: scale(1.1);
+        filter: brightness(1.05);
+    }
+    
+    .gallery-3d-info {
+        padding: 20px;
+        background: linear-gradient(180deg, rgba(14, 165, 233, 0.05) 0%, transparent 100%);
+        border-top: 2px solid rgba(14, 165, 233, 0.3);
+    }
+    
+    .gallery-3d-info h4 {
+        color: #0277BD;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 0 0 8px 0;
+        text-shadow: 0 1px 3px rgba(2, 119, 189, 0.1);
+    }
+    
+    .gallery-3d-info p {
+        color: rgba(1, 87, 155, 0.8);
+        font-size: 0.9rem;
+        margin: 0;
+        line-height: 1.5;
+    }
+    
+    .gallery-3d-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 3px solid rgba(14, 165, 233, 0.5);
+        border-radius: 50%;
+        color: #0277BD;
+        font-size: 24px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(14, 165, 233, 0.3);
+    }
+    
+    .gallery-3d-nav:hover {
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0 6px 24px rgba(14, 165, 233, 0.5);
+        background: rgba(14, 165, 233, 0.95);
+        color: white;
+        border-color: #0EA5E9;
+    }
+    
+    .gallery-3d-nav:active {
+        transform: translateY(-50%) scale(0.95);
+    }
+    
+    .gallery-3d-prev {
+        left: 0;
+    }
+    
+    .gallery-3d-next {
+        right: 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .gallery-3d-item {
+            flex: 0 0 300px;
+            min-width: 300px;
+            height: 380px;
+        }
+        
+        .gallery-3d-image {
+            height: 260px;
+        }
+        
+        .gallery-3d-wrapper {
+            padding: 20px 50px;
+        }
+        
+        .gallery-3d-nav {
+            width: 45px;
+            height: 45px;
+            font-size: 18px;
+        }
+        
+        .gallery-3d-section h2 {
+            font-size: 2rem;
         }
     }
 </style>
+
+<script>
+function scrollGallery(direction) {
+    const container = document.querySelector('.gallery-3d-container');
+    const scrollAmount = 440; // item width + gap
+    
+    if (direction === 'prev') {
+        container.scrollBy({
+            left: -scrollAmount,
+            behavior: 'smooth'
+        });
+    } else {
+        container.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth'
+        });
+    }
+}
+
+// Auto-play gallery (optional)
+let galleryAutoplay = setInterval(() => {
+    const container = document.querySelector('.gallery-3d-container');
+    if (container) {
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        if (container.scrollLeft >= maxScroll - 10) {
+            container.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+            scrollGallery('next');
+        }
+    }
+}, 5000);
+
+// Pause autoplay on hover
+document.addEventListener('DOMContentLoaded', function() {
+    const gallery = document.querySelector('.gallery-3d-container');
+    if (gallery) {
+        gallery.addEventListener('mouseenter', () => {
+            clearInterval(galleryAutoplay);
+        });
+        
+        gallery.addEventListener('mouseleave', () => {
+            galleryAutoplay = setInterval(() => {
+                const maxScroll = gallery.scrollWidth - gallery.clientWidth;
+                if (gallery.scrollLeft >= maxScroll - 10) {
+                    gallery.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    scrollGallery('next');
+                }
+            }, 5000);
+        });
+    }
+});
+</script>
 
 <?php
 $content = ob_get_clean();
