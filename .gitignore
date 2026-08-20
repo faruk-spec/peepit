@@ -1,0 +1,40 @@
+# Dependencies
+/vendor/
+composer.lock
+
+# Configuration
+/config/database.php
+/config/smtp.php
+
+# Uploads
+/public/uploads/*
+!/public/uploads/.htaccess
+
+# Logs
+*.log
+/logs/
+
+# Cache
+/cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# Install folder (delete after installation, but include in repo)
+# /install/
+
+# Temporary files
+/tmp/
+*.tmp
