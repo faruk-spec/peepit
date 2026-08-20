@@ -129,6 +129,14 @@ $router->post('/order/submit', function() {
     $controller->submit();
 });
 
+// User Dashboard
+$router->get('/dashboard', function() {
+    require_login();
+    require_once __DIR__ . '/../app/controllers/DashboardController.php';
+    $controller = new \App\Controllers\DashboardController();
+    $controller->index();
+});
+
 $router->get('/my-orders', function() {
     require_login();
     require_once __DIR__ . '/../app/controllers/MyOrdersController.php';
@@ -155,6 +163,13 @@ $router->post('/profile/update', function() {
     require_once __DIR__ . '/../app/controllers/ProfileController.php';
     $controller = new \App\Controllers\ProfileController();
     $controller->update();
+});
+
+// Custom Pages Route
+$router->get('/page/{slug}', function($slug) {
+    require_once __DIR__ . '/../app/controllers/PageController.php';
+    $controller = new \App\Controllers\PageController();
+    $controller->show($slug);
 });
 
 // Admin routes
@@ -824,6 +839,164 @@ $router->get('/admin/traffic/retention', function() {
     require_once __DIR__ . '/../app/controllers/admin/TrafficController.php';
     $controller = new \App\Controllers\Admin\TrafficController();
     $controller->retention();
+});
+
+// Admin Pages Management (CMS)
+$router->get('/admin/pages', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/PagesController.php';
+    $controller = new \App\Controllers\Admin\PagesController();
+    $controller->index();
+});
+
+$router->get('/admin/pages/create', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/PagesController.php';
+    $controller = new \App\Controllers\Admin\PagesController();
+    $controller->create();
+});
+
+$router->post('/admin/pages/store', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/PagesController.php';
+    $controller = new \App\Controllers\Admin\PagesController();
+    $controller->store();
+});
+
+$router->get('/admin/pages/edit/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/PagesController.php';
+    $controller = new \App\Controllers\Admin\PagesController();
+    $controller->edit($id);
+});
+
+$router->post('/admin/pages/update/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/PagesController.php';
+    $controller = new \App\Controllers\Admin\PagesController();
+    $controller->update($id);
+});
+
+$router->post('/admin/pages/delete', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/PagesController.php';
+    $controller = new \App\Controllers\Admin\PagesController();
+    $controller->delete();
+});
+
+// Admin Navigation Management (CMS)
+$router->get('/admin/navigation', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/NavigationController.php';
+    $controller = new \App\Controllers\Admin\NavigationController();
+    $controller->index();
+});
+
+$router->get('/admin/navigation/create', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/NavigationController.php';
+    $controller = new \App\Controllers\Admin\NavigationController();
+    $controller->create();
+});
+
+$router->post('/admin/navigation/store', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/NavigationController.php';
+    $controller = new \App\Controllers\Admin\NavigationController();
+    $controller->store();
+});
+
+$router->get('/admin/navigation/edit/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/NavigationController.php';
+    $controller = new \App\Controllers\Admin\NavigationController();
+    $controller->edit($id);
+});
+
+$router->post('/admin/navigation/update/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/NavigationController.php';
+    $controller = new \App\Controllers\Admin\NavigationController();
+    $controller->update($id);
+});
+
+$router->post('/admin/navigation/delete', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/NavigationController.php';
+    $controller = new \App\Controllers\Admin\NavigationController();
+    $controller->delete();
+});
+
+$router->post('/admin/navigation/reorder', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/NavigationController.php';
+    $controller = new \App\Controllers\Admin\NavigationController();
+    $controller->reorder();
+});
+
+// Admin Hero Slider Management (CMS)
+$router->get('/admin/hero-slider', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/HeroSliderController.php';
+    $controller = new \App\Controllers\Admin\HeroSliderController();
+    $controller->index();
+});
+
+$router->get('/admin/hero-slider/create', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/HeroSliderController.php';
+    $controller = new \App\Controllers\Admin\HeroSliderController();
+    $controller->create();
+});
+
+$router->post('/admin/hero-slider/store', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/HeroSliderController.php';
+    $controller = new \App\Controllers\Admin\HeroSliderController();
+    $controller->store();
+});
+
+$router->get('/admin/hero-slider/edit/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/HeroSliderController.php';
+    $controller = new \App\Controllers\Admin\HeroSliderController();
+    $controller->edit($id);
+});
+
+$router->post('/admin/hero-slider/update/{id}', function($id) {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/HeroSliderController.php';
+    $controller = new \App\Controllers\Admin\HeroSliderController();
+    $controller->update($id);
+});
+
+$router->post('/admin/hero-slider/delete', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/HeroSliderController.php';
+    $controller = new \App\Controllers\Admin\HeroSliderController();
+    $controller->delete();
+});
+
+// Admin Homepage Content Management (CMS)
+$router->get('/admin/home-content', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/HomeContentController.php';
+    $controller = new \App\Controllers\Admin\HomeContentController();
+    $controller->index();
+});
+
+$router->post('/admin/home-content/update', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/HomeContentController.php';
+    $controller = new \App\Controllers\Admin\HomeContentController();
+    $controller->update();
+});
+
+$router->post('/admin/home-content/reset', function() {
+    require_role('manager');
+    require_once __DIR__ . '/../app/controllers/admin/HomeContentController.php';
+    $controller = new \App\Controllers\Admin\HomeContentController();
+    $controller->reset();
 });
 
 // Get current URL and method

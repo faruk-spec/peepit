@@ -64,8 +64,8 @@ class AuthController extends Controller
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         try {
             $userId = $this->db->query(
-                "INSERT INTO users (name, email, phone, password, role) VALUES (?, ?, ?, ?, 'user')",
-                [$name, $email, $phone, $hashedPassword]
+                "INSERT INTO users (name, email, phone, pincode, password, role) VALUES (?, ?, ?, ?, ?, 'user')",
+                [$name, $email, $phone, $pincode, $hashedPassword]
             );
 
             // Track analytics
@@ -78,12 +78,13 @@ class AuthController extends Controller
                 'id' => $_SESSION['user_id'],
                 'name' => $name,
                 'email' => $email,
-                'role' => 'user'
+                'role' => 'user',
+                'created_at' => date('Y-m-d H:i:s')
             ];
 
             flash('success', 'Registration successful! Welcome to Peepit.');
             clear_old();
-            $this->redirect(url());
+            $this->redirect(url('dashboard'));
         } catch (\Exception $e) {
             flash('error', 'Registration failed. Please try again.');
             set_old($_POST);
@@ -132,14 +133,15 @@ class AuthController extends Controller
             'id' => $user['id'],
             'name' => $user['name'],
             'email' => $user['email'],
-            'role' => $user['role']
+            'role' => $user['role'],
+            'created_at' => $user['created_at']
         ];
 
         // Track login
         $this->trackLogin($user['id']);
 
         flash('success', 'Welcome back!');
-        $this->redirect(url());
+        $this->redirect(url('dashboard'));
     }
 
     public function logout()

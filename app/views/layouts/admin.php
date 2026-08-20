@@ -540,6 +540,35 @@
                     </a>
                 </li>
 
+                <!-- CMS Section -->
+                <li class="menu-section">
+                    <div class="menu-section-title">Content Management</div>
+                </li>
+                <li>
+                    <a href="<?= url('admin/pages') ?>" class="<?= ($current_page ?? '') === 'pages' ? 'active' : '' ?>">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Pages</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="<?= url('admin/navigation') ?>" class="<?= ($current_page ?? '') === 'navigation' ? 'active' : '' ?>">
+                        <i class="fas fa-bars"></i>
+                        <span>Navigation</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="<?= url('admin/hero-slider') ?>" class="<?= ($current_page ?? '') === 'hero-slider' ? 'active' : '' ?>">
+                        <i class="fas fa-images"></i>
+                        <span>Hero Slider</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="<?= url('admin/home-content') ?>" class="<?= ($current_page ?? '') === 'home-content' ? 'active' : '' ?>">
+                        <i class="fas fa-home"></i>
+                        <span>Homepage Content</span>
+                    </a>
+                </li>
+
                 <!-- System Section -->
                 <li class="menu-section">
                     <div class="menu-section-title">System</div>

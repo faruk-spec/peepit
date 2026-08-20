@@ -154,5 +154,7 @@
         setInterval(updateUnreadCount, 30000);
         updateUnreadCount(); // Initial load
     </script>
+        </div>
+    </div>
 </body>
 </html>

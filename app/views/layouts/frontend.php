@@ -25,6 +25,7 @@
                 <li><a href="<?= url() ?>"><i class="fas fa-home"></i> Home</a></li>
                 <li><a href="<?= url('order/start') ?>"><i class="fas fa-shopping-cart"></i> Order Now</a></li>
                 <?php if (is_logged_in()): ?>
+                    <li><a href="<?= url('dashboard') ?>"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                     <li><a href="<?= url('my-orders') ?>"><i class="fas fa-list-alt"></i> My Orders</a></li>
                     <li class="dropdown">
                         <a href="#"><i class="fas fa-user-circle"></i> <?= escape(current_user()['name']) ?> <i class="fas fa-chevron-down"></i></a>
