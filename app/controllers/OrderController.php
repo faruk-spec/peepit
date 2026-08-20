@@ -13,15 +13,24 @@ class OrderController extends Controller
     {
         require_login();
 
-        // Get active bottle models
-        $bottleModel = new BottleModel();
-        $models = $bottleModel->getActive();
+        try {
+            // Get active bottle models
+            $bottleModel = new BottleModel();
+            $models = $bottleModel->getActive();
 
-        $csrfToken = $this->generateCSRF();
-        $this->view('frontend/order/step1', [
-            'csrf_token' => $csrfToken,
-            'models' => $models
-        ]);
+            $csrfToken = $this->generateCSRF();
+            $this->view('frontend/order/step1', [
+                'csrf_token' => $csrfToken,
+                'models' => $models
+            ]);
+        } catch (\Exception $e) {
+            error_log('Error loading bottle models: ' . $e->getMessage());
+            flash('error', 'Unable to load bottle models. Please try again later.');
+            $this->view('frontend/order/step1', [
+                'csrf_token' => $this->generateCSRF(),
+                'models' => []
+            ]);
+        }
     }
 
     public function step2()
@@ -36,19 +45,25 @@ class OrderController extends Controller
             $this->redirect(url('order/start'));
         }
 
-        // Store in session
-        $_SESSION['order_data']['models'] = $selectedModels;
+        try {
+            // Store in session
+            $_SESSION['order_data']['models'] = $selectedModels;
 
-        // Get bottle sizes
-        $bottleSize = new BottleSize();
-        $sizes = $bottleSize->getActive();
+            // Get bottle sizes
+            $bottleSize = new BottleSize();
+            $sizes = $bottleSize->getActive();
 
-        $csrfToken = $this->generateCSRF();
-        $this->view('frontend/order/step2', [
-            'csrf_token' => $csrfToken,
-            'sizes' => $sizes,
-            'selected_models' => $selectedModels
-        ]);
+            $csrfToken = $this->generateCSRF();
+            $this->view('frontend/order/step2', [
+                'csrf_token' => $csrfToken,
+                'sizes' => $sizes,
+                'selected_models' => $selectedModels
+            ]);
+        } catch (\Exception $e) {
+            error_log('Error loading bottle sizes: ' . $e->getMessage());
+            flash('error', 'Unable to load bottle sizes. Please try again later.');
+            $this->redirect(url('order/start'));
+        }
     }
 
     public function step3()
@@ -63,16 +78,22 @@ class OrderController extends Controller
             $this->redirect(url('order/step2'));
         }
 
-        $_SESSION['order_data']['size_id'] = $sizeId;
+        try {
+            $_SESSION['order_data']['size_id'] = $sizeId;
 
-        // Get color presets
-        $colors = $this->db->fetchAll("SELECT * FROM color_presets WHERE status = 'active'");
+            // Get color presets
+            $colors = $this->db->fetchAll("SELECT * FROM color_presets WHERE status = 'active'");
 
-        $csrfToken = $this->generateCSRF();
-        $this->view('frontend/order/step3', [
-            'csrf_token' => $csrfToken,
-            'colors' => $colors
-        ]);
+            $csrfToken = $this->generateCSRF();
+            $this->view('frontend/order/step3', [
+                'csrf_token' => $csrfToken,
+                'colors' => $colors
+            ]);
+        } catch (\Exception $e) {
+            error_log('Error loading color presets: ' . $e->getMessage());
+            flash('error', 'Unable to load color options. Please try again later.');
+            $this->redirect(url('order/step2'));
+        }
     }
 
     public function step4()
@@ -87,16 +108,22 @@ class OrderController extends Controller
             $this->redirect(url('order/step3'));
         }
 
-        $_SESSION['order_data']['color'] = $color;
+        try {
+            $_SESSION['order_data']['color'] = $color;
 
-        // Get label templates
-        $templates = $this->db->fetchAll("SELECT * FROM label_templates WHERE status = 'active'");
+            // Get label templates
+            $templates = $this->db->fetchAll("SELECT * FROM label_templates WHERE status = 'active'");
 
-        $csrfToken = $this->generateCSRF();
-        $this->view('frontend/order/step4', [
-            'csrf_token' => $csrfToken,
-            'templates' => $templates
-        ]);
+            $csrfToken = $this->generateCSRF();
+            $this->view('frontend/order/step4', [
+                'csrf_token' => $csrfToken,
+                'templates' => $templates
+            ]);
+        } catch (\Exception $e) {
+            error_log('Error loading label templates: ' . $e->getMessage());
+            flash('error', 'Unable to load label templates. Please try again later.');
+            $this->redirect(url('order/step3'));
+        }
     }
 
     public function step5()
